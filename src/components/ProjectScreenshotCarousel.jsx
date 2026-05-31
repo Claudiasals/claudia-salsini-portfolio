@@ -99,7 +99,6 @@ const ProjectScreenshotCarousel = ({ items }) => {
         <p className="project-screenshots-carousel__counter" aria-live="polite">
           {activeIndex + 1} / {items.length}
         </p>
-        <p className="project-screenshots-carousel__hint">Scorri per vedere tutte le schermate</p>
       </div>
 
       <div className="project-screenshots-carousel__controls">

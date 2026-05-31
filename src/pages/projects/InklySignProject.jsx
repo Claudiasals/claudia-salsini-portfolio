@@ -4,6 +4,7 @@ import ProjectScreenshotCarousel from '../../components/ProjectScreenshotCarouse
 const CATEGORY = 'SaaS B2B per contratti online e firme digitali'
 const TITLE = 'InklySign'
 const EXTERNAL_URL = 'https://inklysign.it/login'
+const DEMO_SECTION_ID = 'inklysign-demo'
 
 const SCREENSHOTS = [
   {
@@ -46,361 +47,218 @@ const SCREENSHOTS = [
     alt: 'Email automatica InklySign con PDF del contratto firmato in allegato',
     caption: 'Email con PDF firmato',
   },
+]
+
+const CONTRIBUTION_ITEMS = [
+  'progettazione UI in Figma, con brief condivisi col team tech Mirai Bay su modifiche e nuove funzionalità',
+  'sviluppo frontend: schermate, flussi, dashboard, contratti, template e firma online',
+  'sviluppo backend con Laravel e MySQL: logiche applicative, dati e API',
+  'deploy e messa online dell’applicazione',
+  'sviluppo di quanto concordato nei brief, con integrazioni e miglioramenti proposti in autonomia',
+]
+
+const OVERVIEW_CARDS = [
   {
-    src: '/images/projects/inklysign/admin-discount-codes.png',
-    alt: 'Pannello super admin per gestione codici sconto e impostazioni piattaforma',
-    caption: 'Area super admin',
+    title: 'Tipo progetto',
+    text: 'SaaS B2B / applicazione web full stack',
+  },
+  {
+    title: 'Obiettivo',
+    text: 'Semplificare il flusso contrattuale e la firma online',
+  },
+  {
+    title: 'Ruolo',
+    text: 'Sviluppo full stack: frontend, backend e deploy',
   },
 ]
+
+const FEATURES = [
+  {
+    title: 'Dashboard operativa',
+    text: 'Metriche su clienti e contratti, storico recente e stato dei documenti in un’unica vista per il team.',
+  },
+  {
+    title: 'Creazione contratti',
+    text: 'Form guidato con rubrica clienti e campi anagrafici per preparare e inviare nuovi contratti.',
+  },
+  {
+    title: 'Template dinamici',
+    text: 'Editor con variabili per intestazione e corpo documento, termini e privacy collegati al modello.',
+  },
+  {
+    title: 'Firma con OTP',
+    text: 'Percorso firma con pad, accettazione termini e verifica OTP via email, con PDF firmato in allegato.',
+  },
+]
+
+const STACK = ['React', 'Vite', 'Tailwind CSS', 'PHP', 'Laravel', 'MySQL']
 
 const InklySignProject = () => (
   <main className="min-h-screen bg-slate-950 text-white">
     <div className="page-under-navbar px-6 pb-20">
       <article className="project-case mx-auto max-w-6xl">
-    <div className="project-case-header">
-      <p className="project-case-header__label text-sm font-semibold uppercase tracking-[0.3em]">
-        <span className="text-sky-400">{TITLE}</span>
-        <span className="text-white"> | {CATEGORY}</span>
-      </p>
-
-      <Link to="/#projects" className="project-detail-back project-case-header__back">
-        ← Torna ai progetti
-      </Link>
-    </div>
-
-    <section className="project-case-hero skills-category-panel">
-      <div
-        className="project-case-hero__bg"
-        style={{ backgroundImage: "url('/images/projects/inklysign/landing-login.png')" }}
-        aria-hidden="true"
-      />
-      <div className="project-case-hero__overlay" aria-hidden="true" />
-      <div className="project-case-hero__content">
-        <p className="terminal-gradient-label">{CATEGORY}</p>
-        <h1 className="project-case-hero__title">
-          InklySign: contratti e firme online in un unico flusso operativo
-        </h1>
-        <p className="project-case-hero__desc">
-          Un progetto costruito per aziende che vogliono velocizzare il ciclo contrattuale,
-          ridurre errori manuali e avere controllo completo su invio, firma e stato documenti.
-        </p>
-        <div className="project-case-hero__actions">
-          <a href={EXTERNAL_URL} target="_blank" rel="noreferrer" className="btn-primary">
-            <span className="btn-primary-inner">
-              <span className="btn-primary-text">Visita InklySign →</span>
-            </span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section className="project-case-overview mt-14 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-10">
-      <div>
-        <p className="project-detail-category terminal-gradient-label">{CATEGORY}</p>
-
-        <h2 className="mt-4 text-3xl font-bold text-white md:text-4xl">{TITLE}</h2>
-
-        <p className="mt-6 text-lg leading-8 text-slate-300">
-          InklySign è un prodotto SaaS pensato per digitalizzare il flusso contrattuale
-          aziendale: creazione documento, invio, firma in presenza o da remoto e tracciamento
-          dello stato in un’unica interfaccia operativa.
-        </p>
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          {['SaaS B2B', 'Firma Digitale', 'Contratti Online', 'Processi Commerciali'].map(
-            (tag) => (
-              <span key={tag} className="project-case-tag">
-                {tag}
-              </span>
-            ),
-          )}
-        </div>
-
-        <div className="project-case-highlight mt-8">
-          <p className="project-case-highlight__label">Risultato business</p>
-          <p className="project-case-highlight__text">
-            Riduzione del tempo di gestione contratti e maggiore controllo sul ciclo firma.
+        <header className="project-case-header">
+          <p className="project-case-header__label text-sm font-semibold uppercase tracking-[0.3em]">
+            <span className="text-sky-400">{TITLE}</span>
+            <span className="text-white"> | {CATEGORY}</span>
           </p>
-        </div>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
-          <div className="project-case-card">
-            <h3 className="project-case-card__title">La sfida</h3>
-            <p className="project-case-card__text">
-              Prima dell’introduzione della piattaforma, la gestione dei contratti restava
-              frammentata tra file locali, email e approvazioni manuali, con rischio di errori,
-              versioni duplicate e poca visibilità sullo stato dei documenti.
+          <Link to="/#projects" className="project-detail-back project-case-header__back">
+            ← Torna ai progetti
+          </Link>
+
+          <h1 className="project-case-intro__title mt-8 w-full text-3xl font-bold text-white md:text-4xl">
+            InklySign: piattaforma SaaS per contratti e firme digitali
+          </h1>
+          <p className="project-case-intro__desc mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+            Applicazione web per creare, inviare, firmare e monitorare contratti online, con
+            dashboard operativa, template dinamici, gestione clienti e firma con OTP.
+          </p>
+        </header>
+
+        <section className="project-case-hero skills-category-panel">
+          <div
+            className="project-case-hero__bg"
+            style={{ backgroundImage: "url('/images/projects/inklysign/dashboard.png')" }}
+            aria-hidden="true"
+          />
+          <div className="project-case-hero__overlay" aria-hidden="true" />
+          <div className="project-case-hero__content">
+            <p className="terminal-gradient-label">Case study</p>
+            <p className="project-case-hero__desc project-case-hero__desc--compact">
+              Case study dello stage in Mirai Bay: piattaforma che ho sviluppato su frontend,
+              backend e deploy, con UI in Figma. Scope e priorità definiti con il team tech Mirai Bay
+              nei brief di progetto.
+            </p>
+            <div className="project-case-hero__actions">
+              <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+                <span className="btn-primary-inner">
+                  <span className="btn-primary-text">Guarda la demo</span>
+                </span>
+              </a>
+              <a href={EXTERNAL_URL} target="_blank" rel="noreferrer" className="btn-secondary">
+                <span className="btn-secondary-inner">Visita InklySign →</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section className="project-case-overview-cards mt-14" aria-label="Panoramica progetto">
+          <ul className="project-case-overview-cards__grid">
+            {OVERVIEW_CARDS.map((card) => (
+              <li key={card.title} className="project-case-card project-case-card--compact">
+                <h3 className="project-case-card__title">{card.title}</h3>
+                <p className="project-case-card__text">{card.text}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="project-case-contribution mt-16" aria-labelledby="inklysign-contribution">
+          <p className="terminal-gradient-label">Il mio ruolo</p>
+          <h2 id="inklysign-contribution" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+            Come ho realizzato InklySign
+          </h2>
+          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+            Durante lo stage presso Mirai Bay ho portato a termine InklySign in autonomia operativa:
+            UI in Figma, frontend con React, Vite e Tailwind CSS, backend con Laravel e MySQL e
+            deploy dell’applicazione. Con il team tech Mirai Bay abbiamo lavorato per brief:
+            insieme individuavamo modifiche, aggiornamenti e funzionalità da introdurre; poi ne
+            curavo l’implementazione, includendo anche sviluppi aggiuntivi portati avanti in autonomia.
+          </p>
+          <ul className="project-case-checklist mt-8 space-y-4">
+            {CONTRIBUTION_ITEMS.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section
+          id={DEMO_SECTION_ID}
+          className="project-case-video mt-16"
+          aria-labelledby="inklysign-demo-heading"
+        >
+          <div className="project-case-video__intro">
+            <p className="terminal-gradient-label">Demo progetto</p>
+            <h2 id="inklysign-demo-heading" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+              Una panoramica del flusso InklySign
+            </h2>
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+              La piattaforma completa è accessibile solo dopo login. Per questo ho inserito una
+              breve demo video che mostra le principali schermate e il flusso di utilizzo del
+              prodotto.
             </p>
           </div>
-          <div className="project-case-card">
-            <h3 className="project-case-card__title">La soluzione</h3>
-            <p className="project-case-card__text">
-              Ho contribuito allo sviluppo di una piattaforma focalizzata sulla semplificazione
-              del percorso contrattuale: modelli personalizzabili, invio guidato, raccolta firma
-              online e dashboard per monitorare l’avanzamento.
-            </p>
-          </div>
-        </div>
 
-        <div className="mt-10">
-          <h3 className="text-lg font-bold text-white">Stack tecnologico</h3>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {['React', 'Vite', 'Tailwind CSS', 'PHP', 'Laravel', 'MySQL'].map((tech) => (
+          <div className="project-case-video__frame mt-8">
+            <video
+              className="project-case-video__player"
+              src="/videos/inklysign-demo.mp4"
+              poster="/images/projects/inklysign/inklysign-video-poster.jpg"
+              controls
+              preload="metadata"
+              playsInline
+            >
+              Il tuo browser non supporta il tag video.
+            </video>
+          </div>
+        </section>
+
+        <section className="mt-16" aria-labelledby="inklysign-features">
+          <p className="terminal-gradient-label">Funzionalità principali</p>
+          <h2 id="inklysign-features" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+            Cosa fa la piattaforma
+          </h2>
+          <ul className="project-case-features mt-8">
+            {FEATURES.map((feature) => (
+              <li key={feature.title} className="project-case-card project-case-card--feature">
+                <h3 className="project-case-card__title">{feature.title}</h3>
+                <p className="project-case-card__text">{feature.text}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="project-case-stack mt-16" aria-labelledby="inklysign-stack">
+          <p className="terminal-gradient-label">Stack tecnologico</p>
+          <h2 id="inklysign-stack" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+            Tecnologie utilizzate
+          </h2>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {STACK.map((tech) => (
               <span key={tech} className="project-case-tag project-case-tag--tech">
                 {tech}
               </span>
             ))}
           </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {['Product Design', 'B2B UX', 'Workflow Contrattuale', 'Technical SEO'].map(
-              (tag) => (
-                <span key={tag} className="project-case-tag project-case-tag--design">
-                  {tag}
-                </span>
-              ),
-            )}
+          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+            Stack utilizzato su un percorso full stack reale: interfaccia, persistenza dati,
+            logiche server e rilascio dell’applicazione in ambiente di produzione.
+          </p>
+        </section>
+
+        <section className="project-case-gallery mt-16" aria-labelledby="inklysign-gallery">
+          <p className="terminal-gradient-label">Screenshot</p>
+          <h2 id="inklysign-gallery" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+            Approfondimento visivo
+          </h2>
+          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+            Alcune schermate reali dell’applicazione: accesso, dashboard, creazione contratti,
+            template, firma con OTP e consegna del PDF firmato.
+          </p>
+
+          <div className="project-case-gallery__viewport mt-10">
+            <ProjectScreenshotCarousel items={SCREENSHOTS} />
           </div>
+        </section>
+
+        <div className="project-detail-actions mt-14">
+          <a href={EXTERNAL_URL} target="_blank" rel="noreferrer" className="btn-primary">
+            <span className="btn-primary-inner">
+              <span className="btn-primary-text">Visita InklySign</span>
+            </span>
+          </a>
         </div>
-      </div>
-
-      <div className="project-detail-image-wrap mt-10 lg:mt-16">
-        <img
-          src="/images/projects/inklysign/dashboard.png"
-          alt="Anteprima dashboard InklySign"
-          className="project-detail-image"
-          loading="lazy"
-        />
-      </div>
-    </section>
-
-    <section className="project-case-split mt-16 lg:grid lg:grid-cols-2 lg:gap-10">
-      <div>
-        <p className="terminal-gradient-label">Problema risolto</p>
-        <h2 className="mt-4 text-2xl font-bold text-white md:text-3xl">
-          Dal caos documentale a un processo firma chiaro, misurabile e veloce
-        </h2>
-        <p className="mt-5 text-lg leading-8 text-slate-300">
-          In molte realtà commerciali il contratto passa ancora tra allegati email, versioni
-          duplicate e firme non tracciate. Con InklySign il ciclo diventa lineare: preparazione,
-          invio, firma e monitoraggio in una sola piattaforma.
-        </p>
-        <ul className="project-case-checklist mt-8 space-y-4">
-          <li>Creazione rapida di contratti personalizzati per clienti e fornitori</li>
-          <li>Firma online in presenza o da remoto con flusso semplice e tracciabile</li>
-          <li>Archivio centralizzato per stato documenti, revisioni e storico operativo</li>
-          <li>
-            Riduzione dei passaggi manuali tra email, PDF, stampa e approvazioni separate
-          </li>
-        </ul>
-      </div>
-
-      <div className="project-case-visual mt-10 lg:mt-0">
-        <div
-          className="project-case-visual__img"
-          style={{ backgroundImage: "url('/images/projects/inklysign/new-contract.png')" }}
-          role="img"
-          aria-label="Form creazione contratto InklySign"
-        />
-      </div>
-    </section>
-
-    <section className="mt-16">
-      <ul className="project-case-features">
-        <li className="project-case-card project-case-card--feature">
-          <h3 className="project-case-card__title">Contratti strutturati</h3>
-          <p className="project-case-card__text">
-            Template riutilizzabili e campi dinamici per ridurre errori ripetitivi nella fase di
-            preparazione.
-          </p>
-        </li>
-        <li className="project-case-card project-case-card--feature">
-          <h3 className="project-case-card__title">Firma digitale operativa</h3>
-          <p className="project-case-card__text">
-            Percorso firma progettato per utenti business: rapido, comprensibile e pronto anche da
-            mobile.
-          </p>
-        </li>
-        <li className="project-case-card project-case-card--feature">
-          <h3 className="project-case-card__title">Gestione clienti unificata</h3>
-          <p className="project-case-card__text">
-            Ogni contratto resta collegato al cliente corretto, con stato sempre aggiornato e
-            consultabile.
-          </p>
-        </li>
-        <li className="project-case-card project-case-card--feature">
-          <h3 className="project-case-card__title">Controllo e compliance</h3>
-          <p className="project-case-card__text">
-            Processo documentale ordinato, auditabile e allineato alle esigenze di governance
-            aziendale.
-          </p>
-        </li>
-      </ul>
-    </section>
-
-    <section className="project-case-gallery mt-16">
-      <p className="terminal-gradient-label">Interfaccia prodotto</p>
-      <h2 className="mt-4 text-2xl font-bold text-white md:text-3xl">
-        Dal login alla firma: il flusso completo in piattaforma
-      </h2>
-      <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-        Schermate reali dell’applicazione: landing e accesso, dashboard operativa, creazione
-        contratti, template configurabili, firma con OTP e consegna automatica del PDF firmato.
-      </p>
-
-      <div className="project-case-gallery__viewport mt-10">
-        <ProjectScreenshotCarousel items={SCREENSHOTS} />
-      </div>
-    </section>
-
-    <section className="project-case-banner mt-16">
-      <div
-        className="project-case-banner__bg"
-        style={{ backgroundImage: "url('/images/projects/inklysign/dashboard.png')" }}
-        aria-hidden="true"
-      />
-      <div className="project-case-banner__overlay" aria-hidden="true" />
-      <div className="project-case-banner__content">
-        <p className="terminal-gradient-label">Controllo operativo</p>
-        <h2 className="mt-4 text-2xl font-bold text-white md:text-3xl">
-          Visibilità reale sul ciclo contrattuale
-        </h2>
-        <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-200">
-          Commerciale, amministrazione e direzione possono leggere lo stesso stato documento in
-          tempo reale, senza rincorrere aggiornamenti manuali.
-        </p>
-      </div>
-    </section>
-
-    <section className="project-case-split mt-16 lg:grid lg:grid-cols-2 lg:gap-10">
-      <div>
-        <p className="terminal-gradient-label">Metodo progetto</p>
-        <h2 className="mt-4 text-2xl font-bold text-white md:text-3xl">
-          Come abbiamo costruito InklySign
-        </h2>
-        <ol className="project-case-steps mt-8 space-y-4">
-          <li className="project-case-step">
-            <span className="project-case-step__num">1</span>
-            <div>
-              <h3 className="project-case-step__title">Impostazione modelli contratto</h3>
-              <p className="project-case-step__text">
-                Si definisce una base documento standard per le casistiche ricorrenti, evitando di
-                riscrivere tutto ogni volta.
-              </p>
-            </div>
-          </li>
-          <li className="project-case-step">
-            <span className="project-case-step__num">2</span>
-            <div>
-              <h3 className="project-case-step__title">Invio e raccolta firma</h3>
-              <p className="project-case-step__text">
-                Il contratto viene inviato al destinatario con percorso guidato alla firma, anche a
-                distanza.
-              </p>
-            </div>
-          </li>
-          <li className="project-case-step">
-            <span className="project-case-step__num">3</span>
-            <div>
-              <h3 className="project-case-step__title">Monitoraggio stato in dashboard</h3>
-              <p className="project-case-step__text">
-                Backoffice e commerciale vedono in tempo reale quali documenti sono in bozza,
-                inviati o completati.
-              </p>
-            </div>
-          </li>
-          <li className="project-case-step">
-            <span className="project-case-step__num">4</span>
-            <div>
-              <h3 className="project-case-step__title">Storico e follow-up commerciale</h3>
-              <p className="project-case-step__text">
-                Dati e storico rimangono centralizzati per semplificare rinnovi, integrazioni e
-                analisi operative.
-              </p>
-            </div>
-          </li>
-        </ol>
-      </div>
-
-      <div className="project-case-visual mt-10 lg:mt-0">
-        <div
-          className="project-case-visual__img project-case-visual__img--tall"
-          style={{ backgroundImage: "url('/images/projects/inklysign/signature-otp.png')" }}
-          role="img"
-          aria-label="Modale firma digitale con verifica OTP"
-        />
-      </div>
-    </section>
-
-    <section className="project-case-impact mt-16">
-      <div
-        className="project-case-impact__bg"
-        style={{ backgroundImage: "url('/images/projects/inklysign/email-notification.png')" }}
-        aria-hidden="true"
-      />
-      <div className="project-case-impact__overlay" aria-hidden="true" />
-      <div className="project-case-impact__content">
-        <p className="terminal-gradient-label">Impatto business</p>
-        <h2 className="mt-4 text-2xl font-bold text-white md:text-3xl">
-          Meno attese, meno errori, più contratti chiusi
-        </h2>
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-200">
-          InklySign nasce per trasformare un punto critico aziendale in un vantaggio competitivo:
-          velocità esecutiva e controllo sul processo di firma.
-        </p>
-        <ul className="project-case-pills mt-8">
-          <li>Tempi ridotti</li>
-          <li>Flusso ordinato</li>
-          <li>Governance chiara</li>
-        </ul>
-      </div>
-    </section>
-
-    <section className="mt-16">
-      <h2 className="text-2xl font-bold text-white md:text-3xl">FAQ su InklySign</h2>
-      <ul className="project-case-faq mt-8 space-y-4">
-        <li className="project-case-card">
-          <h3 className="project-case-card__title">InklySign è adatto solo a grandi aziende?</h3>
-          <p className="project-case-card__text mt-3">
-            No. È utile sia per team strutturati sia per PMI che vogliono eliminare passaggi
-            manuali nella gestione contratti.
-          </p>
-        </li>
-        <li className="project-case-card">
-          <h3 className="project-case-card__title">Posso firmare documenti anche da remoto?</h3>
-          <p className="project-case-card__text mt-3">
-            Sì. Il flusso è stato pensato proprio per gestire firme online in modo ordinato, anche
-            con utenti non tecnici.
-          </p>
-        </li>
-        <li className="project-case-card">
-          <h3 className="project-case-card__title">
-            Qual è il vantaggio principale per un reparto commerciale?
-          </h3>
-          <p className="project-case-card__text mt-3">
-            Ridurre i tempi tra bozza e chiusura: meno attese, meno documenti dispersi e maggiore
-            visibilità sullo stato delle trattative.
-          </p>
-        </li>
-        <li className="project-case-card">
-          <h3 className="project-case-card__title">Il progetto include anche ottimizzazione SEO?</h3>
-          <p className="project-case-card__text mt-3">
-            Sì. La presentazione prodotto è stata impostata con struttura semantica, contenuti chiari
-            e markup utile all’indicizzazione.
-          </p>
-        </li>
-      </ul>
-    </section>
-
-    <div className="project-detail-actions mt-14">
-      <a href={EXTERNAL_URL} target="_blank" rel="noreferrer" className="btn-primary">
-        <span className="btn-primary-inner">
-          <span className="btn-primary-text">Visita il sito</span>
-        </span>
-      </a>
-      <Link to="/#contact" className="btn-secondary">
-        <span className="btn-secondary-inner">Contattami →</span>
-      </Link>
-    </div>
       </article>
     </div>
   </main>

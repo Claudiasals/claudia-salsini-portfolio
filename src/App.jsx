@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import SiteLayout from './components/SiteLayout'
 import ScrollToHash from './components/ScrollToHash'
+import ScrollToTop from './components/ScrollToTop'
 import CookiePolicy from './pages/CookiePolicy'
 import Home from './pages/Home'
 import PrivacyPolicy from './pages/PrivacyPolicy'
@@ -12,6 +13,7 @@ import TermsPage from './pages/TermsPage'
 const App = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <ScrollToHash />
       <Routes>
         <Route element={<SiteLayout />}>
