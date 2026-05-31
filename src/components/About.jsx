@@ -1,4 +1,5 @@
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
+import AboutCircuitOverlay from './AboutCircuitOverlay'
 
 const educationItems = [
   'Diploma di specializzazione Web Developer',
@@ -81,6 +82,9 @@ const About = () => {
                     width={552}
                     height={1788}
                   />
+                  <div className="about-visual__circuit-mask" aria-hidden="true">
+                    <AboutCircuitOverlay />
+                  </div>
                 </div>
               </div>
             </div>
