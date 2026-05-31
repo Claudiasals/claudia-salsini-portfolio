@@ -1,12 +1,22 @@
+import useHeroCircuitSpotlight from '../hooks/useHeroCircuitSpotlight'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
 
 const Hero = () => {
+  const { patternRef, onMouseMove, onMouseLeave } = useHeroCircuitSpotlight()
+
   return (
     <section
       id="hero"
-      className="page-under-navbar relative overflow-hidden bg-slate-950 bg-[url('/images/sfondo-hero.png')] bg-cover bg-center bg-no-repeat px-6 pb-[calc(4rem+5px)] text-white md:pb-[calc(5rem+5px)]"
+      className="hero-section page-under-navbar relative overflow-hidden px-6 pb-[calc(4rem+5px)] text-white md:pb-[calc(5rem+5px)]"
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
     >
-      <div className="absolute inset-0 bg-slate-950/45" />
+      <div className="hero-bg" aria-hidden="true">
+        <div className="hero-bg__circuit" />
+        <div ref={patternRef} className="hero-bg__circuit-spotlight" aria-hidden="true" />
+        <div className="hero-bg__glow" />
+        <div className="hero-bg__scrim" />
+      </div>
 
       <ScrollReveal className="relative z-10 mx-auto max-w-6xl flex flex-col items-center text-center">
         <ScrollRevealItem tier="hero-1">
