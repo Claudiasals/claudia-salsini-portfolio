@@ -5,6 +5,19 @@ export const HERO_CIRCUIT_VIEWBOX = { width: 960, height: 540 }
 const BG_WIDTH_RATIO = 1.82
 const BG_MAX_VW = 1.32
 
+/** Bloccato all’avvio animazione: evita salti quando innerWidth oscilla al refresh. */
+let lockedViewportWidth = null
+
+export const lockCircuitLayoutViewport = () => {
+  lockedViewportWidth = window.innerWidth
+}
+
+export const unlockCircuitLayoutViewport = () => {
+  lockedViewportWidth = null
+}
+
+const layoutViewportWidth = () => lockedViewportWidth ?? window.innerWidth
+
 const parsePx = (value) => {
   const n = Number.parseFloat(value)
   return Number.isFinite(n) ? n : null
@@ -26,7 +39,7 @@ export const getHeroCircuitBackgroundLayoutFromElement = (el) => {
 
   if (sizeParts[0] && sizeParts[0] !== 'auto') {
     if (sizeParts[0].includes('min(')) {
-      const vw = typeof window !== 'undefined' ? window.innerWidth : 1200
+      const vw = typeof window !== 'undefined' ? layoutViewportWidth() : 1200
       width = Math.min(layerWidth * BG_WIDTH_RATIO, vw * BG_MAX_VW)
     } else if (sizeParts[0].endsWith('%')) {
       const pct = parsePx(sizeParts[0])
@@ -95,6 +108,27 @@ export const getCachedCircuitLayout = (el) => {
 
 export const invalidateCircuitLayoutCache = (el) => {
   layoutCache.delete(el)
+}
+
+/** Firma del posizionamento reale del motivo SVG (non solo clientWidth). */
+export const getCircuitLayoutSignature = (el) => {
+  const layout = getHeroCircuitBackgroundLayoutFromElement(el)
+  return [
+    el.clientWidth,
+    el.clientHeight,
+    Math.round(layout.left),
+    Math.round(layout.top),
+    Math.round(layout.width),
+    Math.round(layout.height),
+    lockedViewportWidth ?? 0,
+  ].join('|')
+}
+
+export const isCircuitLayoutReady = (el) => {
+  if (!el || el.clientWidth <= 0 || el.clientHeight <= 0) return false
+
+  const layout = getHeroCircuitBackgroundLayoutFromElement(el)
+  return layout.width > 64 && layout.height > 36
 }
 
 export const svgCircuitToLayerPx = (svgX, svgY, layerEl) => {

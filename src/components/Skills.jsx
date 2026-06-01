@@ -28,7 +28,12 @@ const getCategoryIconsRevealDelay = (categoryIndex) => {
 
 const Skills = () => {
   const layoutRef = useRef(null)
-  const [animationRun, setAnimationRun] = useState(0)
+  const wasInViewRef = useRef(false)
+  const introDoneRef = useRef(false)
+  const [introDone, setIntroDone] = useState(false)
+  const [typingRun, setTypingRun] = useState(0)
+
+  const bumpTyping = () => setTypingRun((run) => run + 1)
 
   useEffect(() => {
     const layout = layoutRef.current
@@ -36,9 +41,17 @@ const Skills = () => {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return
+        if (entry.isIntersecting) {
+          if (!wasInViewRef.current) {
+            wasInViewRef.current = true
+            introDoneRef.current = true
+            setIntroDone(true)
+            bumpTyping()
+          }
+          return
+        }
 
-        setAnimationRun((run) => (run === 0 ? 1 : run))
+        wasInViewRef.current = false
       },
       { threshold: 0.2 },
     )
@@ -51,8 +64,9 @@ const Skills = () => {
   useEffect(() => {
     const handleSkillsLinkClick = (event) => {
       if (!event.target.closest(SKILLS_LINK_SELECTOR)) return
+      if (!introDoneRef.current) return
 
-      setAnimationRun((run) => run + 1)
+      bumpTyping()
     }
 
     document.addEventListener('click', handleSkillsLinkClick)
@@ -89,7 +103,8 @@ const Skills = () => {
               <SkillCategoryCard
                 key={category.title}
                 category={category}
-                animationRun={animationRun}
+                introDone={introDone}
+                typingTrigger={typingRun}
                 iconsRevealDelayMs={getCategoryIconsRevealDelay(index)}
               />
             ))}

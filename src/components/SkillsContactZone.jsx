@@ -5,7 +5,7 @@ import Skills from './Skills'
 
 const SkillsContactZone = () => {
   const zoneRef = useRef(null)
-  const { patternRef, onMouseMove, onMouseLeave } = useHeroCircuitSpotlight()
+  const { patternRef, pointerRef, onMouseMove, onMouseLeave } = useHeroCircuitSpotlight()
 
   useEffect(() => {
     const zone = zoneRef.current
@@ -45,7 +45,16 @@ const SkillsContactZone = () => {
     >
       <div className="skills-contact-circuits hero-bg" aria-hidden="true">
         <div className="hero-bg__circuit" />
-        <div ref={patternRef} className="hero-bg__circuit-spotlight" aria-hidden="true" />
+        <div
+          ref={patternRef}
+          className="hero-bg__circuit-spotlight hero-bg__circuit-spotlight--auto"
+          aria-hidden="true"
+        />
+        <div
+          ref={pointerRef}
+          className="hero-bg__circuit-spotlight hero-bg__circuit-spotlight--pointer"
+          aria-hidden="true"
+        />
         <div className="hero-bg__glow" />
         <div className="hero-bg__scrim" />
       </div>

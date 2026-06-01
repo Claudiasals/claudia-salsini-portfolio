@@ -58,62 +58,92 @@ export const HERO_CIRCUIT_TRACE_PAIRS = [
 
 const dist = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1])
 
-/** Distanza tra campioni lungo la curva (più basso = angoli più morbidi). */
-const SAMPLE_STEP = 8
-
-const catmullRom = (p0, p1, p2, p3, t) => {
-  const t2 = t * t
-  const t3 = t2 * t
-
-  const x =
-    0.5 *
-    (2 * p1[0] +
-      (-p0[0] + p2[0]) * t +
-      (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 +
-      (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3)
-
-  const y =
-    0.5 *
-    (2 * p1[1] +
-      (-p0[1] + p2[1]) * t +
-      (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 +
-      (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)
-
-  return [x, y]
+const normalize = (x, y) => {
+  const len = Math.hypot(x, y)
+  if (len < 1e-6) return [0, 0]
+  return [x / len, y / len]
 }
 
-/** Curva Catmull-Rom campionata: evita che la luce “tagli” gli angoli. */
-const buildSmoothPath = (controlPoints) => {
-  const n = controlPoints.length
-  if (n < 2) return [...controlPoints]
+const SAMPLE_STEP = 3
+/** Raggio fillet agli angoli (unità SVG, come nel motivo). */
+const CORNER_FILLET_R = 16
+
+const pushIfFar = (samples, point, minDist = 0.15) => {
+  const prev = samples[samples.length - 1]
+  if (!prev || dist(prev, point) > minDist) {
+    samples.push(point)
+  }
+}
+
+const sampleSegment = (samples, p1, p2) => {
+  const chord = dist(p1, p2)
+  const steps = Math.max(2, Math.ceil(chord / SAMPLE_STEP))
+
+  for (let s = 1; s <= steps; s += 1) {
+    const t = s / steps
+    pushIfFar(samples, [p1[0] + (p2[0] - p1[0]) * t, p1[1] + (p2[1] - p1[1]) * t])
+  }
+}
+
+/**
+ * Polilinea come nel SVG (segmenti retti) + piccolo arco agli angoli.
+ * Evita il “gonfiore” Catmull-Rom che fa scattare la scia dopo gli angoli.
+ */
+const buildFilletPolyline = (vertices, filletR = CORNER_FILLET_R) => {
+  const n = vertices.length
+  if (n < 2) return [...vertices]
 
   const samples = []
+  pushIfFar(samples, vertices[0])
 
-  for (let i = 0; i < n - 1; i += 1) {
-    const p0 = controlPoints[Math.max(0, i - 1)]
-    const p1 = controlPoints[i]
-    const p2 = controlPoints[i + 1]
-    const p3 = controlPoints[Math.min(n - 1, i + 2)]
-    const chord = dist(p1, p2)
-    const steps = Math.max(3, Math.ceil(chord / SAMPLE_STEP))
+  for (let i = 1; i < n - 1; i += 1) {
+    const prev = vertices[i - 1]
+    const corner = vertices[i]
+    const next = vertices[i + 1]
 
-    for (let s = 0; s < steps; s += 1) {
-      if (i > 0 && s === 0) continue
+    const inLen = dist(prev, corner)
+    const outLen = dist(corner, next)
+    if (inLen < 1e-4 || outLen < 1e-4) continue
 
-      const point = catmullRom(p0, p1, p2, p3, s / steps)
-      const prev = samples[samples.length - 1]
+    const [inX, inY] = normalize(corner[0] - prev[0], corner[1] - prev[1])
+    const [outX, outY] = normalize(next[0] - corner[0], next[1] - corner[1])
 
-      if (!prev || dist(prev, point) > 0.35) {
-        samples.push(point)
-      }
+    const dot = Math.max(-1, Math.min(1, inX * outX + inY * outY))
+    const turn = Math.acos(dot)
+
+    if (turn < 0.08) {
+      sampleSegment(samples, samples[samples.length - 1], corner)
+      continue
     }
+
+    const trim = Math.min(
+      filletR / Math.tan(turn / 2),
+      inLen * 0.45,
+      outLen * 0.45,
+    )
+
+    const pIn = [corner[0] - inX * trim, corner[1] - inY * trim]
+    const pOut = [corner[0] + outX * trim, corner[1] + outY * trim]
+
+    sampleSegment(samples, samples[samples.length - 1], pIn)
+
+    const arcSteps = Math.max(4, Math.ceil((turn * filletR) / SAMPLE_STEP))
+    for (let s = 1; s < arcSteps; s += 1) {
+      const t = s / arcSteps
+      const bx = pIn[0] * (1 - t) + corner[0] * t
+      const by = pIn[1] * (1 - t) + corner[1] * t
+      const qx = corner[0] * (1 - t) + pOut[0] * t
+      const qy = corner[1] * (1 - t) + pOut[1] * t
+      pushIfFar(samples, [
+        bx * (1 - t) + qx * t,
+        by * (1 - t) + qy * t,
+      ])
+    }
+
+    pushIfFar(samples, pOut)
   }
 
-  const end = controlPoints[n - 1]
-  const last = samples[samples.length - 1]
-  if (!last || dist(last, end) > 0.35) {
-    samples.push(end)
-  }
+  sampleSegment(samples, samples[samples.length - 1], vertices[n - 1])
 
   return samples
 }
@@ -128,24 +158,23 @@ const buildArcLengthSampler = (points) => {
     total += length
   }
 
-  const positionAt = (t) => {
+  const positionAt = (distance) => {
     if (total <= 0 || points.length === 0) {
       return { x: 0, y: 0 }
     }
 
-    if (t <= 0) return { x: points[0][0], y: points[0][1] }
-    if (t >= 1) {
+    if (distance <= 0) return { x: points[0][0], y: points[0][1] }
+    if (distance >= total) {
       const end = points[points.length - 1]
       return { x: end[0], y: end[1] }
     }
 
-    const target = t * total
     let walked = 0
 
     for (let i = 0; i < segmentLengths.length; i += 1) {
       const segLen = segmentLengths[i]
-      if (walked + segLen >= target) {
-        const local = (target - walked) / segLen
+      if (walked + segLen >= distance) {
+        const local = (distance - walked) / segLen
         const [x0, y0] = points[i]
         const [x1, y1] = points[i + 1]
         return {
@@ -162,29 +191,36 @@ const buildArcLengthSampler = (points) => {
 
   const sample = (t) => {
     const clamped = Math.max(0, Math.min(1, t))
-    const pos = positionAt(clamped)
-    const delta = Math.min(0.012, 2 / Math.max(total, 1))
-    const ahead = positionAt(Math.min(1, clamped + delta))
-    const behind = positionAt(Math.max(0, clamped - delta))
+    const pos = positionAt(clamped * total)
+    const delta = Math.max(8, Math.min(28, total * 0.02))
+    const ahead = positionAt(Math.min(total, clamped * total + delta))
+    const behind = positionAt(Math.max(0, clamped * total - delta))
 
     let heading = Math.atan2(ahead.y - behind.y, ahead.x - behind.x)
 
     if (!Number.isFinite(heading)) {
-      const next = positionAt(Math.min(1, clamped + 0.02))
+      const next = positionAt(Math.min(total, clamped * total + total * 0.02))
       heading = Math.atan2(next.y - pos.y, next.x - pos.x)
     }
 
     return { x: pos.x, y: pos.y, heading }
   }
 
-  return { points, total, sample }
+  return { points, total, sample, positionAtDistance: positionAt }
 }
 
 const traceSamplers = HERO_CIRCUIT_TRACES.map((controlPoints) => {
-  const smoothPoints = buildSmoothPath(controlPoints)
-  return buildArcLengthSampler(smoothPoints)
+  const pathPoints = buildFilletPolyline(controlPoints)
+  return buildArcLengthSampler(pathPoints)
 })
 
 export const sampleCircuitTrace = (traceIndex, t) => traceSamplers[traceIndex].sample(t)
 
 export const getCircuitTraceLength = (traceIndex) => traceSamplers[traceIndex].total
+
+/** Distanza lungo il filo in unità SVG (per scia coerente con la geometria). */
+export const sampleCircuitTraceAtDistance = (traceIndex, distance) => {
+  const sampler = traceSamplers[traceIndex]
+  const pos = sampler.positionAtDistance(Math.max(0, Math.min(sampler.total, distance)))
+  return { x: pos.x, y: pos.y, heading: 0 }
+}

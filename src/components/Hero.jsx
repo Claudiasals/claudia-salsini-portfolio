@@ -2,7 +2,7 @@ import useHeroCircuitSpotlight from '../hooks/useHeroCircuitSpotlight'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
 
 const Hero = () => {
-  const { patternRef, onMouseMove, onMouseLeave } = useHeroCircuitSpotlight()
+  const { patternRef, pointerRef, onMouseMove, onMouseLeave } = useHeroCircuitSpotlight()
 
   return (
     <section
@@ -13,12 +13,24 @@ const Hero = () => {
     >
       <div className="hero-bg" aria-hidden="true">
         <div className="hero-bg__circuit" />
-        <div ref={patternRef} className="hero-bg__circuit-spotlight" aria-hidden="true" />
+        <div
+          ref={patternRef}
+          className="hero-bg__circuit-spotlight hero-bg__circuit-spotlight--auto"
+          aria-hidden="true"
+        />
+        <div
+          ref={pointerRef}
+          className="hero-bg__circuit-spotlight hero-bg__circuit-spotlight--pointer"
+          aria-hidden="true"
+        />
         <div className="hero-bg__glow" />
         <div className="hero-bg__scrim" />
       </div>
 
-      <ScrollReveal className="relative z-10 mx-auto max-w-6xl flex flex-col items-center text-center">
+      <ScrollReveal
+        heroIntroBroadcast
+        className="relative z-10 mx-auto max-w-6xl flex flex-col items-center text-center"
+      >
         <ScrollRevealItem tier="hero-1">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-400">
             Portfolio di

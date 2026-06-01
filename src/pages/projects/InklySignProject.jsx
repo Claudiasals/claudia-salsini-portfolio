@@ -127,8 +127,7 @@ const InklySignProject = () => (
             <p className="terminal-gradient-label">Case study</p>
             <p className="project-case-hero__desc project-case-hero__desc--compact">
               Case study dello stage in Mirai Bay: piattaforma che ho sviluppato su frontend,
-              backend e deploy, con UI in Figma. Scope e priorità definiti con il team tech Mirai Bay
-              nei brief di progetto.
+              backend e deploy, con UI in Figma. Scope e priorità definiti con il team tech Mirai Bay.
             </p>
             <div className="project-case-hero__actions">
               <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">

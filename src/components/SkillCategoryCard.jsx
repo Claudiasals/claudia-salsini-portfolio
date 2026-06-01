@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import TypingTerminalLabel from './TypingTerminalLabel'
 
 const TYPING_MS = 70
@@ -24,18 +24,27 @@ const SkillIcon = ({ skill }) => {
   return <i className={`${skill.icon} skills-skill-mini__icon`} aria-hidden="true" />
 }
 
-const SkillCategoryCard = ({ category, animationRun, iconsRevealDelayMs = 0 }) => {
+const SkillCategoryCard = ({ category, introDone, typingTrigger, iconsRevealDelayMs = 0 }) => {
   const [showCard, setShowCard] = useState(false)
   const [showSkills, setShowSkills] = useState(false)
+  const introPlayedRef = useRef(false)
 
   const titleLabel = category.title.toUpperCase()
 
   useEffect(() => {
-    if (animationRun === 0) {
+    if (!introDone) {
       setShowCard(false)
       setShowSkills(false)
       return undefined
     }
+
+    if (introPlayedRef.current) {
+      setShowCard(true)
+      setShowSkills(true)
+      return undefined
+    }
+
+    introPlayedRef.current = true
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -58,7 +67,7 @@ const SkillCategoryCard = ({ category, animationRun, iconsRevealDelayMs = 0 }) =
       window.clearTimeout(cardTimer)
       window.clearTimeout(skillsTimer)
     }
-  }, [animationRun, iconsRevealDelayMs])
+  }, [introDone, iconsRevealDelayMs])
 
   const isCompactCard = category.skills.length < 9
   const isSparseGrid = category.skills.length <= 6
@@ -78,7 +87,7 @@ const SkillCategoryCard = ({ category, animationRun, iconsRevealDelayMs = 0 }) =
           <header className="skills-group-card__header">
             <TypingTerminalLabel
               label={titleLabel}
-              trigger={animationRun}
+              trigger={typingTrigger}
               startDelay={TITLE_TYPING_START_MS}
               variant="gradient"
               wrapperClassName="skills-group-card__title"

@@ -1,7 +1,7 @@
 const CIRCUIT_ZONE = {
   minX: 58,
   maxX: 430,
-  minY: 640,
+  minY: 540,
   maxY: 1760,
 }
 
@@ -13,15 +13,64 @@ const GRID_Y = [
   1680,
 ]
 
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
+
+/** Fascia alta: scintille che salgono verso il busto reale. */
+const UPPER_SPARK_Y = [660, 695, 730, 765, 800]
+
+const buildUpperTransitionRoutes = () => {
+  const routes = []
+  const endY = 560
+
+  UPPER_SPARK_Y.forEach((startY, rowIndex) => {
+    GRID_X.forEach((x, colIndex) => {
+      if ((rowIndex + colIndex) % 3 !== 0) return
+
+      const span = startY - endY
+      if (span < 40) return
+
+      const duration = 2.4 + (rowIndex % 4) * 0.28
+      const delay = (colIndex * 0.19 + rowIndex * 0.37) % 2.8
+
+      if (colIndex % 2 === 0) {
+        routes.push({
+          d: `M ${x} ${startY} L ${x} ${endY}`,
+          duration,
+          delay,
+          accent: rowIndex % 2 === 0,
+        })
+        return
+      }
+
+      const centerX = 276
+      const x2 = clamp(x + (centerX - x) * 0.18, CIRCUIT_ZONE.minX, CIRCUIT_ZONE.maxX)
+      routes.push({
+        d: `M ${x} ${startY} L ${x2} ${endY + 25}`,
+        duration: duration + 0.4,
+        delay,
+        accent: false,
+      })
+    })
+  })
+
+  return routes
+}
+
+/** Tracciati verso l’alto (y decresce) → sfumatura nella metà reale dell’avatar. */
 const TRANSITION_ROUTES = [
-  { d: 'M 118 708 L 208 708', duration: 2.4, delay: 0.2, accent: true },
-  { d: 'M 348 722 L 418 722', duration: 2.1, delay: 0.9, accent: true },
-  { d: 'M 228 792 L 322 792', duration: 2.6, delay: 0.5, accent: true },
-  { d: 'M 198 852 L 352 852', duration: 2.8, delay: 1.1, accent: true },
-  { d: 'M 142 748 L 142 808', duration: 2.3, delay: 1.5, accent: true },
-  { d: 'M 392 768 L 392 828', duration: 2.5, delay: 0.7, accent: true },
-  { d: 'M 168 678 L 238 678', duration: 3.1, delay: 1.8, accent: false },
-  { d: 'M 300 668 L 370 668', duration: 2.9, delay: 2.2, accent: false },
+  { d: 'M 185 815 L 185 575', duration: 2.6, delay: 0.15, accent: true },
+  { d: 'M 275 835 L 275 590', duration: 2.3, delay: 0.45, accent: true },
+  { d: 'M 365 820 L 365 580', duration: 2.5, delay: 0.75, accent: true },
+  { d: 'M 220 865 L 220 600', duration: 2.8, delay: 1.0, accent: true },
+  { d: 'M 310 785 L 310 565', duration: 2.4, delay: 1.3, accent: true },
+  { d: 'M 140 795 L 140 555', duration: 2.2, delay: 0.6, accent: false },
+  { d: 'M 400 805 L 400 570', duration: 2.7, delay: 1.6, accent: false },
+  { d: 'M 255 760 L 290 545', duration: 3.0, delay: 1.9, accent: false },
+  { d: 'M 330 755 L 295 550', duration: 2.9, delay: 2.1, accent: false },
+  { d: 'M 276 700 L 276 555', duration: 2.5, delay: 0.35, accent: true },
+  { d: 'M 215 680 L 250 540', duration: 2.7, delay: 1.15, accent: false },
+  { d: 'M 340 690 L 305 535', duration: 2.6, delay: 0.85, accent: false },
+  ...buildUpperTransitionRoutes(),
 ]
 
 const TRANSITION_NODES = [
@@ -33,12 +82,15 @@ const TRANSITION_NODES = [
   [176, 772, false],
   [360, 796, false],
   [276, 688, false],
+  [276, 620, true],
+  [215, 590, false],
+  [340, 600, true],
+  [195, 640, false],
+  [355, 655, false],
 ]
 
-const FADE_TOP_Y = 620
+const FADE_TOP_Y = 530
 const FADE_FULL_Y = TRANSITION_Y
-
-const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 
 const getCircuitFade = (y) => clamp((y - FADE_TOP_Y) / (FADE_FULL_Y - FADE_TOP_Y), 0, 1)
 
@@ -77,21 +129,25 @@ const getDigitalSparkMetrics = (y, accent = false) => {
   }
 }
 
-const getTransitionSparkMetrics = (accent = false) => {
+const getTransitionSparkMetrics = (accent = false, endY = TRANSITION_Y) => {
+  const fade = 1 - getCircuitFade(endY)
+  /** Più in alto nella foto reale → scintille più piccole e leggere. */
+  const sizeScale = 0.42 + fade * 0.58
+
   if (accent) {
     return {
-      sparkR: 4,
-      coreR: 2,
-      opacity: 0.96,
-      glow: 'full',
+      sparkR: (1.85 + fade * 0.55) * sizeScale,
+      coreR: (0.85 + fade * 0.3) * sizeScale,
+      opacity: 0.32 + fade * 0.48,
+      glow: fade < 0.5 ? 'soft' : fade < 0.75 ? 'medium' : 'full',
     }
   }
 
   return {
-    sparkR: 2.6,
-    coreR: 1.25,
-    opacity: 0.62,
-    glow: 'medium',
+    sparkR: (1.15 + fade * 0.65) * sizeScale,
+    coreR: (0.5 + fade * 0.32) * sizeScale,
+    opacity: 0.14 + fade * 0.4,
+    glow: fade < 0.42 ? 'soft' : 'medium',
   }
 }
 
@@ -113,53 +169,69 @@ const getDigitalNodeMetrics = (y, accent = false) => {
   }
 }
 
-const getTransitionNodeMetrics = (accent = false) => ({
-  r: accent ? 3.2 : 2,
-  glow: accent ? 'full' : 'medium',
-})
+const getTransitionNodeMetrics = (accent = false, y = TRANSITION_Y) => {
+  const fade = 1 - getCircuitFade(y)
+  const scale = 0.45 + fade * 0.55
+
+  return {
+    r: (accent ? 2.2 : 1.35) * scale,
+    glow: fade < 0.5 ? 'soft' : accent ? 'full' : 'medium',
+  }
+}
+
+const parseRouteEndY = (pathD) => {
+  const match = pathD.match(/[\d.]+\s+([\d.]+)\s*$/u)
+  return match ? Number(match[1]) : TRANSITION_Y
+}
 
 const buildDigitalSparkRoutes = () => {
   const routes = []
+  const centerX = (GRID_X[0] + GRID_X[GRID_X.length - 1]) / 2
 
   GRID_Y.forEach((y, rowIndex) => {
     if (y < TRANSITION_Y) return
 
+    const nearRealHalf = y < TRANSITION_Y + 220
+
     GRID_X.forEach((x, colIndex) => {
       if (!shouldPlaceSpark(y, rowIndex, colIndex)) return
 
-      const pattern = (rowIndex + colIndex) % 4
+      const pattern = nearRealHalf ? (rowIndex + colIndex) % 3 : (rowIndex + colIndex) % 4
       const span = 34 + ((rowIndex * 3 + colIndex * 2) % 5) * 11
       const duration = 2.1 + ((rowIndex + colIndex) % 6) * 0.32
       const delay = ((rowIndex * 0.31 + colIndex * 0.23) % 3.4) + pattern * 0.08
 
       if (pattern === 0) {
-        const x2 = clamp(x + span, CIRCUIT_ZONE.minX, CIRCUIT_ZONE.maxX)
-        if (x2 - x >= 28) routes.push({ d: `M ${x} ${y} L ${x2} ${y}`, duration, delay, y, accent: false })
+        const y2 = clamp(y - span, CIRCUIT_ZONE.minY, CIRCUIT_ZONE.maxY)
+        if (y - y2 >= 28) routes.push({ d: `M ${x} ${y} L ${x} ${y2}`, duration, delay, y, accent: false })
         return
       }
 
       if (pattern === 1) {
-        const y2 = clamp(y + span, CIRCUIT_ZONE.minY, CIRCUIT_ZONE.maxY)
-        if (y2 - y >= 28) routes.push({ d: `M ${x} ${y} L ${x} ${y2}`, duration, delay, y, accent: false })
+        const y2 = clamp(y - span * 0.72, CIRCUIT_ZONE.minY, CIRCUIT_ZONE.maxY)
+        const x2 = clamp(x + (centerX - x) * 0.22, CIRCUIT_ZONE.minX, CIRCUIT_ZONE.maxX)
+        if (y - y2 >= 24 && Math.abs(x2 - x) >= 18) {
+          routes.push({ d: `M ${x} ${y} L ${x2} ${y2}`, duration: duration + 0.35, delay, y, accent: false })
+        }
         return
       }
 
       if (pattern === 2) {
-        const x2 = clamp(x - span, CIRCUIT_ZONE.minX, CIRCUIT_ZONE.maxX)
-        if (x - x2 >= 28) routes.push({ d: `M ${x} ${y} L ${x2} ${y}`, duration, delay, y, accent: false })
+        const y2 = clamp(y - span * 0.9, CIRCUIT_ZONE.minY, CIRCUIT_ZONE.maxY)
+        if (y - y2 >= 28) routes.push({ d: `M ${x} ${y} L ${x} ${y2}`, duration, delay, y, accent: false })
         return
       }
 
-      const y2 = clamp(y + span * 0.72, CIRCUIT_ZONE.minY, CIRCUIT_ZONE.maxY)
-      const x2 = clamp(
-        colIndex >= GRID_X.length / 2 ? x - span * 0.75 : x + span * 0.75,
-        CIRCUIT_ZONE.minX,
-        CIRCUIT_ZONE.maxX,
-      )
-
-      if (y2 - y >= 24 && Math.abs(x2 - x) >= 24) {
-        routes.push({ d: `M ${x} ${y} L ${x} ${y2} L ${x2} ${y2}`, duration: duration + 0.6, delay, y, accent: false })
+      if (nearRealHalf) {
+        const y2 = clamp(y - span * 0.55, CIRCUIT_ZONE.minY, TRANSITION_Y)
+        const x2 = clamp(x + (centerX - x) * 0.15, CIRCUIT_ZONE.minX, CIRCUIT_ZONE.maxX)
+        if (y - y2 >= 20) routes.push({ d: `M ${x} ${y} L ${x2} ${y2}`, duration, delay, y, accent: false })
+        return
       }
+
+      const y2 = clamp(y - span * 0.5, CIRCUIT_ZONE.minY, CIRCUIT_ZONE.maxY)
+      const x2 = clamp(x + span * 0.35, CIRCUIT_ZONE.minX, CIRCUIT_ZONE.maxX)
+      if (y - y2 >= 22) routes.push({ d: `M ${x} ${y} L ${x2} ${y2}`, duration: duration + 0.2, delay, y, accent: false })
     })
   })
 
@@ -231,19 +303,28 @@ const SparkNode = ({ cx, cy, metrics, index, nodeKey }) => (
   />
 )
 
+/** Coordinate overlay (552×1788) → foto attuale foto-ibrida-portfolio.png (1774×3548). */
+const ABOUT_PHOTO_W = 1774
+const ABOUT_PHOTO_H = 3548
+const ABOUT_OVERLAY_W = 552
+const ABOUT_OVERLAY_H = 1788
+
 const AboutCircuitOverlay = () => {
   return (
     <svg
       className="about-visual__circuit-overlay"
-      viewBox="0 0 552 1788"
+      viewBox={`0 0 ${ABOUT_PHOTO_W} ${ABOUT_PHOTO_H}`}
       preserveAspectRatio="xMidYMax meet"
       aria-hidden="true"
     >
-      <defs>
-        <clipPath id="about-circuit-bounds">
-          <rect x="52" y="620" width="384" height="1152" />
-        </clipPath>
-      </defs>
+      <g
+        transform={`scale(${ABOUT_PHOTO_W / ABOUT_OVERLAY_W} ${ABOUT_PHOTO_H / ABOUT_OVERLAY_H})`}
+      >
+        <defs>
+          <clipPath id="about-circuit-bounds">
+            <rect x="52" y="530" width="384" height="1242" />
+          </clipPath>
+        </defs>
 
       <g className="about-circuit__layer about-circuit__layer--transition" clipPath="url(#about-circuit-bounds)">
         {TRANSITION_ROUTES.map((route, index) => (
@@ -251,7 +332,7 @@ const AboutCircuitOverlay = () => {
             key={`transition-route-${index}`}
             routeKey={`transition-route-${index}`}
             route={route}
-            metrics={getTransitionSparkMetrics(route.accent)}
+            metrics={getTransitionSparkMetrics(route.accent, parseRouteEndY(route.d))}
           />
         ))}
 
@@ -261,7 +342,7 @@ const AboutCircuitOverlay = () => {
             nodeKey={`transition-node-${cx}-${cy}`}
             cx={cx}
             cy={cy}
-            metrics={getTransitionNodeMetrics(accent)}
+            metrics={getTransitionNodeMetrics(accent, cy)}
             index={index}
           />
         ))}
@@ -287,6 +368,7 @@ const AboutCircuitOverlay = () => {
             index={index}
           />
         ))}
+      </g>
       </g>
     </svg>
   )

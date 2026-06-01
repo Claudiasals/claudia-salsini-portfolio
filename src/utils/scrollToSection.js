@@ -1,5 +1,3 @@
-export const SCROLL_REVEAL_NAV_EVENT = 'portfolio:reveal-scroll'
-
 const parseCssPx = (value, fallback) => {
   const parsed = Number.parseFloat(value)
   return Number.isFinite(parsed) ? parsed : fallback
@@ -40,16 +38,6 @@ export const getSectionScrollOffset = (element = null) => {
   )
 }
 
-export const notifyScrollRevealNav = (element) => {
-  if (!element) return
-
-  window.dispatchEvent(
-    new CustomEvent(SCROLL_REVEAL_NAV_EVENT, {
-      detail: { target: element },
-    }),
-  )
-}
-
 const getElementDocumentTop = (element) =>
   element.getBoundingClientRect().top + window.scrollY
 
@@ -57,7 +45,6 @@ export const scrollToSectionById = (id, behavior = 'auto') => {
   const element = document.getElementById(id)
   if (!element) return false
 
-  notifyScrollRevealNav(element)
   void element.offsetHeight
 
   const offset = getSectionScrollOffset(element)
