@@ -51,7 +51,7 @@ const About = () => {
             </ScrollRevealItem>
 
             <ScrollRevealItem tier="about-title" revealWithHero>
-              <h2 className="about-intro__title mt-3 text-3xl font-bold text-white md:text-4xl">
+              <h2 className="about-intro__title section-heading mt-3 text-3xl font-bold text-white md:text-4xl">
                 Dalla psicologia allo sviluppo web
               </h2>
             </ScrollRevealItem>
@@ -82,13 +82,13 @@ const About = () => {
               <div className="about-visual__img-shell">
                 <div className="about-visual__media about-visual__media--complete">
                   <img
-                    src="/images/foto-ibrida-portfolio.png?v=20"
+                    src="/images/foto-ibrida-portfolio.png?v=21"
                     alt="Claudia Salsini - dalla psicologia allo sviluppo web"
                     className="about-visual__img"
                     loading="lazy"
                     decoding="async"
                     width={1200}
-                    height={1703}
+                    height={1456}
                   />
                 </div>
               </div>

@@ -2,25 +2,18 @@ import useHeroCircuitSpotlight from '../hooks/useHeroCircuitSpotlight'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
 
 const Hero = () => {
-  const { patternRef, pointerRef, onMouseMove, onMouseLeave } = useHeroCircuitSpotlight()
+  const { patternRef } = useHeroCircuitSpotlight()
 
   return (
     <section
       id="hero"
       className="hero-section page-under-navbar relative overflow-hidden px-6 pb-[calc(4rem+5px)] text-white md:pb-[calc(5rem+5px)]"
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
     >
       <div className="hero-bg" aria-hidden="true">
         <div className="hero-bg__circuit" />
         <div
           ref={patternRef}
           className="hero-bg__circuit-spotlight hero-bg__circuit-spotlight--auto"
-          aria-hidden="true"
-        />
-        <div
-          ref={pointerRef}
-          className="hero-bg__circuit-spotlight hero-bg__circuit-spotlight--pointer"
           aria-hidden="true"
         />
         <div className="hero-bg__glow" />
@@ -44,7 +37,7 @@ const Hero = () => {
         </ScrollRevealItem>
 
         <ScrollRevealItem tier="hero-3">
-          <h1 className="hero-title mb-10 mt-8 font-black md:mt-10">
+          <h1 className="hero-title mb-10 mt-8 md:mt-10">
             <span className="bg-gradient-to-r from-purple-600 via-sky-400 to-emerald-300 bg-clip-text text-transparent">
               Junior Full Stack
             </span>

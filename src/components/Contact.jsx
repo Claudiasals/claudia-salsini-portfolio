@@ -92,7 +92,7 @@ const Contact = () => {
             Contacts
           </p>
 
-          <h2 className="contact-layout__title mt-4 text-center text-3xl font-bold text-white md:text-4xl">
+          <h2 className="contact-layout__title section-heading mt-4 text-center text-3xl font-bold text-white md:text-4xl">
             Contatti e profili
           </h2>
         </ScrollRevealItem>

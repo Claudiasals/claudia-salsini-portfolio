@@ -86,7 +86,7 @@ const Skills = () => {
               Skills
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold text-white md:text-4xl">
+            <h2 className="section-heading mt-4 text-3xl font-bold text-white md:text-4xl">
               Competenze tecniche
             </h2>
 

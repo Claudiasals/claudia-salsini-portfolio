@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { projects } from '../data/projects'
 import ProjectCarouselCard from './ProjectCarouselCard'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
+
+const SCROLL_EDGE_THRESHOLD = 4
 
 const ChevronIcon = ({ direction }) => (
   <svg
@@ -36,37 +38,27 @@ const ChevronIcon = ({ direction }) => (
 
 const Projects = () => {
   const trackRef = useRef(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(false)
-
-  const updateScrollState = () => {
-    const track = trackRef.current
-    if (!track) return
-
-    setCanScrollLeft(track.scrollLeft > 4)
-    setCanScrollRight(
-      track.scrollLeft + track.clientWidth < track.scrollWidth - 4,
-    )
-  }
-
-  useEffect(() => {
-    const track = trackRef.current
-    if (!track) return undefined
-
-    updateScrollState()
-
-    track.addEventListener('scroll', updateScrollState, { passive: true })
-    window.addEventListener('resize', updateScrollState)
-
-    return () => {
-      track.removeEventListener('scroll', updateScrollState)
-      window.removeEventListener('resize', updateScrollState)
-    }
-  }, [])
 
   const scrollProjects = (direction) => {
     const track = trackRef.current
     if (!track) return
+
+    const atStart = track.scrollLeft <= SCROLL_EDGE_THRESHOLD
+    const atEnd =
+      track.scrollLeft + track.clientWidth >= track.scrollWidth - SCROLL_EDGE_THRESHOLD
+
+    if (direction > 0 && atEnd) {
+      track.scrollTo({ left: 0, behavior: 'smooth' })
+      return
+    }
+
+    if (direction < 0 && atStart) {
+      track.scrollTo({
+        left: track.scrollWidth - track.clientWidth,
+        behavior: 'smooth',
+      })
+      return
+    }
 
     const card = track.querySelector('.project-carousel-card')
     const gap = 24
@@ -89,7 +81,7 @@ const Projects = () => {
             Projects
           </p>
 
-          <h2 className="mt-4 text-3xl font-bold text-white md:text-4xl">
+          <h2 className="section-heading mt-4 text-3xl font-bold text-white md:text-4xl">
             Progetti principali
           </h2>
         </ScrollRevealItem>
@@ -107,8 +99,7 @@ const Projects = () => {
             type="button"
             className="projects-carousel-nav"
             onClick={() => scrollProjects(-1)}
-            disabled={!canScrollLeft}
-            aria-label="Scorri progetti a sinistra"
+            aria-label="Progetto precedente"
           >
             <span className="projects-carousel-nav-inner">
               <ChevronIcon direction="left" />
@@ -129,8 +120,7 @@ const Projects = () => {
             type="button"
             className="projects-carousel-nav"
             onClick={() => scrollProjects(1)}
-            disabled={!canScrollRight}
-            aria-label="Scorri progetti a destra"
+            aria-label="Progetto successivo"
           >
             <span className="projects-carousel-nav-inner">
               <ChevronIcon direction="right" />

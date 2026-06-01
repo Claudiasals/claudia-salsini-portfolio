@@ -12,8 +12,7 @@ html {
   scroll-padding-top: var(--section-anchor-offset);
 }
 
-html.is-scrolling .hero-bg__circuit-spotlight--auto,
-html.is-scrolling .hero-bg__circuit-spotlight--pointer {
+html.is-scrolling .hero-bg__circuit-spotlight--auto {
   visibility: hidden !important;
 }
 
@@ -94,36 +93,15 @@ html.custom-cursor-active * {
 .custom-cursor__arrow {
   display: block;
   overflow: visible;
-  transform-origin: 18% 8%;
-  transition: transform 0.15s ease;
   background: transparent;
 }
 
 .custom-cursor__shape {
   fill: none !important;
+  stroke: #2f7ae8;
+  stroke-width: 2.35;
   vector-effect: non-scaling-stroke;
-  transition:
-    stroke 0.12s ease,
-    stroke-width 0.12s ease;
-}
-
-.custom-cursor__shape {
-  fill: transparent !important;
   paint-order: stroke;
-}
-
-.custom-cursor--default .custom-cursor__shape {
-  stroke: #9333ea;
-  stroke-width: 2;
-}
-
-.custom-cursor--clickable .custom-cursor__shape {
-  stroke: #38bdf8;
-  stroke-width: 2.25;
-}
-
-.custom-cursor--clickable .custom-cursor__arrow {
-  transform: scale(1.35);
 }
 
 /* Glow condiviso pulsanti */
@@ -578,6 +556,10 @@ html.custom-cursor-active * {
   );
 }
 
+.skills-contact-circuits .hero-bg__circuit {
+  opacity: 0.42;
+}
+
 .projects-section {
   position: relative;
   z-index: 1;
@@ -856,13 +838,6 @@ html.custom-cursor-active * {
   mask-composite: add;
 }
 
-/* Luce cursore: layer separato, non interrompe l’animazione sui tracciati SVG. */
-.hero-bg__circuit-spotlight--pointer {
-  z-index: 3;
-  opacity: calc(var(--spot-active) * 0.9);
-  filter: brightness(1.42) saturate(1.18);
-}
-
 .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--idle {
   visibility: hidden;
 }
@@ -886,8 +861,9 @@ html.custom-cursor-active * {
     radial-gradient(circle 46px at var(--blob-b-2-x) var(--blob-b-2-y), #000 0%, #000 30%, rgb(0 0 0 / 84%) 58%, rgb(0 0 0 / 40%) 78%, transparent 100%);
 }
 
-/* Hero: nucleo spotlight più acceso al centro del bagliore */
-.hero-section .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
+/* Hero e Skills/Contact: nucleo spotlight più acceso */
+.hero-section .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto,
+.skills-contact-circuits .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   filter: brightness(2.45) saturate(1.52);
   -webkit-mask-image:
     radial-gradient(circle 66px at var(--spot-x) var(--spot-y), #000 0%, #000 58%, #000 78%, rgb(0 0 0 / 72%) 90%, transparent 100%),
@@ -903,11 +879,6 @@ html.custom-cursor-active * {
     radial-gradient(circle 66px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 58%, #000 78%, rgb(0 0 0 / 72%) 90%, transparent 100%),
     radial-gradient(circle 60px at var(--blob-b-1-x) var(--blob-b-1-y), #000 0%, #000 50%, rgb(0 0 0 / 98%) 72%, rgb(0 0 0 / 62%) 88%, transparent 100%),
     radial-gradient(circle 56px at var(--blob-b-2-x) var(--blob-b-2-y), #000 0%, #000 46%, rgb(0 0 0 / 96%) 70%, rgb(0 0 0 / 58%) 86%, transparent 100%);
-}
-
-.hero-section .hero-bg__circuit-spotlight--pointer {
-  opacity: calc(var(--spot-active) * 1);
-  filter: brightness(1.68) saturate(1.32);
 }
 
 .hero-bg__circuit-spotlight::after {
@@ -945,14 +916,6 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   mask-image:
     radial-gradient(circle 62px at var(--spot-x) var(--spot-y), #000 0%, #000 45%, transparent 100%),
     radial-gradient(circle 62px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 45%, transparent 100%);
-}
-
-html.perf-lite .hero-bg__circuit-spotlight--pointer::after {
-  display: none;
-}
-
-.hero-section .hero-bg__circuit-spotlight--pointer::after {
-  filter: blur(14px) brightness(1.85);
 }
 
 .hero-bg__glow {
@@ -1009,9 +972,7 @@ html.perf-lite .hero-bg__circuit-spotlight--pointer::after {
 @media (width >= 768px) {
   .hero-bg__circuit,
   .hero-bg__circuit-spotlight,
-  .hero-bg__circuit-spotlight::after,
-  .hero-bg__circuit-spotlight--pointer,
-  .hero-bg__circuit-spotlight--pointer::after {
+  .hero-bg__circuit-spotlight::after {
     --hero-circuit-bg: center 36% / min(182%, 132vw) auto no-repeat;
   }
 
@@ -1022,13 +983,8 @@ html.perf-lite .hero-bg__circuit-spotlight--pointer::after {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-bg__circuit-spotlight,
-  .hero-bg__circuit-spotlight::after,
-  .hero-bg__circuit-spotlight--pointer {
+  .hero-bg__circuit-spotlight::after {
     transition: opacity 0.4s ease;
-  }
-
-  .hero-bg__circuit-spotlight--pointer {
-    display: none;
   }
 }
 
@@ -1038,10 +994,17 @@ html.perf-lite .hero-bg__circuit-spotlight--pointer::after {
   letter-spacing: 0.04em;
 }
 
+.hero-title,
+.section-heading {
+  font-family: "Orbitron", "Inter", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 .hero-title {
   font-size: clamp(2.25rem, 5.5vw + 0.75rem, 4.5rem);
   line-height: 0.95;
-  letter-spacing: -0.04em;
+  letter-spacing: 0.04em;
 }
 
 .hero-lead {
