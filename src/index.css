@@ -494,11 +494,47 @@ html.custom-cursor-active * {
     0 0 28px rgba(56, 189, 248, 0.35);
 }
 
-/* Griglia con spotlight cursore (Skills + Contatti) */
+/* Skills + Contatti */
 .skills-contact-grid-zone {
+  --circuits-fade-from: 35%;
+  --circuits-fade-mid: 48%;
+  --circuits-fade-to: 62%;
   position: relative;
   overflow: hidden;
   background: #020617;
+}
+
+.skills-contact-circuits {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent var(--circuits-fade-from),
+    rgb(0 0 0 / 0.35) var(--circuits-fade-mid),
+    #000 var(--circuits-fade-to),
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent var(--circuits-fade-from),
+    rgb(0 0 0 / 0.35) var(--circuits-fade-mid),
+    #000 var(--circuits-fade-to),
+    #000 100%
+  );
+}
+
+.skills-contact-circuits .hero-bg__scrim {
+  background: linear-gradient(
+    to bottom,
+    rgba(2, 6, 23, 0) 0%,
+    rgba(2, 6, 23, 0.2) 38%,
+    rgba(2, 6, 23, 0.45) 52%,
+    rgba(2, 6, 23, 0.72) 100%
+  );
 }
 
 .projects-section {
@@ -516,86 +552,6 @@ html.custom-cursor-active * {
   position: relative;
   z-index: 1;
   overflow: visible;
-}
-
-.section-grid-pattern {
-  --spot-x: -999px;
-  --spot-y: -999px;
-  --blob-1-x: -999px;
-  --blob-1-y: -999px;
-  --blob-2-x: -999px;
-  --blob-2-y: -999px;
-  --blob-3-x: -999px;
-  --blob-3-y: -999px;
-  --spot-active: 0;
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-color: #020617;
-  background-image:
-    linear-gradient(rgba(100, 116, 139, 0.09) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(100, 116, 139, 0.09) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    transparent 26%,
-    rgba(0, 0, 0, 0.35) 34%,
-    black 46%,
-    black 80%,
-    transparent 100%
-  );
-}
-
-.section-grid-pattern::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: calc(var(--spot-active) * 0.85);
-  background-image:
-    linear-gradient(rgba(34, 211, 238, 0.9) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.9) 1px, transparent 1px);
-  background-size: 48px 48px;
-  -webkit-mask-image:
-    radial-gradient(ellipse 118px 84px at var(--spot-x) var(--spot-y), #000 0%, #000 28%, transparent 72%),
-    radial-gradient(ellipse 74px 106px at var(--blob-1-x) var(--blob-1-y), #000 0%, transparent 66%),
-    radial-gradient(ellipse 98px 66px at var(--blob-2-x) var(--blob-2-y), #000 0%, transparent 62%),
-    radial-gradient(ellipse 58px 94px at var(--blob-3-x) var(--blob-3-y), #000 0%, transparent 58%);
-  mask-image:
-    radial-gradient(ellipse 118px 84px at var(--spot-x) var(--spot-y), #000 0%, #000 28%, transparent 72%),
-    radial-gradient(ellipse 74px 106px at var(--blob-1-x) var(--blob-1-y), #000 0%, transparent 66%),
-    radial-gradient(ellipse 98px 66px at var(--blob-2-x) var(--blob-2-y), #000 0%, transparent 62%),
-    radial-gradient(ellipse 58px 94px at var(--blob-3-x) var(--blob-3-y), #000 0%, transparent 58%);
-  -webkit-mask-composite: source-over;
-  mask-composite: add;
-  transition: opacity 0.25s ease;
-}
-
-.section-grid-pattern::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  filter: blur(4px);
-  opacity: calc(var(--spot-active) * 0.45);
-  background-image:
-    linear-gradient(rgba(56, 189, 248, 0.95) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 189, 248, 0.95) 1px, transparent 1px);
-  background-size: 48px 48px;
-  -webkit-mask-image:
-    radial-gradient(ellipse 132px 96px at var(--spot-x) var(--spot-y), #000 0%, #000 22%, transparent 74%),
-    radial-gradient(ellipse 86px 118px at var(--blob-1-x) var(--blob-1-y), #000 0%, transparent 68%),
-    radial-gradient(ellipse 108px 78px at var(--blob-2-x) var(--blob-2-y), #000 0%, transparent 64%),
-    radial-gradient(ellipse 68px 104px at var(--blob-3-x) var(--blob-3-y), #000 0%, transparent 60%);
-  mask-image:
-    radial-gradient(ellipse 132px 96px at var(--spot-x) var(--spot-y), #000 0%, #000 22%, transparent 74%),
-    radial-gradient(ellipse 86px 118px at var(--blob-1-x) var(--blob-1-y), #000 0%, transparent 68%),
-    radial-gradient(ellipse 108px 78px at var(--blob-2-x) var(--blob-2-y), #000 0%, transparent 64%),
-    radial-gradient(ellipse 68px 104px at var(--blob-3-x) var(--blob-3-y), #000 0%, transparent 60%);
-  -webkit-mask-composite: source-over;
-  mask-composite: add;
-  transition: opacity 0.25s ease;
 }
 
 .contact-detail-list > li {

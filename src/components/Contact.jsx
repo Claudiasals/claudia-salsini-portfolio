@@ -81,7 +81,7 @@ const Contact = () => {
   return (
     <section
       ref={sectionRef}
-      className="contact-section section-page section-page--contact"
+      className="contact-section section-page section-page--contact relative text-white"
     >
       <ScrollReveal className="relative z-10 mx-auto max-w-6xl">
         <ScrollRevealItem tier="head">
