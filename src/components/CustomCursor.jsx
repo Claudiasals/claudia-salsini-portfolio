@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { isPerfLite } from '../utils/perfProfile'
 
 const CLICKABLE_SELECTOR =
   'a, button, input, select, textarea, summary, label, [role="button"], [role="link"], [href], .nav-btn, .btn-primary, .btn-secondary, .contact-detail-icon, .contact-form-input-wrap, .projects-carousel-nav'
@@ -7,31 +8,7 @@ const ARROW_PATH =
   'M4 2.5V18.5L8.2 14.3L10.8 20.8L13.2 19.6L10.6 13.1H16.2L4 2.5Z'
 
 const CURSOR_SVG = `
-  <svg class="custom-cursor__arrow" width="30" height="36" viewBox="0 0 22 28" fill="none" overflow="visible" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <mask id="custom-cursor-glow-mask" maskUnits="userSpaceOnUse" x="-10" y="-10" width="42" height="48">
-        <rect x="-10" y="-10" width="42" height="48" fill="white" />
-        <path d="${ARROW_PATH}" fill="black" />
-      </mask>
-      <filter id="custom-cursor-outer-glow" x="-200%" y="-200%" width="500%" height="500%" filterUnits="objectBoundingBox">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="6.2" result="blur" />
-        <feComposite in="blur" in2="SourceGraphic" operator="out" result="outerGlow" />
-        <feGaussianBlur in="outerGlow" stdDeviation="2.2" result="softOuter" />
-        <feMerge>
-          <feMergeNode in="softOuter" />
-        </feMerge>
-      </filter>
-    </defs>
-    <g mask="url(#custom-cursor-glow-mask)">
-      <path
-        class="custom-cursor__glow"
-        d="${ARROW_PATH}"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        filter="url(#custom-cursor-outer-glow)"
-      ></path>
-    </g>
+  <svg class="custom-cursor__arrow" width="30" height="36" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       class="custom-cursor__shape"
       d="${ARROW_PATH}"
@@ -52,7 +29,7 @@ const isClickableElement = (element) => {
 
 const CustomCursor = () => {
   useEffect(() => {
-    if (window.matchMedia('(hover: none)').matches) {
+    if (window.matchMedia('(hover: none)').matches || isPerfLite()) {
       return undefined
     }
 
@@ -66,6 +43,10 @@ const CustomCursor = () => {
 
     let lastClickable = false
     let isVisible = false
+    let moveRaf = 0
+    let pendingX = 0
+    let pendingY = 0
+    let pendingTarget = null
 
     const setClickable = (isClickable) => {
       if (isClickable === lastClickable) return
@@ -80,11 +61,25 @@ const CustomCursor = () => {
       cursor.style.visibility = 'hidden'
     }
 
+    const flushClickableCheck = () => {
+      moveRaf = 0
+      if (!pendingTarget) return
+      setClickable(isClickableElement(pendingTarget))
+    }
+
     const handlePointerMove = (event) => {
-      isVisible = true
-      cursor.style.visibility = 'visible'
-      cursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`
-      setClickable(isClickableElement(event.target))
+      pendingX = event.clientX
+      pendingY = event.clientY
+      pendingTarget = event.target
+
+      if (!isVisible) {
+        isVisible = true
+        cursor.style.visibility = 'visible'
+      }
+      cursor.style.transform = `translate3d(${pendingX}px, ${pendingY}px, 0)`
+
+      if (moveRaf !== 0) return
+      moveRaf = window.requestAnimationFrame(flushClickableCheck)
     }
 
     const handlePointerLeave = (event) => {
@@ -106,6 +101,7 @@ const CustomCursor = () => {
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
     return () => {
+      if (moveRaf !== 0) window.cancelAnimationFrame(moveRaf)
       cursor.remove()
       document.documentElement.classList.remove('custom-cursor-active')
       document.removeEventListener('pointermove', handlePointerMove)

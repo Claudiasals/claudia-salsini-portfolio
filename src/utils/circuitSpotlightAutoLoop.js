@@ -12,8 +12,15 @@ import {
   getCircuitTraceLength,
   sampleCircuitTraceAtDistance,
 } from './heroCircuitTraces'
+import { isPerfLite } from './perfProfile'
+import { initScrollInteraction, isScrolling, onScrollIdle } from './scrollInteraction'
 
 const AUTO_CLASS = 'hero-bg__circuit-spotlight--auto'
+const IDLE_CLASS = 'hero-bg__circuit-spotlight--idle'
+const LITE_CLASS = 'hero-bg__circuit-spotlight--lite'
+const TICK_MS_DEFAULT = 1000 / 60
+const TICK_MS_LITE = 1000 / 30
+const VISIBILITY_ROOT_MARGIN = '100px 0px'
 const TRACE_SWEEP_SEC = 11
 const PAIR_COOLDOWN_SEC = 0.55
 const LAYOUT_STABLE_FRAMES = 12
@@ -29,6 +36,12 @@ const TRAIL_BACK_2_SVG = 78
 
 const patterns = new Set()
 const smoothByPattern = new WeakMap()
+/** @type {Map<Element, IntersectionObserver>} */
+const visibilityObservers = new Map()
+const patternVisible = new WeakMap()
+let pageVisibilityHooked = false
+let scrollHooked = false
+let lastPaintMs = 0
 
 let rafId = null
 let animStartMs = null
@@ -116,10 +129,19 @@ const snapPatternToFrame = (pattern, frame) => {
   applyChannelPositions(pattern, 'b', targetB)
 }
 
-const applyChannelPositions = (pattern, channel, points) => {
+const applyChannelPositions = (pattern, channel, points, lite = false) => {
   const set = (name, x, y) => {
     setPx(pattern, `--${name}-x`, x)
     setPx(pattern, `--${name}-y`, y)
+  }
+
+  if (lite) {
+    if (channel === 'b') {
+      set('spot-b', points.lead.x, points.lead.y)
+    } else {
+      set('spot', points.lead.x, points.lead.y)
+    }
+    return
   }
 
   if (channel === 'b') {
@@ -150,37 +172,46 @@ const renderPatternFrame = (pattern, frame, alpha, now) => {
     return
   }
 
+  const lite = isPerfLite()
+  pattern.classList.toggle(LITE_CLASS, lite)
   getCachedCircuitLayout(pattern)
 
   const state = getSmoothState(pattern)
   const [traceA, traceB] = HERO_CIRCUIT_TRACE_PAIRS[frame.pairIndex]
+  const progress = frame.inCooldown ? 1 : frame.progress
 
   if (frame.pairIndex !== state.pairIndex) {
     state.pairIndex = frame.pairIndex
-    state.a = targetChannel(pattern, traceA, frame.inCooldown ? 1 : frame.progress)
-    state.b = targetChannel(pattern, traceB, frame.inCooldown ? 1 : frame.progress)
+    state.a = targetChannel(pattern, traceA, progress)
+    state.b = targetChannel(pattern, traceB, progress)
   }
 
   const targetActive = frame.inCooldown ? 0 : fadeInFactor(now)
-  const targetA = targetChannel(pattern, traceA, frame.inCooldown ? 1 : frame.progress)
-  const targetB = targetChannel(pattern, traceB, frame.inCooldown ? 1 : frame.progress)
+  const targetA = targetChannel(pattern, traceA, progress)
+  const targetB = targetChannel(pattern, traceB, progress)
 
-  state.a = {
-    lead: lerpPoint(state.a.lead, targetA.lead, alpha),
-    back1: lerpPoint(state.a.back1, targetA.back1, alpha),
-    back2: lerpPoint(state.a.back2, targetA.back2, alpha),
+  if (lite) {
+    state.a = targetA
+    state.b = targetB
+    state.spotActive = targetActive
+  } else {
+    state.a = {
+      lead: lerpPoint(state.a.lead, targetA.lead, alpha),
+      back1: lerpPoint(state.a.back1, targetA.back1, alpha),
+      back2: lerpPoint(state.a.back2, targetA.back2, alpha),
+    }
+    state.b = {
+      lead: lerpPoint(state.b.lead, targetB.lead, alpha),
+      back1: lerpPoint(state.b.back1, targetB.back1, alpha),
+      back2: lerpPoint(state.b.back2, targetB.back2, alpha),
+    }
+    state.spotActive += (targetActive - state.spotActive) * alpha
   }
-  state.b = {
-    lead: lerpPoint(state.b.lead, targetB.lead, alpha),
-    back1: lerpPoint(state.b.back1, targetB.back1, alpha),
-    back2: lerpPoint(state.b.back2, targetB.back2, alpha),
-  }
-  state.spotActive += (targetActive - state.spotActive) * alpha
 
   pattern.classList.add(AUTO_CLASS)
   pattern.style.setProperty('--spot-active', String(Math.max(0, Math.min(1, state.spotActive))))
-  applyChannelPositions(pattern, 'a', state.a)
-  applyChannelPositions(pattern, 'b', state.b)
+  applyChannelPositions(pattern, 'a', state.a, lite)
+  applyChannelPositions(pattern, 'b', state.b, lite)
 }
 
 const fadeInFactor = (now) => {
@@ -241,17 +272,110 @@ const tick = (now) => {
     return
   }
 
+  const tickInterval = isPerfLite() ? TICK_MS_LITE : TICK_MS_DEFAULT
+  if (now - lastPaintMs < tickInterval) {
+    rafId = window.requestAnimationFrame(tick)
+    return
+  }
+  lastPaintMs = now
+
   const deltaMs =
-    lastFrameMs == null ? 16.67 : Math.min(Math.max(0, now - lastFrameMs), 50)
+    lastFrameMs == null ? tickInterval : Math.min(Math.max(0, now - lastFrameMs), 50)
   lastFrameMs = now
-  const alpha = smoothAlpha(deltaMs)
+  const alpha = isPerfLite() ? 1 : smoothAlpha(deltaMs)
   const frame = frameFromClock(now)
 
   for (const pattern of patterns) {
+    if (!isPatternVisible(pattern)) continue
     renderPatternFrame(pattern, frame, alpha, now)
   }
 
-  rafId = window.requestAnimationFrame(tick)
+  if (shouldRunLoop()) {
+    rafId = window.requestAnimationFrame(tick)
+  } else {
+    rafId = null
+    lastFrameMs = null
+  }
+}
+
+const isPatternVisible = (pattern) => patternVisible.get(pattern) !== false
+
+const hasVisiblePattern = () => {
+  for (const pattern of patterns) {
+    if (isPatternVisible(pattern)) return true
+  }
+  return false
+}
+
+const setPatternVisible = (pattern, visible) => {
+  const wasVisible = isPatternVisible(pattern)
+  patternVisible.set(pattern, visible)
+  pattern.classList.toggle(IDLE_CLASS, !visible)
+
+  if (visible && !wasVisible) {
+    syncLoopRunning()
+  } else if (!visible && wasVisible) {
+    syncLoopRunning()
+  }
+}
+
+const isElementInViewport = (element) => {
+  const rect = element.getBoundingClientRect()
+  const margin = 100
+  return rect.bottom > -margin && rect.top < window.innerHeight + margin
+}
+
+const attachPatternVisibilityObserver = (element) => {
+  setPatternVisible(element, isElementInViewport(element))
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      setPatternVisible(element, entry.isIntersecting)
+    },
+    { rootMargin: VISIBILITY_ROOT_MARGIN, threshold: 0 },
+  )
+
+  observer.observe(element)
+  visibilityObservers.set(element, observer)
+}
+
+const detachPatternVisibilityObserver = (element) => {
+  visibilityObservers.get(element)?.disconnect()
+  visibilityObservers.delete(element)
+  patternVisible.delete(element)
+}
+
+const ensurePageVisibilityHook = () => {
+  if (pageVisibilityHooked) return
+  pageVisibilityHooked = true
+
+  document.addEventListener('visibilitychange', () => {
+    syncLoopRunning()
+  })
+}
+
+const ensureScrollHook = () => {
+  if (scrollHooked) return
+  scrollHooked = true
+  initScrollInteraction()
+  onScrollIdle(() => syncLoopRunning())
+}
+
+const shouldRunLoop = () => {
+  if (patterns.size === 0) return false
+  if (clockPending) return true
+  if (document.hidden) return false
+  if (isScrolling()) return false
+  if (animStartMs === null) return false
+  return hasVisiblePattern()
+}
+
+const syncLoopRunning = () => {
+  if (shouldRunLoop()) {
+    startLoop()
+  } else {
+    stopLoop()
+  }
 }
 
 const startLoop = () => {
@@ -366,9 +490,12 @@ const tryBoot = () => {
 export const registerCircuitAutoPattern = (element) => {
   if (!element) return () => {}
 
+  ensurePageVisibilityHook()
+  ensureScrollHook()
   patterns.add(element)
   element.classList.add(AUTO_CLASS)
   hidePattern(element)
+  attachPatternVisibilityObserver(element)
 
   if (clockPending) {
     const holdFrame = { pairIndex: 0, progress: 0, inCooldown: false }
@@ -382,7 +509,8 @@ export const registerCircuitAutoPattern = (element) => {
   return () => {
     patterns.delete(element)
     smoothByPattern.delete(element)
-    element.classList.remove(AUTO_CLASS)
+    detachPatternVisibilityObserver(element)
+    element.classList.remove(AUTO_CLASS, IDLE_CLASS)
     hidePattern(element)
 
     if (patterns.size === 0) {
@@ -395,6 +523,8 @@ export const registerCircuitAutoPattern = (element) => {
       clockPending = false
       clockStartFramesLeft = 0
       unlockCircuitLayoutViewport()
+    } else {
+      syncLoopRunning()
     }
   }
 }

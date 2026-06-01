@@ -1,5 +1,4 @@
 import { ScrollRevealItem } from './ScrollReveal'
-import AboutCircuitOverlay from './AboutCircuitOverlay'
 
 const educationItems = [
   'Diploma di specializzazione Web Developer',
@@ -40,6 +39,7 @@ const About = () => {
     <section className="about-section section-page section-page--default">
       <div className="mx-auto max-w-6xl">
         <div className="about-grid">
+          <div className="about-lead">
           <div className="about-intro">
             <ScrollRevealItem tier="head" revealWithHero>
               <p
@@ -79,25 +79,22 @@ const About = () => {
 
           <ScrollRevealItem tier="about-2" className="about-visual" revealWithHero>
             <div className="about-visual__wrap">
-              <div className="about-visual__glow" aria-hidden="true" />
               <div className="about-visual__img-shell">
-                <div className="about-visual__media">
+                <div className="about-visual__media about-visual__media--complete">
                   <img
-                    src="/images/foto-ibrida-portfolio.png?v=10"
+                    src="/images/foto-ibrida-portfolio.png?v=20"
                     alt="Claudia Salsini - dalla psicologia allo sviluppo web"
                     className="about-visual__img"
                     loading="lazy"
                     decoding="async"
-                    width={1774}
-                    height={3548}
+                    width={1200}
+                    height={1703}
                   />
-                  <div className="about-visual__circuit-mask" aria-hidden="true">
-                    <AboutCircuitOverlay />
-                  </div>
                 </div>
               </div>
             </div>
           </ScrollRevealItem>
+          </div>
 
           <div className="about-highlights">
             {highlightCards.map((card, index) => (

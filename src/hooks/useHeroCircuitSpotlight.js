@@ -4,6 +4,7 @@ import {
   registerCircuitAutoPattern,
 } from '../utils/circuitSpotlightAutoLoop'
 import { svgCircuitToLayerPx } from '../utils/heroCircuitGeometry'
+import { isPerfLite } from '../utils/perfProfile'
 
 const hideSecondarySpot = (pattern) => {
   pattern.style.setProperty('--spot-b-x', '-999px')
@@ -25,6 +26,7 @@ const hidePointerSpot = (pointer) => {
 
 /** @param {{ boost?: boolean; heading?: number }} options */
 export const applySpotlightBlob = (pattern, x, y, options = {}) => {
+  const lite = isPerfLite()
   const { boost = false, heading = null } = options
   const blobScale = boost ? 1.28 : 1
   const angle = heading ?? x * 0.012 + y * 0.009
@@ -33,28 +35,45 @@ export const applySpotlightBlob = (pattern, x, y, options = {}) => {
     y: y + Math.sin(angle * 1.1 + phase) * dist * 0.85,
   })
 
+  pattern.style.setProperty('--spot-x', `${x}px`)
+  pattern.style.setProperty('--spot-y', `${y}px`)
+  pattern.style.setProperty('--spot-active', '1')
+
+  if (lite) {
+    hideSecondarySpot(pattern)
+    pattern.style.setProperty('--blob-1-x', '-999px')
+    pattern.style.setProperty('--blob-1-y', '-999px')
+    pattern.style.setProperty('--blob-2-x', '-999px')
+    pattern.style.setProperty('--blob-2-y', '-999px')
+    pattern.style.setProperty('--blob-3-x', '-999px')
+    pattern.style.setProperty('--blob-3-y', '-999px')
+    return
+  }
+
   const tailA = along(72 * blobScale)
   const tailB = along(128 * blobScale, 0.35)
   const tailC = along(56 * blobScale, -0.4)
 
-  pattern.style.setProperty('--spot-x', `${x}px`)
-  pattern.style.setProperty('--spot-y', `${y}px`)
   pattern.style.setProperty('--blob-1-x', `${tailA.x}px`)
   pattern.style.setProperty('--blob-1-y', `${tailA.y}px`)
   pattern.style.setProperty('--blob-2-x', `${tailB.x}px`)
   pattern.style.setProperty('--blob-2-y', `${tailB.y}px`)
   pattern.style.setProperty('--blob-3-x', `${tailC.x}px`)
   pattern.style.setProperty('--blob-3-y', `${tailC.y}px`)
-  pattern.style.setProperty('--spot-active', '1')
   hideSecondarySpot(pattern)
 }
 
-const useHeroCircuitSpotlight = () => {
+/**
+ * @param {{ enableAuto?: boolean; enablePointer?: boolean }} [options]
+ * Hero: auto + pointer. Altre zone: solo sfondo statico (niente secondo loop/maschere).
+ */
+const useHeroCircuitSpotlight = ({ enableAuto = true, enablePointer = true } = {}) => {
   const patternRef = useRef(null)
   const pointerRef = useRef(null)
-  const moveRafRef = useRef(null)
 
   useEffect(() => {
+    if (!enableAuto) return undefined
+
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let bootRaf = 0
     let unregister = null
@@ -88,37 +107,27 @@ const useHeroCircuitSpotlight = () => {
       window.removeEventListener('resize', onResize)
       unregister?.()
     }
-  }, [])
+  }, [enableAuto])
 
-  const onMouseMove = useCallback((event) => {
-    const pointer = pointerRef.current
-    if (!pointer) return
+  const onMouseMove = useCallback(
+    (event) => {
+      if (!enablePointer) return
 
-    const clientX = event.clientX
-    const clientY = event.clientY
+      const pointer = pointerRef.current
+      if (!pointer) return
 
-    if (moveRafRef.current !== null) return
-
-    moveRafRef.current = window.requestAnimationFrame(() => {
-      moveRafRef.current = null
-
-      const activePointer = pointerRef.current
-      if (!activePointer) return
-
-      const rect = activePointer.getBoundingClientRect()
-      applySpotlightBlob(activePointer, clientX - rect.left, clientY - rect.top)
-    })
-  }, [])
+      const rect = pointer.getBoundingClientRect()
+      applySpotlightBlob(pointer, event.clientX - rect.left, event.clientY - rect.top)
+    },
+    [enablePointer],
+  )
 
   const onMouseLeave = useCallback(() => {
-    if (moveRafRef.current !== null) {
-      window.cancelAnimationFrame(moveRafRef.current)
-      moveRafRef.current = null
-    }
+    if (!enablePointer) return
 
     const pointer = pointerRef.current
     if (pointer) hidePointerSpot(pointer)
-  }, [])
+  }, [enablePointer])
 
   return { patternRef, pointerRef, onMouseMove, onMouseLeave }
 }
