@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react'
+import useHeroCircuitSpotlight from '../hooks/useHeroCircuitSpotlight'
 import Contact from './Contact'
 import Skills from './Skills'
 
 const SkillsContactZone = () => {
   const zoneRef = useRef(null)
+  const { patternRef } = useHeroCircuitSpotlight()
 
   useEffect(() => {
     const zone = zoneRef.current
@@ -38,6 +40,11 @@ const SkillsContactZone = () => {
     <div ref={zoneRef} className="skills-contact-grid-zone">
       <div className="skills-contact-circuits hero-bg" aria-hidden="true">
         <div className="hero-bg__circuit" />
+        <div
+          ref={patternRef}
+          className="hero-bg__circuit-spotlight hero-bg__circuit-spotlight--auto"
+          aria-hidden="true"
+        />
         <div className="hero-bg__glow" />
         <div className="hero-bg__scrim" />
       </div>

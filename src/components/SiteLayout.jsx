@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import CustomCursor from './CustomCursor'
 import Footer from './Footer'
 import Navbar from './Navbar'
+import ScrollToTopArrow from './ScrollToTopArrow'
 
 const SiteLayout = () => {
   return (
@@ -11,6 +12,7 @@ const SiteLayout = () => {
       <Navbar />
       <Outlet />
       <Footer />
+      <ScrollToTopArrow />
     </>
   )
 }

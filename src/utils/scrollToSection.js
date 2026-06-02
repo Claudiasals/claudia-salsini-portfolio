@@ -3,6 +3,15 @@ const parseCssPx = (value, fallback) => {
   return Number.isFinite(parsed) ? parsed : fallback
 }
 
+const easeOutCubic = (progress) => 1 - (1 - progress) ** 3
+
+let activeScrollAnimation = null
+
+export const isCoarsePointer = () => {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(hover: none), (pointer: coarse)').matches
+}
+
 export const getSectionIdFromHref = (href) => {
   if (!href?.includes('#')) return ''
   return href.slice(href.indexOf('#') + 1)
@@ -41,27 +50,78 @@ export const getSectionScrollOffset = (element = null) => {
 const getElementDocumentTop = (element) =>
   element.getBoundingClientRect().top + window.scrollY
 
-export const scrollToSectionById = (id, behavior = 'auto') => {
+export const getSectionScrollTop = (id) => {
   const element = document.getElementById(id)
-  if (!element) return false
-
-  void element.offsetHeight
+  if (!element) return null
 
   const offset = getSectionScrollOffset(element)
-  const top = Math.max(0, getElementDocumentTop(element) - offset)
+  return Math.max(0, getElementDocumentTop(element) - offset)
+}
+
+export const smoothScrollToY = (targetY, duration = 720) => {
+  if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.scrollTo({ top: targetY, left: 0, behavior: 'auto' })
+    return
+  }
+
+  if (activeScrollAnimation) {
+    cancelAnimationFrame(activeScrollAnimation)
+    activeScrollAnimation = null
+  }
+
+  const startY = window.scrollY
+  const distance = targetY - startY
+
+  if (Math.abs(distance) < 2) {
+    window.scrollTo({ top: targetY, left: 0, behavior: 'auto' })
+    return
+  }
+
+  const startTime = performance.now()
+
+  const step = (now) => {
+    const elapsed = now - startTime
+    const progress = Math.min(1, elapsed / duration)
+    const nextY = startY + distance * easeOutCubic(progress)
+
+    window.scrollTo({ top: nextY, left: 0, behavior: 'auto' })
+
+    if (progress < 1) {
+      activeScrollAnimation = requestAnimationFrame(step)
+      return
+    }
+
+    activeScrollAnimation = null
+    window.scrollTo({ top: targetY, left: 0, behavior: 'auto' })
+  }
+
+  activeScrollAnimation = requestAnimationFrame(step)
+}
+
+export const scrollToSectionById = (id, behavior = 'auto') => {
+  const top = getSectionScrollTop(id)
+  if (top == null) return false
+
+  if (behavior === 'smooth' && isCoarsePointer()) {
+    smoothScrollToY(top, 760)
+    return true
+  }
 
   window.scrollTo({ top, left: 0, behavior })
-
   return true
 }
 
 export const scrollToSectionByIdAfterLayout = (id, behavior = 'auto') => {
-  scrollToSectionById(id, behavior)
+  const run = (scrollBehavior) => scrollToSectionById(id, scrollBehavior)
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      scrollToSectionById(id, behavior)
-      window.setTimeout(() => scrollToSectionById(id, behavior), 50)
+      run(behavior)
+
+      const settleDelay =
+        behavior === 'smooth' && isCoarsePointer() ? 820 : behavior === 'smooth' ? 420 : 50
+
+      window.setTimeout(() => run('auto'), settleDelay)
     })
   })
 }
@@ -91,6 +151,14 @@ export const navigateToHomeSection = (
     navigate({ pathname: '/', hash: id })
   }
 
-  scrollToSectionByIdAfterLayout(id, behavior)
+  const startScroll = () => scrollToSectionByIdAfterLayout(id, behavior)
+  const scrollDelay = isCoarsePointer() ? 160 : 0
+
+  if (scrollDelay > 0) {
+    window.setTimeout(startScroll, scrollDelay)
+  } else {
+    startScroll()
+  }
+
   return true
 }

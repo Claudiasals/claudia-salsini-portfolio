@@ -27,6 +27,7 @@ const highlightCards = [
 
 /** Con hero: etichette + titolo + PNG; poi testo; poi card (margini crescenti = più scroll). */
 const REVEAL_COPY = '0px 0px -18% 0px'
+const REVEAL_CV = '0px 0px 12% 0px'
 const REVEAL_HIGHLIGHTS = [
   '0px 0px -22% 0px',
   '0px 0px -26% 0px',
@@ -120,19 +121,16 @@ const About = () => {
                 </article>
               </ScrollRevealItem>
             ))}
-
-            <ScrollRevealItem tier="about-6" revealMargin="0px 0px -38% 0px">
-              <div className="about-cv-area">
-                <a
-                  href="/cv-claudia-salsini.pdf"
-                  download="CV-Claudia-Salsini.pdf"
-                  className="btn-primary about-cv-download"
-                >
-                  <span className="btn-primary-inner">
-                    <span className="btn-primary-text">Scarica CV</span>
-                  </span>
-                </a>
-              </div>
+            <ScrollRevealItem tier="about-6" className="about-cv-area" revealMargin={REVEAL_CV}>
+              <a
+                href="/cv-claudia-salsini.pdf"
+                download="CV-Claudia-Salsini.pdf"
+                className="btn-primary about-cv-download"
+              >
+                <span className="btn-primary-inner">
+                  <span className="btn-primary-text">Scarica CV</span>
+                </span>
+              </a>
             </ScrollRevealItem>
           </div>
         </div>

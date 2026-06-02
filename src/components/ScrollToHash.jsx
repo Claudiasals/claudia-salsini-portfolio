@@ -13,7 +13,10 @@ const ScrollToHash = () => {
     }
 
     const id = hash.replace('#', '')
-    scrollToSectionByIdAfterLayout(id, 'auto')
+    const behavior = window.matchMedia('(hover: none), (pointer: coarse)').matches
+      ? 'smooth'
+      : 'auto'
+    scrollToSectionByIdAfterLayout(id, behavior)
 
     return undefined
   }, [pathname, hash])

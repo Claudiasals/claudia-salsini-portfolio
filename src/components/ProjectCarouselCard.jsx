@@ -5,7 +5,7 @@ import ProjectTypingTitle from './ProjectTypingTitle'
 import TypingTerminalLabel from './TypingTerminalLabel'
 import { ScrollRevealContext } from './ScrollReveal'
 
-const ProjectCarouselCard = ({ project, trackRef }) => {
+const ProjectCarouselCard = ({ project, trackRef, carouselSlide = 'real' }) => {
   const cardRef = useRef(null)
   const sectionVisible = useContext(ScrollRevealContext)
   const [typingEnabled, setTypingEnabled] = useState(false)
@@ -41,13 +41,26 @@ const ProjectCarouselCard = ({ project, trackRef }) => {
     return () => observer.disconnect()
   }, [sectionVisible, trackRef])
 
+  const isLoopDuplicate =
+    carouselSlide === 'loop-duplicate' || carouselSlide.startsWith('clone-')
+
   return (
     <article
       ref={cardRef}
       className="project-carousel-card skills-category-panel"
+      data-carousel-slide={carouselSlide}
+      aria-hidden={isLoopDuplicate ? true : undefined}
     >
       <div className="skills-category-inner skills-category-inner--project">
         <div className="project-carousel-card__body">
+          <p className="project-carousel-card__category project-card-category">
+            <TypingTerminalLabel
+              label={project.category}
+              trigger={typingEnabled}
+              variant="gradient"
+            />
+          </p>
+
           <div className="project-carousel-card__media">
             <div className="project-card-image-wrap">
               <img
@@ -59,24 +72,13 @@ const ProjectCarouselCard = ({ project, trackRef }) => {
             </div>
           </div>
 
-          <div className="project-carousel-card__content">
-            <p className="project-carousel-card__category project-card-category">
-              <TypingTerminalLabel
-                label={project.category}
-                trigger={typingEnabled}
-                variant="gradient"
-              />
-            </p>
-
-            <ProjectTypingTitle
-              title={project.title}
-              enabled={typingEnabled}
-            />
-
-            <p className="project-carousel-card__description text-slate-300">
-              {project.description}
-            </p>
+          <div className="project-carousel-card__title-block">
+            <ProjectTypingTitle title={project.title} enabled={typingEnabled} />
           </div>
+
+          <p className="project-carousel-card__description text-slate-300">
+            {project.description}
+          </p>
 
           <div className="project-card-actions project-carousel-card__actions">
             <Link to={`/progetti/${project.slug}`} className="btn-primary">

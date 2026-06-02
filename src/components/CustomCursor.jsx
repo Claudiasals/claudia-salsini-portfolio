@@ -1,31 +1,37 @@
 import { useEffect } from 'react'
 import { isPerfLite } from '../utils/perfProfile'
 
-const CLICKABLE_SELECTOR =
-  'a, button, input, select, textarea, summary, label, [role="button"], [role="link"], [href], .nav-btn, .btn-primary, .btn-secondary, .contact-detail-icon, .contact-form-input-wrap, .projects-carousel-nav'
-
 const ARROW_PATH =
   'M4 2.5V18.5L8.2 14.3L10.8 20.8L13.2 19.6L10.6 13.1H16.2L4 2.5Z'
 
+/** Alone solo fuori dal bordo (feComposite out), interno della freccia vuoto. */
 const CURSOR_SVG = `
-  <svg class="custom-cursor__arrow" width="30" height="36" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      class="custom-cursor__shape"
-      d="${ARROW_PATH}"
-      fill="none"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    ></path>
+  <svg class="custom-cursor__arrow" width="30" height="36" viewBox="0 0 22 28" fill="none" overflow="visible" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="custom-cursor-outer-glow" x="-80%" y="-80%" width="260%" height="260%" color-interpolation-filters="sRGB">
+        <feMorphology operator="dilate" radius="0.65" in="SourceAlpha" result="dilate" />
+        <feGaussianBlur in="dilate" stdDeviation="2.4" result="blur" />
+        <feComposite in="blur" in2="SourceGraphic" operator="out" result="outer" />
+        <feFlood flood-color="#00f0ff" flood-opacity="1" result="glowColor" />
+        <feComposite in="glowColor" in2="outer" operator="in" result="coloredGlow" />
+        <feGaussianBlur in="coloredGlow" stdDeviation="2.8" result="softGlow" />
+        <feMerge>
+          <feMergeNode in="softGlow" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+    <g filter="url(#custom-cursor-outer-glow)">
+      <path
+        class="custom-cursor__shape"
+        d="${ARROW_PATH}"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      ></path>
+    </g>
   </svg>
 `
-
-const isClickableElement = (element) => {
-  if (!element || element.closest('.custom-cursor')) {
-    return false
-  }
-
-  return Boolean(element.closest(CLICKABLE_SELECTOR))
-}
 
 const CustomCursor = () => {
   useEffect(() => {
@@ -34,52 +40,26 @@ const CustomCursor = () => {
     }
 
     const cursor = document.createElement('div')
-    cursor.className = 'custom-cursor custom-cursor--default'
+    cursor.className = 'custom-cursor'
     cursor.setAttribute('aria-hidden', 'true')
     cursor.innerHTML = CURSOR_SVG
     document.body.appendChild(cursor)
 
     document.documentElement.classList.add('custom-cursor-active')
 
-    let lastClickable = false
     let isVisible = false
-    let moveRaf = 0
-    let pendingX = 0
-    let pendingY = 0
-    let pendingTarget = null
-
-    const setClickable = (isClickable) => {
-      if (isClickable === lastClickable) return
-
-      lastClickable = isClickable
-      cursor.classList.toggle('custom-cursor--clickable', isClickable)
-      cursor.classList.toggle('custom-cursor--default', !isClickable)
-    }
 
     const hideCursor = () => {
       isVisible = false
       cursor.style.visibility = 'hidden'
     }
 
-    const flushClickableCheck = () => {
-      moveRaf = 0
-      if (!pendingTarget) return
-      setClickable(isClickableElement(pendingTarget))
-    }
-
     const handlePointerMove = (event) => {
-      pendingX = event.clientX
-      pendingY = event.clientY
-      pendingTarget = event.target
-
       if (!isVisible) {
         isVisible = true
         cursor.style.visibility = 'visible'
       }
-      cursor.style.transform = `translate3d(${pendingX}px, ${pendingY}px, 0)`
-
-      if (moveRaf !== 0) return
-      moveRaf = window.requestAnimationFrame(flushClickableCheck)
+      cursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`
     }
 
     const handlePointerLeave = (event) => {
@@ -101,7 +81,6 @@ const CustomCursor = () => {
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
     return () => {
-      if (moveRaf !== 0) window.cancelAnimationFrame(moveRaf)
       cursor.remove()
       document.documentElement.classList.remove('custom-cursor-active')
       document.removeEventListener('pointermove', handlePointerMove)

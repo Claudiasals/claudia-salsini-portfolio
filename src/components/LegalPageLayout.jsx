@@ -27,19 +27,23 @@ const LegalPageLayout = ({
     <main className="min-h-screen bg-slate-950 text-white">
       <div className="legal-page page-under-navbar px-6 pb-20">
         <div className="legal-page__inner mx-auto max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-400">
-            {label}
-          </p>
+          <header className="legal-page__header">
+            <div className="legal-page__header-top">
+              <Link to="/" className="legal-page__back project-detail-back">
+                ← Torna al portfolio
+              </Link>
 
-          <div className="project-case-header mt-4">
-            <h1 className="min-w-0 text-3xl font-bold text-white md:text-4xl">{title}</h1>
+              <p className="legal-page__label text-sm font-semibold uppercase tracking-[0.3em] text-sky-400">
+                {label}
+              </p>
+            </div>
 
-            <Link to="/" className="project-detail-back project-case-header__back">
-              ← Torna al portfolio
-            </Link>
-          </div>
+            <h1 className="legal-page__title mt-4 text-3xl font-bold text-white md:text-4xl">
+              {title}
+            </h1>
+          </header>
 
-          <p className="mt-6 text-lg leading-8 text-slate-300">{intro}</p>
+          <p className="legal-page__intro mt-6 text-lg leading-8 text-slate-300">{intro}</p>
 
           <div className="legal-page__sections mt-10 space-y-8">{children}</div>
 

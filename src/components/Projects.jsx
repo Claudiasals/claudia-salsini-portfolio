@@ -1,9 +1,13 @@
-import { useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { projects } from '../data/projects'
 import ProjectCarouselCard from './ProjectCarouselCard'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
+import {
+  initProjectCarouselLoop,
+  scrollProjectCarouselBy,
+} from '../utils/projectCarousel'
 
-const SCROLL_EDGE_THRESHOLD = 4
+const LOOP_SET_COUNT = 3
 
 const ChevronIcon = ({ direction }) => (
   <svg
@@ -36,38 +40,41 @@ const ChevronIcon = ({ direction }) => (
   </svg>
 )
 
+/** Tre sequenze 1-2-3: scorrimento lineare, loop senza card “clone” singole. */
+const buildCarouselSlides = (items) => {
+  if (items.length <= 1) {
+    return items.map((project) => ({
+      key: project.slug,
+      project,
+      carouselSlide: 'real',
+    }))
+  }
+
+  return Array.from({ length: LOOP_SET_COUNT }, (_, setIndex) =>
+    items.map((project) => ({
+      key: `${project.slug}-loop-${setIndex}`,
+      project,
+      carouselSlide: setIndex === 1 ? 'real' : 'loop-duplicate',
+    })),
+  ).flat()
+}
+
 const Projects = () => {
   const trackRef = useRef(null)
+  const slides = useMemo(() => buildCarouselSlides(projects), [])
+  const slidesKey = slides.map((slide) => slide.key).join('|')
+  const loopEnabled = projects.length > 1
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return undefined
+    return initProjectCarouselLoop(track)
+  }, [slidesKey])
 
   const scrollProjects = (direction) => {
     const track = trackRef.current
     if (!track) return
-
-    const atStart = track.scrollLeft <= SCROLL_EDGE_THRESHOLD
-    const atEnd =
-      track.scrollLeft + track.clientWidth >= track.scrollWidth - SCROLL_EDGE_THRESHOLD
-
-    if (direction > 0 && atEnd) {
-      track.scrollTo({ left: 0, behavior: 'smooth' })
-      return
-    }
-
-    if (direction < 0 && atStart) {
-      track.scrollTo({
-        left: track.scrollWidth - track.clientWidth,
-        behavior: 'smooth',
-      })
-      return
-    }
-
-    const card = track.querySelector('.project-carousel-card')
-    const gap = 24
-    const amount = card ? card.offsetWidth + gap : track.clientWidth * 0.9
-
-    track.scrollBy({
-      left: direction * amount,
-      behavior: 'smooth',
-    })
+    scrollProjectCarouselBy(track, direction)
   }
 
   return (
@@ -106,12 +113,18 @@ const Projects = () => {
             </span>
           </button>
 
-          <div ref={trackRef} className="projects-carousel-track">
-            {projects.map((project) => (
+          <div
+            ref={trackRef}
+            className="projects-carousel-track"
+            data-carousel-loop={loopEnabled ? 'true' : undefined}
+            data-carousel-set-size={projects.length}
+          >
+            {slides.map(({ key, project, carouselSlide }) => (
               <ProjectCarouselCard
-                key={project.slug}
+                key={key}
                 project={project}
                 trackRef={trackRef}
+                carouselSlide={carouselSlide}
               />
             ))}
           </div>

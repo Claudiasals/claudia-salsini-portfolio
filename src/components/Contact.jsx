@@ -76,6 +76,7 @@ const Contact = () => {
     )
 
     window.location.href = `mailto:salsiniclaudia@gmail.com?subject=${subject}&body=${body}`
+    form.reset()
   }
 
   return (
@@ -115,6 +116,7 @@ const Contact = () => {
                       name="name"
                       type="text"
                       required
+                      autoComplete="name"
                       placeholder="Inserisci il tuo nome"
                       className="contact-form-input"
                     />
@@ -131,6 +133,7 @@ const Contact = () => {
                       name="email"
                       type="email"
                       required
+                      autoComplete="email"
                       placeholder="Inserisci la tua email"
                       className="contact-form-input"
                     />
