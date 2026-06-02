@@ -1,5 +1,5 @@
 const INTERACTIVE_SELECTOR =
-  'a, button, .nav-btn, .btn-primary, .btn-secondary, .contact-detail-link, .projects-carousel-nav, .project-detail-back, .legal-page__email, .site-footer__link'
+  'a, button, .nav-btn, .btn-primary, .btn-secondary, .contact-detail-link, .contact-form-input-wrap, .projects-carousel-nav, .project-detail-back, .legal-page__email, .site-footer__link'
 
 const TOUCH_FEEDBACK_CLASS = 'touch-feedback'
 /** Durata minima visibile della sfumatura dopo un tap breve (ms). */
@@ -13,8 +13,9 @@ const resolveInteractiveTarget = (node) => {
 
 const shouldHandleTarget = (element) => {
   if (!(element instanceof HTMLElement)) return false
+  if (element.matches('.contact-form-input-wrap')) return true
   if (element.matches('input, textarea, select, [contenteditable="true"]')) return false
-  if (element.closest('.contact-form-input-wrap, .contact-form-input, .contact-form-textarea')) {
+  if (element.closest('.contact-form-input, .contact-form-textarea')) {
     return false
   }
   return true
@@ -23,7 +24,7 @@ const shouldHandleTarget = (element) => {
 /** Su touch: glow percepibile su tap brevi, senza rettangolo di focus persistente. */
 export const initTouchFocus = () => {
   if (typeof window === 'undefined') return
-  if (!window.matchMedia('(hover: none), (pointer: coarse)').matches) return
+  if (!window.matchMedia('(width < 640px)').matches) return
 
   let active = null
 

@@ -15,21 +15,21 @@ export const projects = [
     category: 'Piattaforma gestionale interna',
     title: 'WorkHub',
     description:
-      'Gestionale full stack per la centralizzazione di attività operative aziendali, con gestione di clienti, personale, magazzino, ordini e sistema di ticketing interno.',
+      'Progetto finale di gruppo del corso Full Stack Web Developer: gestionale interno per personale, turni, clienti, magazzino, ordini e ticketing.',
     image: '/images/projects/workhub.png',
     imageAlt: 'Anteprima dashboard WorkHub',
     tech: ['React', 'Redux', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB'],
-    externalUrl: 'https://github.com/Claudiasals/workhub.git',
+    externalUrl: 'https://github.com/Claudiasals/workhub',
   },
   {
     slug: 'francesca-gandelli',
     category: 'Portfolio fotografico con pannello admin',
     title: 'Francesca Gandelli',
     description:
-      'Sito portfolio per fotografa con area pubblica e pannello admin per la gestione di categorie, immagini, copertine, gallery e contenuti della homepage.',
+      'Progetto personale sviluppato in autonomia: portfolio fotografico con sito pubblico e pannello admin per categorie, gallerie e contenuti.',
     image: '/images/projects/francesca-gandelli.png',
     imageAlt: 'Anteprima del portfolio fotografico Francesca Gandelli con pannello admin',
-    tech: ['React', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB Atlas'],
+    tech: ['React', 'Vite', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB Atlas', 'Cloudinary'],
     externalUrl: 'https://francescagandelli.netlify.app/',
   },
 ]

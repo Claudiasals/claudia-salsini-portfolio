@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import ProjectScreenshotCarousel from '../../components/ProjectScreenshotCarousel'
+import { useVideoVolumeBoost } from '../../hooks/useVideoVolumeBoost'
 
 const CATEGORY = 'SaaS B2B per contratti online e firme digitali'
 const TITLE = 'InklySign'
@@ -93,19 +94,22 @@ const FEATURES = [
 
 const STACK = ['React', 'Vite', 'Tailwind CSS', 'PHP', 'Laravel', 'MySQL']
 
-const InklySignProject = () => (
+const InklySignProject = () => {
+  const demoVideoRef = useVideoVolumeBoost(1.35)
+
+  return (
   <main className="min-h-screen bg-slate-950 text-white">
     <div className="page-under-navbar px-6 pb-20">
       <article className="project-case mx-auto max-w-6xl">
         <header className="project-case-header">
+          <Link to="/#projects" className="project-detail-back project-case-header__back">
+            ← Torna ai progetti
+          </Link>
+
           <p className="project-case-header__label text-sm font-semibold uppercase tracking-[0.3em]">
             <span className="text-sky-400">{TITLE}</span>
             <span className="text-white"> | {CATEGORY}</span>
           </p>
-
-          <Link to="/#projects" className="project-detail-back project-case-header__back">
-            ← Torna ai progetti
-          </Link>
 
           <h1 className="project-case-intro__title mt-8 w-full text-3xl font-bold text-white md:text-4xl">
             InklySign: piattaforma SaaS per contratti e firme digitali
@@ -189,11 +193,12 @@ const InklySignProject = () => (
             </p>
           </div>
 
-          <div className="project-case-video__frame mt-8">
+          <div className="project-case-video__frame project-case-video__frame--crop mt-8">
             <video
+              ref={demoVideoRef}
               className="project-case-video__player"
               src="/videos/inklysign-demo.mp4"
-              poster="/images/projects/inklysign/inklysign-video-poster.jpg"
+              poster="/images/projects/inklysign/inklysign-video-poster.png"
               controls
               preload="metadata"
               playsInline
@@ -261,6 +266,7 @@ const InklySignProject = () => (
       </article>
     </div>
   </main>
-)
+  )
+}
 
 export default InklySignProject

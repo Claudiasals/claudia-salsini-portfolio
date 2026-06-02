@@ -115,7 +115,7 @@ html.is-scrolling .hero-bg__circuit-spotlight--auto {
   height: 2.25rem;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .scroll-to-top--visible:hover {
     opacity: 0.9;
     transform: translateY(-2px);
@@ -270,11 +270,12 @@ html.custom-cursor-active * {
   opacity: 0.75;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .nav-btn:hover::before,
   .btn-primary:hover::before,
   .btn-secondary:hover::before,
   .contact-detail-link:hover .contact-detail-icon::before,
+  .contact-form-input-wrap:hover::before,
   .projects-carousel-nav:hover::before {
     opacity: 0.75;
   }
@@ -303,7 +304,7 @@ html.custom-cursor-active * {
     0 0 28px rgba(56, 189, 248, 0.35);
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .nav-btn:hover {
     transform: scale(1.05);
     box-shadow:
@@ -624,7 +625,7 @@ html.custom-cursor-active * {
     0 0 28px rgba(56, 189, 248, 0.35);
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .btn-primary:hover {
     box-shadow:
       0 0 16px rgba(56, 189, 248, 0.6),
@@ -848,7 +849,7 @@ html.custom-cursor-active * {
     0 0 28px rgba(56, 189, 248, 0.35);
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .btn-secondary:hover {
     box-shadow:
       0 0 16px rgba(56, 189, 248, 0.6),
@@ -950,7 +951,7 @@ html.custom-cursor-active * {
   color: #ffffff;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .contact-detail-link:hover {
     color: #ffffff;
   }
@@ -967,7 +968,7 @@ html.custom-cursor-active * {
     0 0 28px rgba(56, 189, 248, 0.35);
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .contact-detail-link:hover .contact-detail-icon {
     transform: scale(1.05);
     box-shadow:
@@ -1012,7 +1013,7 @@ html.custom-cursor-active * {
   color: #38bdf8;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .contact-detail-link:hover .contact-detail-icon-inner {
     color: #38bdf8;
   }
@@ -1493,6 +1494,14 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     0 0 28px rgba(56, 189, 248, 0.35);
 }
 
+@media (hover: hover) and (min-width: 640px) {
+  .contact-form-input-wrap:hover {
+    box-shadow:
+      0 0 16px rgba(56, 189, 248, 0.6),
+      0 0 28px rgba(56, 189, 248, 0.35);
+  }
+}
+
 .contact-form-input {
   position: relative;
   z-index: 1;
@@ -1720,7 +1729,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   transition: background-color 0.3s ease;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .skills-skill-mini:hover {
     transform: translateY(-3px);
     background:
@@ -2074,7 +2083,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     0 0 28px rgba(56, 189, 248, 0.35);
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .projects-carousel-nav:hover:not(:disabled) {
     transform: scale(1.05);
     box-shadow:
@@ -2203,7 +2212,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     box-shadow: none;
   }
 
-  @media (hover: hover) and (pointer: fine) {
+  @media (hover: hover) and (min-width: 640px) {
     .projects-carousel-nav:hover:not(:disabled) {
       transform: translateY(-50%);
       box-shadow: none;
@@ -2266,7 +2275,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   color: #38bdf8;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .project-detail-back:hover {
     color: #38bdf8;
   }
@@ -2418,7 +2427,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     transform 0.3s ease;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .about-highlight-card:hover {
     box-shadow:
       0 0 20px rgba(56, 189, 248, 0.12),
@@ -2559,13 +2568,11 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   }
 }
 
-/* Project case study (InklySign) */
+/* Project case study (InklySign, WorkHub, Francesca Gandelli) */
 .project-case-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 0.75rem;
 }
 
 .project-case-header__label {
@@ -2574,8 +2581,8 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 }
 
 .project-case-header__back {
+  justify-self: end;
   flex-shrink: 0;
-  margin-left: auto;
   white-space: nowrap;
 }
 
@@ -2776,6 +2783,26 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     0 0 48px rgba(147, 51, 234, 0.1);
 }
 
+/* Ritaglia letterbox/pillarbox (es. demo WorkHub con bande nere) */
+.project-case-video__frame--crop {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-height: min(72vh, 720px);
+}
+
+.project-case-video__frame--crop .project-case-video__player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.08);
+  transform-origin: center center;
+}
+
 .project-case-video__player {
   display: block;
   width: 100%;
@@ -2938,18 +2965,13 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 .project-case-gallery__viewport {
   width: 100%;
   max-width: 100%;
-  position: relative;
-  left: auto;
-  margin-left: 0;
-  padding-inline: clamp(1rem, 3vw, 2rem);
+  margin-inline: auto;
+  padding-inline: 0;
 }
 
-@media (width >= 1024px) {
-  .project-case-gallery__viewport {
-    width: 100vw;
-    left: 50%;
-    margin-left: -50vw;
-  }
+.project-screenshots-carousel {
+  width: 100%;
+  margin-inline: auto;
 }
 
 .project-screenshots-carousel__toolbar {
@@ -3094,9 +3116,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 }
 
 @media (width < 768px) {
-  .legal-page__back,
-  .project-detail-back,
-  .project-case-header__back {
+  .legal-page__back {
     display: none;
   }
 
@@ -3151,7 +3171,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   color: #ffffff;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .legal-page__email:hover {
     color: #ffffff;
   }
@@ -3229,7 +3249,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   color: #38bdf8;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (min-width: 640px) {
   .site-footer__link:hover {
     color: #38bdf8;
   }
@@ -3248,8 +3268,8 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   }
 }
 
-/* Touch: glow azzurro al tap (active/focus), mai su :hover durante lo scroll */
-@media (hover: none), (pointer: coarse) {
+/* Smartphone: glow al tap, senza :hover (desktop e tablet conservano hover) */
+@media (width < 640px) {
   a,
   button,
   .nav-btn,
@@ -3277,6 +3297,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   .btn-primary:hover::before,
   .btn-secondary:hover::before,
   .contact-detail-link:hover .contact-detail-icon::before,
+  .contact-form-input-wrap:hover::before,
   .projects-carousel-nav:hover::before {
     opacity: 0;
   }
@@ -3312,11 +3333,22 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   .contact-detail-link.touch-feedback .contact-detail-icon::before,
   .contact-detail-link:focus .contact-detail-icon::before,
   .contact-detail-link:focus-visible .contact-detail-icon::before,
+  .contact-form-input-wrap:active::before,
+  .contact-form-input-wrap.touch-feedback::before,
+  .contact-form-input-wrap:focus-within::before,
   .projects-carousel-nav:active::before,
   .projects-carousel-nav.touch-feedback::before,
   .projects-carousel-nav:focus::before,
   .projects-carousel-nav:focus-visible::before {
     opacity: 0.6;
+  }
+
+  .contact-form-input-wrap:active,
+  .contact-form-input-wrap.touch-feedback,
+  .contact-form-input-wrap:focus-within {
+    box-shadow:
+      0 0 16px rgba(56, 189, 248, 0.6),
+      0 0 28px rgba(56, 189, 248, 0.35);
   }
 
   .nav-btn,

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { isPerfLite } from '../utils/perfProfile'
+import { SMARTPHONE_MEDIA_QUERY } from '../constants/breakpoints'
 
 const ARROW_PATH =
   'M4 2.5V18.5L8.2 14.3L10.8 20.8L13.2 19.6L10.6 13.1H16.2L4 2.5Z'
@@ -35,7 +35,11 @@ const CURSOR_SVG = `
 
 const CustomCursor = () => {
   useEffect(() => {
-    if (window.matchMedia('(hover: none)').matches || isPerfLite()) {
+    const disableCursor =
+      window.matchMedia(SMARTPHONE_MEDIA_QUERY).matches ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (disableCursor) {
       return undefined
     }
 

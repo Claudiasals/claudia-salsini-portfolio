@@ -1,4 +1,6 @@
-/** Profilo performance: meno animazioni/maschere su device lenti o touch. */
+import { SMARTPHONE_MEDIA_QUERY } from '../constants/breakpoints'
+
+/** Profilo performance: solo smartphone o reduced motion (non su laptop touch / 4 core). */
 let perfLite = false
 let initialized = false
 
@@ -9,12 +11,9 @@ export const initPerfProfile = () => {
   initialized = true
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const coarsePointer = window.matchMedia('(hover: none), (pointer: coarse)').matches
-  const lowMemory = navigator.deviceMemory != null && navigator.deviceMemory <= 4
-  const lowCores = navigator.hardwareConcurrency != null && navigator.hardwareConcurrency <= 4
-  const narrow = window.matchMedia('(max-width: 900px)').matches
+  const smartphone = window.matchMedia(SMARTPHONE_MEDIA_QUERY).matches
 
-  perfLite = reducedMotion || coarsePointer || lowMemory || lowCores || narrow
+  perfLite = reducedMotion || smartphone
 
   if (perfLite) {
     document.documentElement.classList.add('perf-lite')

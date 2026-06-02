@@ -83,13 +83,13 @@ const About = () => {
               <div className="about-visual__img-shell">
                 <div className="about-visual__media">
                   <img
-                    src="/images/foto-ibrida-portfolio.png?v=21"
+                    src="/images/foto-ibrida-portfolio.png?v=22"
                     alt="Claudia Salsini - dalla psicologia allo sviluppo web"
                     className="about-visual__img"
                     loading="lazy"
                     decoding="async"
-                    width={1200}
-                    height={1456}
+                    width={858}
+                    height={1024}
                   />
                 </div>
               </div>
