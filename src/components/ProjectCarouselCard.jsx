@@ -41,8 +41,7 @@ const ProjectCarouselCard = ({ project, trackRef, carouselSlide = 'real' }) => {
     return () => observer.disconnect()
   }, [sectionVisible, trackRef])
 
-  const isLoopDuplicate =
-    carouselSlide === 'loop-duplicate' || carouselSlide.startsWith('clone-')
+  const isLoopDuplicate = carouselSlide === 'loop-duplicate'
 
   return (
     <article

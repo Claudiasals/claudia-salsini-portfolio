@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
+import { SECTION_REVEAL_EVENT, elementIntersectsViewport } from '../utils/sectionReveal'
 import SkillCategoryCard, {
   SKILLS_ICONS_AFTER_TITLE_MS,
   SKILLS_ICONS_ANIMATION_MS,
@@ -33,7 +34,14 @@ const Skills = () => {
   const [introDone, setIntroDone] = useState(false)
   const [typingRun, setTypingRun] = useState(0)
 
-  const bumpTyping = () => setTypingRun((run) => run + 1)
+  const activateIntro = useCallback(() => {
+    if (introDoneRef.current) return
+
+    wasInViewRef.current = true
+    introDoneRef.current = true
+    setIntroDone(true)
+    setTypingRun(1)
+  }, [])
 
   useEffect(() => {
     const layout = layoutRef.current
@@ -43,30 +51,52 @@ const Skills = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           if (!wasInViewRef.current) {
-            wasInViewRef.current = true
-            introDoneRef.current = true
-            setIntroDone(true)
-            bumpTyping()
+            activateIntro()
           }
           return
         }
 
-        wasInViewRef.current = false
+        if (!introDoneRef.current) {
+          wasInViewRef.current = false
+        }
       },
-      { threshold: 0.2 },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
     )
 
     observer.observe(layout)
 
     return () => observer.disconnect()
-  }, [])
+  }, [activateIntro])
+
+  useEffect(() => {
+    const layout = layoutRef.current
+    const skillsAnchor = document.getElementById('skills')
+    if (!layout && !skillsAnchor) return undefined
+
+    const onSectionReveal = (event) => {
+      if (introDoneRef.current) return
+
+      const sectionId = event.detail?.sectionId ?? null
+      if (sectionId && sectionId !== 'skills') return
+
+      const shouldActivate =
+        sectionId === 'skills' ||
+        (layout && elementIntersectsViewport(layout, { bottomInset: 48 })) ||
+        (skillsAnchor && elementIntersectsViewport(skillsAnchor, { bottomInset: 48 }))
+
+      if (shouldActivate) activateIntro()
+    }
+
+    window.addEventListener(SECTION_REVEAL_EVENT, onSectionReveal)
+    return () => window.removeEventListener(SECTION_REVEAL_EVENT, onSectionReveal)
+  }, [activateIntro])
 
   useEffect(() => {
     const handleSkillsLinkClick = (event) => {
       if (!event.target.closest(SKILLS_LINK_SELECTOR)) return
       if (!introDoneRef.current) return
 
-      bumpTyping()
+      setTypingRun((run) => run + 1)
     }
 
     document.addEventListener('click', handleSkillsLinkClick)

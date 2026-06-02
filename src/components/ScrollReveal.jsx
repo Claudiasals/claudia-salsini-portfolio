@@ -1,5 +1,9 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import {
+  SECTION_REVEAL_EVENT,
+  shouldRevealForRequest,
+} from '../utils/sectionReveal'
 import {
   broadcastHeroIntroReveal,
   HERO_INTRO_REVEAL_EVENT,
@@ -12,16 +16,15 @@ const ScrollReveal = ({ children, className = '', heroIntroBroadcast = false }) 
   const ref = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
   const { hash } = useLocation()
-  const initialHashRef = useRef(hash)
+
+  const markVisible = useCallback(() => {
+    setIsVisible(true)
+    if (heroIntroBroadcast) broadcastHeroIntroReveal()
+  }, [heroIntroBroadcast])
 
   useEffect(() => {
     const element = ref.current
     if (!element) return undefined
-
-    const markVisible = () => {
-      setIsVisible(true)
-      if (heroIntroBroadcast) broadcastHeroIntroReveal()
-    }
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       markVisible()
@@ -36,31 +39,42 @@ const ScrollReveal = ({ children, className = '', heroIntroBroadcast = false }) 
         }
       },
       {
-        threshold: 0.1,
-        rootMargin: '0px 0px -5% 0px',
+        threshold: 0.08,
+        rootMargin: '0px 0px -4% 0px',
       },
     )
 
     observer.observe(element)
 
     return () => observer.disconnect()
-  }, [heroIntroBroadcast])
+  }, [markVisible])
+
+  useEffect(() => {
+    const element = ref.current
+    if (!element || !hash) return undefined
+
+    const hashId = hash.replace('#', '')
+    const target = document.getElementById(hashId)
+    if (target && element.contains(target)) {
+      markVisible()
+    }
+
+    return undefined
+  }, [hash, markVisible])
 
   useEffect(() => {
     const element = ref.current
     if (!element) return undefined
 
-    const hashId = initialHashRef.current.replace('#', '')
-    if (!hashId) return undefined
-
-    const target = document.getElementById(hashId)
-    if (target && element.contains(target)) {
-      setIsVisible(true)
-      if (heroIntroBroadcast) broadcastHeroIntroReveal()
+    const onSectionReveal = (event) => {
+      if (shouldRevealForRequest(element, event.detail?.sectionId ?? null)) {
+        markVisible()
+      }
     }
 
-    return undefined
-  }, [heroIntroBroadcast])
+    window.addEventListener(SECTION_REVEAL_EVENT, onSectionReveal)
+    return () => window.removeEventListener(SECTION_REVEAL_EVENT, onSectionReveal)
+  }, [markVisible])
 
   return (
     <ScrollRevealContext.Provider value={isVisible}>
@@ -86,11 +100,20 @@ const ScrollRevealItem = ({
   const [selfVisible, setSelfVisible] = useState(false)
   const [heroCueVisible, setHeroCueVisible] = useState(() => isHeroIntroRevealed())
   const observesSelf = revealMargin != null
+  const { hash } = useLocation()
+
+  const markSelfVisible = useCallback(() => {
+    setSelfVisible(true)
+  }, [])
+
+  const markHeroCueVisible = useCallback(() => {
+    setHeroCueVisible(true)
+  }, [])
 
   useEffect(() => {
     if (!revealWithHero) return undefined
 
-    const reveal = () => setHeroCueVisible(true)
+    const reveal = () => markHeroCueVisible()
 
     if (isHeroIntroRevealed()) {
       reveal()
@@ -106,7 +129,21 @@ const ScrollRevealItem = ({
     return () => {
       window.removeEventListener(HERO_INTRO_REVEAL_EVENT, reveal)
     }
-  }, [revealWithHero])
+  }, [revealWithHero, markHeroCueVisible])
+
+  useEffect(() => {
+    if (!hash || !revealWithHero) return undefined
+
+    const hashId = hash.replace('#', '')
+    const element = ref.current
+    if (!element || hashId !== 'about') return undefined
+
+    if (shouldRevealForRequest(element, 'about')) {
+      markHeroCueVisible()
+    }
+
+    return undefined
+  }, [hash, revealWithHero, markHeroCueVisible])
 
   useEffect(() => {
     if (!observesSelf) return undefined
@@ -114,17 +151,15 @@ const ScrollRevealItem = ({
     const element = ref.current
     if (!element) return undefined
 
-    const reveal = () => setSelfVisible(true)
-
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      reveal()
+      markSelfVisible()
       return undefined
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          reveal()
+          markSelfVisible()
           observer.disconnect()
         }
       },
@@ -137,7 +172,24 @@ const ScrollRevealItem = ({
     observer.observe(element)
 
     return () => observer.disconnect()
-  }, [observesSelf, revealMargin, revealThreshold])
+  }, [observesSelf, revealMargin, revealThreshold, markSelfVisible])
+
+  useEffect(() => {
+    const element = ref.current
+    if (!element) return undefined
+
+    const onSectionReveal = (event) => {
+      const sectionId = event.detail?.sectionId ?? null
+
+      if (shouldRevealForRequest(element, sectionId)) {
+        markSelfVisible()
+        if (revealWithHero) markHeroCueVisible()
+      }
+    }
+
+    window.addEventListener(SECTION_REVEAL_EVENT, onSectionReveal)
+    return () => window.removeEventListener(SECTION_REVEAL_EVENT, onSectionReveal)
+  }, [revealWithHero, markSelfVisible, markHeroCueVisible])
 
   const isVisible = revealWithHero
     ? heroCueVisible

@@ -1,3 +1,5 @@
+import { requestSectionReveal } from './sectionReveal'
+
 const parseCssPx = (value, fallback) => {
   const parsed = Number.parseFloat(value)
   return Number.isFinite(parsed) ? parsed : fallback
@@ -121,7 +123,10 @@ export const scrollToSectionByIdAfterLayout = (id, behavior = 'auto') => {
       const settleDelay =
         behavior === 'smooth' && isCoarsePointer() ? 820 : behavior === 'smooth' ? 420 : 50
 
-      window.setTimeout(() => run('auto'), settleDelay)
+      window.setTimeout(() => {
+        run('auto')
+        requestSectionReveal(id)
+      }, settleDelay)
     })
   })
 }

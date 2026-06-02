@@ -259,32 +259,3 @@ export function initProjectCarouselLoop(track) {
     loopState.delete(track)
   }
 }
-
-/** @deprecated use initProjectCarouselLoop */
-export const bindProjectCarouselLoop = initProjectCarouselLoop
-
-export function getActiveProjectCarouselIndex(track, cards) {
-  const slideIndex = getActiveProjectCarouselSlideIndex(track, cards)
-  const setSize = getCarouselSetSize(track)
-  if (!carouselHasInfiniteLoop(track) || setSize <= 0) return slideIndex
-  return slideIndex % setSize
-}
-
-export function scrollProjectCarouselToIndex(track, logicalIndex, behavior = 'smooth') {
-  const setSize = getCarouselSetSize(track)
-  const offset = carouselHasInfiniteLoop(track) ? getMiddleSetStartIndex(track) : 0
-  const index = offset + (((logicalIndex % setSize) + setSize) % setSize)
-  scrollProjectCarouselToSlideIndex(track, index, behavior)
-}
-
-/** @deprecated old clone API */
-export const carouselHasLoopClones = carouselHasInfiniteLoop
-export const getFirstRealSlideIndex = getMiddleSetStartIndex
-export function getLastRealSlideIndex(track) {
-  const setSize = getCarouselSetSize(track)
-  if (!carouselHasInfiniteLoop(track)) {
-    const cards = getProjectCarouselCards(track)
-    return Math.max(0, cards.length - 1)
-  }
-  return getMiddleSetStartIndex(track) + setSize - 1
-}

@@ -1,3 +1,5 @@
+import { requestSectionReveal } from './sectionReveal'
+
 /** Pausa effetti pesanti mentre l’utente scrolla (libera il main thread). */
 let scrolling = false
 let scrollEndTimer = 0
@@ -17,6 +19,7 @@ const setScrolling = (active) => {
   document.documentElement.classList.toggle('is-scrolling', active)
   if (!active) {
     for (const listener of idleListeners) listener()
+    requestSectionReveal()
   }
 }
 

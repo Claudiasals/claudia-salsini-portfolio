@@ -81,7 +81,7 @@ const About = () => {
           <ScrollRevealItem tier="about-2" className="about-visual" revealWithHero>
             <div className="about-visual__wrap">
               <div className="about-visual__img-shell">
-                <div className="about-visual__media about-visual__media--complete">
+                <div className="about-visual__media">
                   <img
                     src="/images/foto-ibrida-portfolio.png?v=21"
                     alt="Claudia Salsini - dalla psicologia allo sviluppo web"

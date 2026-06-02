@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { FaGithub, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa'
 import { FiMail, FiPhone } from 'react-icons/fi'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
+import {
+  SECTION_REVEAL_EVENT,
+  elementIntersectsViewport,
+} from '../utils/sectionReveal'
 import ContactDetailLink from './ContactDetailLink'
 
 const TYPING_MS = 70
@@ -31,6 +35,13 @@ const Contact = () => {
   const sectionRef = useRef(null)
   const [typingRun, setTypingRun] = useState(0)
 
+  const startTyping = useCallback((restart = false) => {
+    setTypingRun((run) => {
+      if (run === 0) return 1
+      return restart ? run + 1 : run
+    })
+  }, [])
+
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return undefined
@@ -38,28 +49,48 @@ const Contact = () => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
-
-        setTypingRun((run) => (run === 0 ? 1 : run))
+        startTyping()
       },
-      { threshold: 0.2 },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
     )
 
     observer.observe(section)
 
     return () => observer.disconnect()
-  }, [])
+  }, [startTyping])
+
+  useEffect(() => {
+    const section = sectionRef.current
+    const contactAnchor = document.getElementById('contact')
+    if (!section && !contactAnchor) return undefined
+
+    const onSectionReveal = (event) => {
+      const sectionId = event.detail?.sectionId ?? null
+      if (sectionId && sectionId !== 'contact') return
+
+      const shouldStart =
+        sectionId === 'contact' ||
+        (section && elementIntersectsViewport(section, { bottomInset: 48 })) ||
+        (contactAnchor && elementIntersectsViewport(contactAnchor, { bottomInset: 48 }))
+
+      if (shouldStart) startTyping(sectionId === 'contact')
+    }
+
+    window.addEventListener(SECTION_REVEAL_EVENT, onSectionReveal)
+    return () => window.removeEventListener(SECTION_REVEAL_EVENT, onSectionReveal)
+  }, [startTyping])
 
   useEffect(() => {
     const handleContactLinkClick = (event) => {
       if (!event.target.closest(CONTACT_LINK_SELECTOR)) return
 
-      setTypingRun((run) => run + 1)
+      startTyping(true)
     }
 
     document.addEventListener('click', handleContactLinkClick)
 
     return () => document.removeEventListener('click', handleContactLinkClick)
-  }, [])
+  }, [startTyping])
 
   const handleSubmit = (event) => {
     event.preventDefault()
