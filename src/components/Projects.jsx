@@ -94,7 +94,7 @@ const Projects = () => {
         </ScrollRevealItem>
 
         <ScrollRevealItem tier="body">
-          <p className="section-after-title max-w-3xl text-lg leading-8 text-slate-300">
+          <p className="section-lead section-after-title max-w-3xl">
             Una selezione di progetti sviluppati durante il percorso da Full Stack
             Developer, tra applicazioni gestionali, piattaforme full stack e siti
             con pannello di amministrazione.

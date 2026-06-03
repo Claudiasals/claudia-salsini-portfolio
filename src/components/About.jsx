@@ -58,7 +58,7 @@ const About = () => {
             </ScrollRevealItem>
 
             <ScrollRevealItem tier="about-1" revealMargin={REVEAL_COPY}>
-              <div className="about-copy mt-5 space-y-4 text-base leading-7 text-slate-300 md:text-[1.0625rem] md:leading-8">
+              <div className="about-copy section-lead mt-5 space-y-4">
                 <p>
                   Sono una Junior Full Stack Web Developer con una formazione in Scienze e
                   Tecniche Psicologiche e un percorso precedente nei settori psicologico,

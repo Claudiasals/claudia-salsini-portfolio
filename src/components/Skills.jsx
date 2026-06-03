@@ -120,7 +120,7 @@ const Skills = () => {
               Competenze tecniche
             </h2>
 
-            <p className="skills-lead mt-5 max-w-2xl text-base leading-7 text-slate-400">
+            <p className="skills-lead section-lead mt-5 max-w-2xl">
               Uno stack costruito tra formazione, stage curricolare e sviluppo di applicazioni
               web.
             </p>

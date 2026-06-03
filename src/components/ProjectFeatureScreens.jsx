@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { FiMaximize2, FiX } from 'react-icons/fi'
 
 function getFeatureScreens(feature) {
   if (feature.screens?.length) return feature.screens
@@ -48,52 +49,80 @@ export function ProjectFeatureScreens({ features }) {
         {features.map((feature) => {
           const screens = getFeatureScreens(feature)
 
+          const multiScreens = screens.length > 1
+          const cardLayout =
+            screens.length === 1
+              ? 'project-case-feature-screens__card--side'
+              : multiScreens
+                ? 'project-case-feature-screens__card--stacked'
+                : ''
+
           return (
             <li
               key={feature.title}
-              className="project-case-card project-case-feature-screens__card"
+              className={`project-case-feature-screens__card ${cardLayout}`.trim()}
             >
-              <h3 className="project-case-feature-screens__title">{feature.title}</h3>
+              <div className="project-case-feature-screens__copy">
+                <h3 className="project-case-feature-screens__title">{feature.title}</h3>
               <p className="project-case-card__text">{feature.text}</p>
 
               {feature.tags ? (
                 <p className="project-case-feature-screens__tags">{feature.tags}</p>
               ) : null}
 
+                {screens.length === 0 && feature.fallback ? (
+                  <p className="project-case-feature-screens__fallback">{feature.fallback}</p>
+                ) : null}
+              </div>
+
               {screens.length > 0 ? (
-                <div
-                  className={
-                    screens.length > 1
-                      ? 'project-case-feature-screens__shots'
-                      : 'project-case-feature-screens__shots project-case-feature-screens__shots--single'
-                  }
-                >
-                  {screens.map((screen) => (
-                    <button
-                      key={screen.src}
-                      type="button"
-                      className="project-case-feature-screens__shot"
-                      onClick={() => openLightbox(feature, screen)}
-                      aria-label={`Ingrandisci schermata: ${feature.title}${screen.label ? ` — ${screen.label}` : ''}`}
-                    >
-                      <div className="project-case-feature-screens__frame">
-                        <img
-                          src={screen.src}
-                          alt={screen.alt}
-                          className="project-case-feature-screens__img"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </div>
-                      {screen.label ? (
-                        <span className="project-case-feature-screens__screen-label">{screen.label}</span>
-                      ) : null}
-                      <span className="project-case-feature-screens__hint">Clicca per ingrandire</span>
-                    </button>
-                  ))}
+                <div className="project-case-feature-screens__media">
+                  <div
+                    className={
+                      multiScreens
+                        ? 'project-case-feature-screens__shots'
+                        : 'project-case-feature-screens__shots project-case-feature-screens__shots--single'
+                    }
+                  >
+                    {screens.map((screen) => {
+                      const openScreen = () => openLightbox(feature, screen)
+
+                      return (
+                        <div key={screen.src} className="project-case-feature-screens__shot">
+                          <div className="project-case-feature-screens__frame group relative overflow-hidden">
+                            <button
+                              type="button"
+                              className="project-case-feature-screens__frame-hit"
+                              onClick={openScreen}
+                              aria-label={`Ingrandisci immagine: ${feature.title}${screen.label ? ` — ${screen.label}` : ''}`}
+                            >
+                              <img
+                                src={screen.src}
+                                alt={screen.alt}
+                                className="project-case-feature-screens__img w-full cursor-zoom-in transition duration-300 group-hover:scale-[1.02]"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            </button>
+                            <button
+                              type="button"
+                              className="project-case-feature-screens__expand-btn absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition hover:bg-black/80"
+                              onClick={openScreen}
+                              aria-label="Ingrandisci immagine"
+                            >
+                              <FiMaximize2 size={18} aria-hidden />
+                            </button>
+                          </div>
+                          {screen.label ? (
+                            <span className="project-case-feature-screens__screen-label">
+                              {screen.label}
+                            </span>
+                          ) : null}
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
-              ) : feature.fallback ? (
-                <p className="project-case-feature-screens__fallback">{feature.fallback}</p>
               ) : null}
             </li>
           )
@@ -110,11 +139,13 @@ export function ProjectFeatureScreens({ features }) {
         >
           <button
             type="button"
-            className="project-screenshot-lightbox__close"
+            className="nav-btn project-screenshot-lightbox__close"
             onClick={close}
             aria-label="Chiudi anteprima"
           >
-            ×
+            <span className="nav-btn-inner project-screenshot-lightbox__close-inner">
+              <FiX className="project-screenshot-lightbox__close-icon" aria-hidden />
+            </span>
           </button>
           <div
             className="project-screenshot-lightbox__inner"

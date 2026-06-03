@@ -38,7 +38,7 @@ const Hero = () => {
         </ScrollRevealItem>
 
         <ScrollRevealItem tier="hero-4">
-          <p className="hero-lead mx-auto mt-8 max-w-3xl text-slate-300">
+          <p className="hero-lead section-lead mx-auto mt-8 max-w-3xl">
             Creo applicazioni web moderne, responsive e orientate all&apos;esperienza utente,
             con attenzione a interfacce chiare, flussi semplici e soluzioni digitali pensate
             per esigenze reali.
