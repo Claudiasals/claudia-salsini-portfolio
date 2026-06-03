@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom'
+import CookieConsent from './CookieConsent'
 import CustomCursor from './CustomCursor'
 import Footer from './Footer'
 import Navbar from './Navbar'
@@ -12,6 +13,7 @@ const SiteLayout = () => {
       <Navbar />
       <Outlet />
       <Footer />
+      <CookieConsent />
       <ScrollToTopArrow />
     </>
   )
