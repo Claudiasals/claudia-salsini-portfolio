@@ -3050,9 +3050,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   background:
     linear-gradient(rgba(var(--site-bg-rgb), 0.94), rgba(var(--site-bg-rgb), 0.94)) padding-box,
     linear-gradient(to right, #9333ea 0%, #38bdf8 45%, #22d3ee 88%, #6ee7b7 100%) border-box;
-  box-shadow:
-    0 0 16px rgba(56, 189, 248, 0.2),
-    0 0 28px rgba(147, 51, 234, 0.14);
+  box-shadow: none;
 }
 
 .project-case-overview-cards .project-case-card--compact .project-case-card__title,
