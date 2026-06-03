@@ -10,6 +10,7 @@ import {
 import {
   HERO_CIRCUIT_TRACE_PAIRS,
   getCircuitTraceLength,
+  initHeroCircuitTraces,
   sampleCircuitTraceAtDistance,
 } from './heroCircuitTraces'
 import { isPerfLite } from './perfProfile'
@@ -18,22 +19,18 @@ import { initScrollInteraction, isScrolling, onScrollIdle } from './scrollIntera
 const AUTO_CLASS = 'hero-bg__circuit-spotlight--auto'
 const IDLE_CLASS = 'hero-bg__circuit-spotlight--idle'
 const LITE_CLASS = 'hero-bg__circuit-spotlight--lite'
-const TICK_MS_DEFAULT = 1000 / 60
-const TICK_MS_LITE = 1000 / 30
 const VISIBILITY_ROOT_MARGIN = '100px 0px'
 const TRACE_SWEEP_SEC = 11
-const PAIR_COOLDOWN_SEC = 0.28
+const PAIR_COOLDOWN_SEC = 0.12
 const LAYOUT_STABLE_FRAMES = 12
 const LAYOUT_SETTLE_MS = 600
 /** Attesa dopo layout stabile prima di far partire l’orologio (evita sweep “in corsa” al refresh). */
 const CLOCK_START_FRAMES = 3
 /** Fade-in luminosità all’avvio: l’orologio resta a progress 0 finché non è visibile. */
 const FADE_IN_MS = 520
-/** Smussatura posizioni (ms): indipendente dal framerate, non altera la velocità lungo il filo. */
-const SMOOTH_TAU_MS = 38
-const TRAIL_BACK_1_SVG = 22
-const TRAIL_BACK_2_SVG = 44
-const TRAIL_BACK_3_SVG = 66
+const TRAIL_BACK_1_SVG = 16
+const TRAIL_BACK_2_SVG = 32
+const TRAIL_BACK_3_SVG = 48
 
 const patterns = new Set()
 const smoothByPattern = new WeakMap()
@@ -64,18 +61,13 @@ const emptyChannel = () => ({
   back3: { x: 0, y: 0 },
 })
 
-const smoothAlpha = (deltaMs) => {
-  if (deltaMs <= 0) return 1
-  return 1 - Math.exp(-deltaMs / SMOOTH_TAU_MS)
-}
-
 const layerOnTraceDistance = (pattern, traceIndex, distance) => {
   const { x, y } = sampleCircuitTraceAtDistance(traceIndex, distance)
   return svgCircuitToLayerPx(x, y, pattern)
 }
 
 const setPx = (pattern, name, value) => {
-  pattern.style.setProperty(name, `${value.toFixed(3)}px`)
+  pattern.style.setProperty(name, `${value}px`)
 }
 
 const targetChannel = (pattern, traceIndex, progress) => {
@@ -167,7 +159,7 @@ const hidePattern = (pattern) => {
   pattern.style.setProperty('--spot-b-y', '-999px')
 }
 
-const renderPatternFrame = (pattern, frame, alpha, now) => {
+const renderPatternFrame = (pattern, frame, now) => {
   if (!isCircuitLayoutReady(pattern)) {
     hidePattern(pattern)
     return
@@ -181,28 +173,15 @@ const renderPatternFrame = (pattern, frame, alpha, now) => {
   const [traceA, traceB] = HERO_CIRCUIT_TRACE_PAIRS[frame.pairIndex]
   const progress = frame.inCooldown ? 1 : frame.progress
 
-  const targetActive = fadeInFactor(now)
-
   if (frame.pairIndex !== state.pairIndex) {
     state.pairIndex = frame.pairIndex
-    state.progressA = progress
-    state.progressB = progress
-  } else if (!lite) {
-    state.progressA += (progress - state.progressA) * alpha
-    state.progressB += (progress - state.progressB) * alpha
-  } else {
-    state.progressA = progress
-    state.progressB = progress
   }
 
-  state.a = targetChannel(pattern, traceA, state.progressA)
-  state.b = targetChannel(pattern, traceB, state.progressB)
-
-  if (lite) {
-    state.spotActive = targetActive
-  } else {
-    state.spotActive += (targetActive - state.spotActive) * alpha
-  }
+  state.progressA = progress
+  state.progressB = progress
+  state.a = targetChannel(pattern, traceA, progress)
+  state.b = targetChannel(pattern, traceB, progress)
+  state.spotActive = fadeInFactor(now)
 
   pattern.classList.add(AUTO_CLASS)
   pattern.style.setProperty('--spot-active', String(Math.max(0, Math.min(1, state.spotActive))))
@@ -289,16 +268,12 @@ const tick = (now) => {
     return
   }
 
-  const tickInterval = isPerfLite() ? TICK_MS_LITE : TICK_MS_DEFAULT
-  const deltaMs =
-    lastFrameMs == null ? tickInterval : Math.min(Math.max(0, now - lastFrameMs), 32)
   lastFrameMs = now
-  const alpha = isPerfLite() ? 1 : smoothAlpha(deltaMs)
   const frame = frameFromClock(now)
 
   for (const pattern of patterns) {
     if (!isPatternVisible(pattern)) continue
-    renderPatternFrame(pattern, frame, alpha, now)
+    renderPatternFrame(pattern, frame, now)
   }
 
   if (shouldRunLoop()) {
@@ -503,6 +478,7 @@ const tryBoot = () => {
 export const registerCircuitAutoPattern = (element) => {
   if (!element) return () => {}
 
+  initHeroCircuitTraces()
   ensurePageVisibilityHook()
   ensureScrollHook()
   patterns.add(element)

@@ -1,7 +1,17 @@
 /**
- * Le 6 linee principali del motivo (prima dei rametti d’angolo).
- * Ogni traccia è una polilinea in coordinate SVG (viewBox 960×540).
+ * Tracciati principali di hero-circuit-motif.svg (path stroke, senza rametti d’angolo).
+ * Campionamento via getPointAtLength = stesso percorso del filo visibile (angoli a chamfer, non fillet).
  */
+export const HERO_CIRCUIT_PATH_D = [
+  'M40 120 H280 L320 160 H520 L560 120 H880',
+  'M80 260 H240 L300 320 H460 L520 260 H760 L820 300 H920',
+  'M120 400 H360 L400 360 H640 L680 420 H900',
+  'M200 80 V200 L260 260 V380',
+  'M480 60 V180 L540 240 V420',
+  'M720 100 V220 L660 280 V460',
+]
+
+/** Vertici equivalenti (fallback senza DOM). */
 export const HERO_CIRCUIT_TRACES = [
   [
     [40, 120],
@@ -49,7 +59,6 @@ export const HERO_CIRCUIT_TRACES = [
   ],
 ]
 
-/** Coppie di indici: due linee illuminate insieme. */
 export const HERO_CIRCUIT_TRACE_PAIRS = [
   [0, 1],
   [2, 3],
@@ -58,109 +67,39 @@ export const HERO_CIRCUIT_TRACE_PAIRS = [
 
 const dist = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1])
 
-const normalize = (x, y) => {
-  const len = Math.hypot(x, y)
-  if (len < 1e-6) return [0, 0]
-  return [x / len, y / len]
-}
-
-const SAMPLE_STEP = 2
-const DENSIFY_STEP = 3
-/** Raggio fillet agli angoli (unità SVG, come nel motivo). */
-const CORNER_FILLET_R = 16
-
-const pushIfFar = (samples, point, minDist = 0.08) => {
-  const prev = samples[samples.length - 1]
-  if (!prev || dist(prev, point) > minDist) {
-    samples.push(point)
-  }
-}
-
-const sampleSegment = (samples, p1, p2, maxStep = SAMPLE_STEP) => {
+const sampleSegment = (samples, p1, p2, maxStep) => {
   const chord = dist(p1, p2)
   const steps = Math.max(2, Math.ceil(chord / maxStep))
 
   for (let s = 1; s <= steps; s += 1) {
     const t = s / steps
-    pushIfFar(samples, [p1[0] + (p2[0] - p1[0]) * t, p1[1] + (p2[1] - p1[1]) * t])
+    samples.push([p1[0] + (p2[0] - p1[0]) * t, p1[1] + (p2[1] - p1[1]) * t])
   }
 }
 
-/**
- * Polilinea come nel SVG (segmenti retti) + piccolo arco agli angoli.
- * Evita il “gonfiore” Catmull-Rom che fa scattare la scia dopo gli angoli.
- */
-const buildFilletPolyline = (vertices, filletR = CORNER_FILLET_R) => {
-  const n = vertices.length
-  if (n < 2) return [...vertices]
+/** Polilinea esatta: passa per ogni vertice, nessun arrotondamento agli angoli. */
+const buildExactPolyline = (vertices, maxStep = 1.5) => {
+  if (vertices.length < 2) return [...vertices]
 
-  const samples = []
-  pushIfFar(samples, vertices[0])
-
-  for (let i = 1; i < n - 1; i += 1) {
-    const prev = vertices[i - 1]
-    const corner = vertices[i]
-    const next = vertices[i + 1]
-
-    const inLen = dist(prev, corner)
-    const outLen = dist(corner, next)
-    if (inLen < 1e-4 || outLen < 1e-4) continue
-
-    const [inX, inY] = normalize(corner[0] - prev[0], corner[1] - prev[1])
-    const [outX, outY] = normalize(next[0] - corner[0], next[1] - corner[1])
-
-    const dot = Math.max(-1, Math.min(1, inX * outX + inY * outY))
-    const turn = Math.acos(dot)
-
-    if (turn < 0.08) {
-      sampleSegment(samples, samples[samples.length - 1], corner)
-      continue
-    }
-
-    const trim = Math.min(
-      filletR / Math.tan(turn / 2),
-      inLen * 0.45,
-      outLen * 0.45,
-    )
-
-    const pIn = [corner[0] - inX * trim, corner[1] - inY * trim]
-    const pOut = [corner[0] + outX * trim, corner[1] + outY * trim]
-
-    sampleSegment(samples, samples[samples.length - 1], pIn)
-
-    const arcSteps = Math.max(12, Math.ceil((turn * filletR * 1.35) / SAMPLE_STEP))
-    for (let s = 1; s < arcSteps; s += 1) {
-      const t = s / arcSteps
-      const bx = pIn[0] * (1 - t) + corner[0] * t
-      const by = pIn[1] * (1 - t) + corner[1] * t
-      const qx = corner[0] * (1 - t) + pOut[0] * t
-      const qy = corner[1] * (1 - t) + pOut[1] * t
-      pushIfFar(samples, [
-        bx * (1 - t) + qx * t,
-        by * (1 - t) + qy * t,
-      ])
-    }
-
-    pushIfFar(samples, pOut)
+  const samples = [vertices[0]]
+  for (let i = 0; i < vertices.length - 1; i += 1) {
+    sampleSegment(samples, vertices[i], vertices[i + 1], maxStep)
   }
-
-  sampleSegment(samples, samples[samples.length - 1], vertices[n - 1])
-
   return samples
 }
 
-/** Riduce segmenti lunghi: velocità costante in arco senza “balzi” agli spigoli campionati. */
-const densifyPolyline = (points, maxStep = DENSIFY_STEP) => {
-  if (points.length < 2) return points
-
-  const dense = [points[0]]
-  for (let i = 0; i < points.length - 1; i += 1) {
-    sampleSegment(dense, points[i], points[i + 1], maxStep)
+const buildArcLengthSampler = (positionAtDistance, total) => {
+  const sample = (t) => {
+    const clamped = Math.max(0, Math.min(1, t))
+    const pos = positionAtDistance(clamped * total)
+    return { x: pos.x, y: pos.y, heading: 0 }
   }
-  return dense
+
+  return { total, sample, positionAtDistance }
 }
 
-const buildArcLengthSampler = (points) => {
+const buildPolylineSampler = (vertices) => {
+  const points = buildExactPolyline(vertices)
   const segmentLengths = []
   let total = 0
 
@@ -170,19 +109,16 @@ const buildArcLengthSampler = (points) => {
     total += length
   }
 
-  const positionAt = (distance) => {
-    if (total <= 0 || points.length === 0) {
-      return { x: 0, y: 0 }
-    }
-
+  const positionAtDistance = (distance) => {
+    if (total <= 0 || points.length === 0) return { x: 0, y: 0 }
     if (distance <= 0) return { x: points[0][0], y: points[0][1] }
+
     if (distance >= total) {
       const end = points[points.length - 1]
       return { x: end[0], y: end[1] }
     }
 
     let walked = 0
-
     for (let i = 0; i < segmentLengths.length; i += 1) {
       const segLen = segmentLengths[i]
       if (walked + segLen >= distance) {
@@ -201,38 +137,45 @@ const buildArcLengthSampler = (points) => {
     return { x: end[0], y: end[1] }
   }
 
-  const sample = (t) => {
-    const clamped = Math.max(0, Math.min(1, t))
-    const pos = positionAt(clamped * total)
-    const delta = Math.max(8, Math.min(28, total * 0.02))
-    const ahead = positionAt(Math.min(total, clamped * total + delta))
-    const behind = positionAt(Math.max(0, clamped * total - delta))
-
-    let heading = Math.atan2(ahead.y - behind.y, ahead.x - behind.x)
-
-    if (!Number.isFinite(heading)) {
-      const next = positionAt(Math.min(total, clamped * total + total * 0.02))
-      heading = Math.atan2(next.y - pos.y, next.x - pos.x)
-    }
-
-    return { x: pos.x, y: pos.y, heading }
-  }
-
-  return { points, total, sample, positionAtDistance: positionAt }
+  return buildArcLengthSampler(positionAtDistance, total)
 }
 
-const traceSamplers = HERO_CIRCUIT_TRACES.map((controlPoints) => {
-  const pathPoints = densifyPolyline(buildFilletPolyline(controlPoints))
-  return buildArcLengthSampler(pathPoints)
-})
+const buildNativePathSampler = (pathEl) => {
+  const total = pathEl.getTotalLength()
+  const positionAtDistance = (distance) => {
+    const p = pathEl.getPointAtLength(Math.max(0, Math.min(total, distance)))
+    return { x: p.x, y: p.y }
+  }
+  return buildArcLengthSampler(positionAtDistance, total)
+}
 
-export const sampleCircuitTrace = (traceIndex, t) => traceSamplers[traceIndex].sample(t)
+let traceSamplers = null
 
-export const getCircuitTraceLength = (traceIndex) => traceSamplers[traceIndex].total
+export const initHeroCircuitTraces = () => {
+  if (traceSamplers) return traceSamplers
 
-/** Distanza lungo il filo in unità SVG (per scia coerente con la geometria). */
+  if (typeof document !== 'undefined') {
+    traceSamplers = HERO_CIRCUIT_PATH_D.map((d) => {
+      const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+      pathEl.setAttribute('d', d)
+      return buildNativePathSampler(pathEl)
+    })
+    return traceSamplers
+  }
+
+  traceSamplers = HERO_CIRCUIT_TRACES.map((vertices) => buildPolylineSampler(vertices))
+  return traceSamplers
+}
+
+const getSampler = (traceIndex) => initHeroCircuitTraces()[traceIndex]
+
+export const sampleCircuitTrace = (traceIndex, t) => getSampler(traceIndex).sample(t)
+
+export const getCircuitTraceLength = (traceIndex) => getSampler(traceIndex).total
+
 export const sampleCircuitTraceAtDistance = (traceIndex, distance) => {
-  const sampler = traceSamplers[traceIndex]
-  const pos = sampler.positionAtDistance(Math.max(0, Math.min(sampler.total, distance)))
-  return { x: pos.x, y: pos.y, heading: 0 }
+  const sampler = getSampler(traceIndex)
+  return sampler.positionAtDistance(
+    Math.max(0, Math.min(sampler.total, distance)),
+  )
 }
