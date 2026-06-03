@@ -8,13 +8,12 @@ const ARROW_PATH =
 const CURSOR_SVG = `
   <svg class="custom-cursor__arrow" width="30" height="36" viewBox="0 0 22 28" fill="none" overflow="visible" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <filter id="custom-cursor-outer-glow" x="-80%" y="-80%" width="260%" height="260%" color-interpolation-filters="sRGB">
-        <feMorphology operator="dilate" radius="0.65" in="SourceAlpha" result="dilate" />
-        <feGaussianBlur in="dilate" stdDeviation="2.4" result="blur" />
-        <feComposite in="blur" in2="SourceGraphic" operator="out" result="outer" />
-        <feFlood flood-color="#00f0ff" flood-opacity="1" result="glowColor" />
-        <feComposite in="glowColor" in2="outer" operator="in" result="coloredGlow" />
-        <feGaussianBlur in="coloredGlow" stdDeviation="2.8" result="softGlow" />
+      <filter id="custom-cursor-outer-glow" x="-120%" y="-120%" width="340%" height="340%" color-interpolation-filters="sRGB">
+        <feMorphology operator="dilate" radius="1.15" in="SourceAlpha" result="dilate" />
+        <feGaussianBlur in="dilate" stdDeviation="3.2" result="blurWide" />
+        <feFlood flood-color="#00f0ff" flood-opacity="0.92" result="glowColor" />
+        <feComposite in="glowColor" in2="blurWide" operator="in" result="coloredGlow" />
+        <feGaussianBlur in="coloredGlow" stdDeviation="1.4" result="softGlow" />
         <feMerge>
           <feMergeNode in="softGlow" />
           <feMergeNode in="SourceGraphic" />

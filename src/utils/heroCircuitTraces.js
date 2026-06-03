@@ -64,20 +64,21 @@ const normalize = (x, y) => {
   return [x / len, y / len]
 }
 
-const SAMPLE_STEP = 3
+const SAMPLE_STEP = 2
+const DENSIFY_STEP = 3
 /** Raggio fillet agli angoli (unità SVG, come nel motivo). */
 const CORNER_FILLET_R = 16
 
-const pushIfFar = (samples, point, minDist = 0.15) => {
+const pushIfFar = (samples, point, minDist = 0.08) => {
   const prev = samples[samples.length - 1]
   if (!prev || dist(prev, point) > minDist) {
     samples.push(point)
   }
 }
 
-const sampleSegment = (samples, p1, p2) => {
+const sampleSegment = (samples, p1, p2, maxStep = SAMPLE_STEP) => {
   const chord = dist(p1, p2)
-  const steps = Math.max(2, Math.ceil(chord / SAMPLE_STEP))
+  const steps = Math.max(2, Math.ceil(chord / maxStep))
 
   for (let s = 1; s <= steps; s += 1) {
     const t = s / steps
@@ -127,7 +128,7 @@ const buildFilletPolyline = (vertices, filletR = CORNER_FILLET_R) => {
 
     sampleSegment(samples, samples[samples.length - 1], pIn)
 
-    const arcSteps = Math.max(4, Math.ceil((turn * filletR) / SAMPLE_STEP))
+    const arcSteps = Math.max(12, Math.ceil((turn * filletR * 1.35) / SAMPLE_STEP))
     for (let s = 1; s < arcSteps; s += 1) {
       const t = s / arcSteps
       const bx = pIn[0] * (1 - t) + corner[0] * t
@@ -146,6 +147,17 @@ const buildFilletPolyline = (vertices, filletR = CORNER_FILLET_R) => {
   sampleSegment(samples, samples[samples.length - 1], vertices[n - 1])
 
   return samples
+}
+
+/** Riduce segmenti lunghi: velocità costante in arco senza “balzi” agli spigoli campionati. */
+const densifyPolyline = (points, maxStep = DENSIFY_STEP) => {
+  if (points.length < 2) return points
+
+  const dense = [points[0]]
+  for (let i = 0; i < points.length - 1; i += 1) {
+    sampleSegment(dense, points[i], points[i + 1], maxStep)
+  }
+  return dense
 }
 
 const buildArcLengthSampler = (points) => {
@@ -210,7 +222,7 @@ const buildArcLengthSampler = (points) => {
 }
 
 const traceSamplers = HERO_CIRCUIT_TRACES.map((controlPoints) => {
-  const pathPoints = buildFilletPolyline(controlPoints)
+  const pathPoints = densifyPolyline(buildFilletPolyline(controlPoints))
   return buildArcLengthSampler(pathPoints)
 })
 

@@ -22,7 +22,7 @@ const TICK_MS_DEFAULT = 1000 / 60
 const TICK_MS_LITE = 1000 / 30
 const VISIBILITY_ROOT_MARGIN = '100px 0px'
 const TRACE_SWEEP_SEC = 11
-const PAIR_COOLDOWN_SEC = 0.55
+const PAIR_COOLDOWN_SEC = 0.28
 const LAYOUT_STABLE_FRAMES = 12
 const LAYOUT_SETTLE_MS = 600
 /** Attesa dopo layout stabile prima di far partire l’orologio (evita sweep “in corsa” al refresh). */
@@ -30,9 +30,10 @@ const CLOCK_START_FRAMES = 3
 /** Fade-in luminosità all’avvio: l’orologio resta a progress 0 finché non è visibile. */
 const FADE_IN_MS = 520
 /** Smussatura posizioni (ms): indipendente dal framerate, non altera la velocità lungo il filo. */
-const SMOOTH_TAU_MS = 42
-const TRAIL_BACK_1_SVG = 38
-const TRAIL_BACK_2_SVG = 78
+const SMOOTH_TAU_MS = 38
+const TRAIL_BACK_1_SVG = 22
+const TRAIL_BACK_2_SVG = 44
+const TRAIL_BACK_3_SVG = 66
 
 const patterns = new Set()
 const smoothByPattern = new WeakMap()
@@ -41,9 +42,10 @@ const visibilityObservers = new Map()
 const patternVisible = new WeakMap()
 let pageVisibilityHooked = false
 let scrollHooked = false
-let lastPaintMs = 0
-
 let rafId = null
+/** Tempo in cui il loop è fermo (scroll / tab nascosta): evita salti alla ripresa. */
+let clockPauseMs = 0
+let clockPauseStartedAt = null
 let animStartMs = null
 let lastFrameMs = null
 let booting = false
@@ -59,6 +61,7 @@ const emptyChannel = () => ({
   lead: { x: 0, y: 0 },
   back1: { x: 0, y: 0 },
   back2: { x: 0, y: 0 },
+  back3: { x: 0, y: 0 },
 })
 
 const smoothAlpha = (deltaMs) => {
@@ -66,18 +69,13 @@ const smoothAlpha = (deltaMs) => {
   return 1 - Math.exp(-deltaMs / SMOOTH_TAU_MS)
 }
 
-const lerpPoint = (from, to, alpha) => ({
-  x: from.x + (to.x - from.x) * alpha,
-  y: from.y + (to.y - from.y) * alpha,
-})
-
 const layerOnTraceDistance = (pattern, traceIndex, distance) => {
   const { x, y } = sampleCircuitTraceAtDistance(traceIndex, distance)
   return svgCircuitToLayerPx(x, y, pattern)
 }
 
 const setPx = (pattern, name, value) => {
-  pattern.style.setProperty(name, `${value.toFixed(2)}px`)
+  pattern.style.setProperty(name, `${value.toFixed(3)}px`)
 }
 
 const targetChannel = (pattern, traceIndex, progress) => {
@@ -88,6 +86,7 @@ const targetChannel = (pattern, traceIndex, progress) => {
     lead: layerOnTraceDistance(pattern, traceIndex, leadDist),
     back1: layerOnTraceDistance(pattern, traceIndex, leadDist - TRAIL_BACK_1_SVG),
     back2: layerOnTraceDistance(pattern, traceIndex, leadDist - TRAIL_BACK_2_SVG),
+    back3: layerOnTraceDistance(pattern, traceIndex, leadDist - TRAIL_BACK_3_SVG),
   }
 }
 
@@ -97,6 +96,8 @@ const getSmoothState = (pattern) => {
     state = {
       pairIndex: -1,
       spotActive: 0,
+      progressA: 0,
+      progressB: 0,
       a: emptyChannel(),
       b: emptyChannel(),
     }
@@ -119,6 +120,8 @@ const snapPatternToFrame = (pattern, frame) => {
   smoothByPattern.set(pattern, {
     pairIndex: frame.pairIndex,
     spotActive: frame.inCooldown ? 0 : 0,
+    progressA: progress,
+    progressB: progress,
     a: targetA,
     b: targetB,
   })
@@ -148,16 +151,14 @@ const applyChannelPositions = (pattern, channel, points, lite = false) => {
     set('spot-b', points.lead.x, points.lead.y)
     set('blob-b-1', points.back1.x, points.back1.y)
     set('blob-b-2', points.back2.x, points.back2.y)
-    setPx(pattern, '--blob-b-3-x', -999)
-    setPx(pattern, '--blob-b-3-y', -999)
+    set('blob-b-3', points.back3.x, points.back3.y)
     return
   }
 
   set('spot', points.lead.x, points.lead.y)
   set('blob-1', points.back1.x, points.back1.y)
   set('blob-2', points.back2.x, points.back2.y)
-  setPx(pattern, '--blob-3-x', -999)
-  setPx(pattern, '--blob-3-y', -999)
+  set('blob-3', points.back3.x, points.back3.y)
 }
 
 const hidePattern = (pattern) => {
@@ -180,31 +181,26 @@ const renderPatternFrame = (pattern, frame, alpha, now) => {
   const [traceA, traceB] = HERO_CIRCUIT_TRACE_PAIRS[frame.pairIndex]
   const progress = frame.inCooldown ? 1 : frame.progress
 
+  const targetActive = fadeInFactor(now)
+
   if (frame.pairIndex !== state.pairIndex) {
     state.pairIndex = frame.pairIndex
-    state.a = targetChannel(pattern, traceA, progress)
-    state.b = targetChannel(pattern, traceB, progress)
+    state.progressA = progress
+    state.progressB = progress
+  } else if (!lite) {
+    state.progressA += (progress - state.progressA) * alpha
+    state.progressB += (progress - state.progressB) * alpha
+  } else {
+    state.progressA = progress
+    state.progressB = progress
   }
 
-  const targetActive = frame.inCooldown ? 0 : fadeInFactor(now)
-  const targetA = targetChannel(pattern, traceA, progress)
-  const targetB = targetChannel(pattern, traceB, progress)
+  state.a = targetChannel(pattern, traceA, state.progressA)
+  state.b = targetChannel(pattern, traceB, state.progressB)
 
   if (lite) {
-    state.a = targetA
-    state.b = targetB
     state.spotActive = targetActive
   } else {
-    state.a = {
-      lead: lerpPoint(state.a.lead, targetA.lead, alpha),
-      back1: lerpPoint(state.a.back1, targetA.back1, alpha),
-      back2: lerpPoint(state.a.back2, targetA.back2, alpha),
-    }
-    state.b = {
-      lead: lerpPoint(state.b.lead, targetB.lead, alpha),
-      back1: lerpPoint(state.b.back1, targetB.back1, alpha),
-      back2: lerpPoint(state.b.back2, targetB.back2, alpha),
-    }
     state.spotActive += (targetActive - state.spotActive) * alpha
   }
 
@@ -219,8 +215,29 @@ const fadeInFactor = (now) => {
   return Math.min(1, Math.max(0, (now - animStartMs) / FADE_IN_MS))
 }
 
+const clockOffsetMs = (now) => {
+  let paused = clockPauseMs
+  if (clockPauseStartedAt !== null) {
+    paused += Math.max(0, now - clockPauseStartedAt)
+  }
+  return paused
+}
+
+const beginClockPause = () => {
+  if (clockPauseStartedAt === null) {
+    clockPauseStartedAt = performance.now()
+  }
+}
+
+const endClockPause = () => {
+  if (clockPauseStartedAt !== null) {
+    clockPauseMs += Math.max(0, performance.now() - clockPauseStartedAt)
+    clockPauseStartedAt = null
+  }
+}
+
 const frameFromClock = (now) => {
-  const motionElapsed = Math.max(0, now - animStartMs - FADE_IN_MS) / 1000
+  const motionElapsed = Math.max(0, now - animStartMs - FADE_IN_MS - clockOffsetMs(now)) / 1000
   const elapsed = motionElapsed
   const pairDuration = TRACE_SWEEP_SEC + PAIR_COOLDOWN_SEC
   const pairCount = HERO_CIRCUIT_TRACE_PAIRS.length
@@ -273,14 +290,8 @@ const tick = (now) => {
   }
 
   const tickInterval = isPerfLite() ? TICK_MS_LITE : TICK_MS_DEFAULT
-  if (now - lastPaintMs < tickInterval) {
-    rafId = window.requestAnimationFrame(tick)
-    return
-  }
-  lastPaintMs = now
-
   const deltaMs =
-    lastFrameMs == null ? tickInterval : Math.min(Math.max(0, now - lastFrameMs), 50)
+    lastFrameMs == null ? tickInterval : Math.min(Math.max(0, now - lastFrameMs), 32)
   lastFrameMs = now
   const alpha = isPerfLite() ? 1 : smoothAlpha(deltaMs)
   const frame = frameFromClock(now)
@@ -379,6 +390,7 @@ const syncLoopRunning = () => {
 }
 
 const startLoop = () => {
+  endClockPause()
   if (rafId !== null) return
   rafId = window.requestAnimationFrame(tick)
 }
@@ -396,6 +408,7 @@ const stopLoop = () => {
     rafId = null
   }
   lastFrameMs = null
+  beginClockPause()
 }
 
 const hideAllPatterns = () => {
@@ -522,6 +535,8 @@ export const registerCircuitAutoPattern = (element) => {
       animationArmed = false
       clockPending = false
       clockStartFramesLeft = 0
+      clockPauseMs = 0
+      clockPauseStartedAt = null
       unlockCircuitLayoutViewport()
     } else {
       syncLoopRunning()
