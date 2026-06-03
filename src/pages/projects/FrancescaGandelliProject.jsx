@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
 import ProjectScreenshotCarousel from '../../components/ProjectScreenshotCarousel'
 
 const CATEGORY = 'Portfolio fotografico con pannello admin'
@@ -90,7 +91,7 @@ const STACK = [
 ]
 
 const FrancescaGandelliProject = () => (
-  <main className="min-h-screen bg-slate-950 text-white">
+  <main className="min-h-screen bg-site text-white">
     <div className="page-under-navbar px-6 pb-20">
       <article className="project-case mx-auto max-w-6xl">
         <header className="project-case-header">
@@ -106,7 +107,7 @@ const FrancescaGandelliProject = () => (
           <h1 className="project-case-intro__title mt-8 w-full text-3xl font-bold text-white md:text-4xl">
             Portfolio fotografico con gestione contenuti da pannello admin
           </h1>
-          <p className="project-case-intro__desc mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+          <p className="project-case-intro__desc">
             Progetto personale sviluppato in autonomia, fuori dal percorso formativo: sito full
             stack per Francesca Gandelli con area pubblica e pannello admin per gallerie, testi e
             pagine legali.
@@ -123,13 +124,13 @@ const FrancescaGandelliProject = () => (
           />
           <div className="project-case-hero__overlay" aria-hidden="true" />
           <div className="project-case-hero__content">
-            <p className="terminal-gradient-label">Case study</p>
+            <p className="project-case-section-label">Case study</p>
             <p className="project-case-hero__desc project-case-hero__desc--compact">
               Progetto individuale realizzato da sola, a parte dal corso: ho curato sito pubblico
               e pannello admin con API su Render, frontend su Netlify e media su Cloudinary, così
               la fotografa può aggiornare il portfolio in autonomia.
             </p>
-            <div className="project-case-hero__actions">
+            <ProjectCaseHeroActions>
               <a href={SITE_URL} target="_blank" rel="noreferrer" className="btn-primary">
                 <span className="btn-primary-inner">
                   <span className="btn-primary-text">Visita il sito</span>
@@ -138,7 +139,7 @@ const FrancescaGandelliProject = () => (
               <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn-secondary">
                 <span className="btn-secondary-inner">Repository GitHub →</span>
               </a>
-            </div>
+            </ProjectCaseHeroActions>
           </div>
         </section>
 
@@ -157,16 +158,16 @@ const FrancescaGandelliProject = () => (
           className="project-case-contribution mt-16"
           aria-labelledby="francesca-contribution"
         >
-          <p className="terminal-gradient-label">Il mio ruolo</p>
-          <h2 id="francesca-contribution" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+          <p className="project-case-section-label">Il mio ruolo</p>
+          <h2 id="francesca-contribution" className="project-case-section-title text-2xl font-bold text-white md:text-3xl">
             Come ho realizzato il portfolio
           </h2>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+          <p className="project-case-body">
             Ho sviluppato il portfolio da sola, in parallelo alla formazione: architettura
             client/server con React e API Express, MongoDB Atlas per i contenuti e Cloudinary per
             le immagini, con autenticazione admin e deploy su Netlify e Render.
           </p>
-          <ul className="project-case-checklist mt-8 space-y-4">
+          <ul className="project-case-checklist space-y-4">
             {CONTRIBUTION_ITEMS.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -174,11 +175,11 @@ const FrancescaGandelliProject = () => (
         </section>
 
         <section className="mt-16" aria-labelledby="francesca-features">
-          <p className="terminal-gradient-label">Funzionalità principali</p>
-          <h2 id="francesca-features" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+          <p className="project-case-section-label">Funzionalità principali</p>
+          <h2 id="francesca-features" className="project-case-section-title text-2xl font-bold text-white md:text-3xl">
             Cosa fa la piattaforma
           </h2>
-          <ul className="project-case-features mt-8">
+          <ul className="project-case-features">
             {FEATURES.map((feature) => (
               <li key={feature.title} className="project-case-card project-case-card--feature">
                 <h3 className="project-case-card__title">{feature.title}</h3>
@@ -189,18 +190,18 @@ const FrancescaGandelliProject = () => (
         </section>
 
         <section className="project-case-stack mt-16" aria-labelledby="francesca-stack">
-          <p className="terminal-gradient-label">Stack tecnologico</p>
-          <h2 id="francesca-stack" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+          <p className="project-case-section-label">Stack tecnologico</p>
+          <h2 id="francesca-stack" className="project-case-section-title text-2xl font-bold text-white md:text-3xl">
             Tecnologie utilizzate
           </h2>
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
             {STACK.map((tech) => (
-              <span key={tech} className="project-case-tag project-case-tag--tech">
-                {tech}
+              <span key={tech} className="nav-btn project-case-stack-tag">
+                <span className="nav-btn-inner">{tech}</span>
               </span>
             ))}
           </div>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+          <p className="project-case-body">
             Stack pensato per un sito vetrina performante e un admin affidabile: React e Vite sul
             client, Express e Mongoose sul server, con servizi gestiti per hosting, database,
             media e email.
@@ -208,16 +209,16 @@ const FrancescaGandelliProject = () => (
         </section>
 
         <section className="project-case-gallery mt-16" aria-labelledby="francesca-gallery">
-          <p className="terminal-gradient-label">Screenshot</p>
-          <h2 id="francesca-gallery" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+          <p className="project-case-section-label">Screenshot</p>
+          <h2 id="francesca-gallery" className="project-case-section-title text-2xl font-bold text-white md:text-3xl">
             Approfondimento visivo
           </h2>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+          <p className="project-case-body">
             Schermate del sito pubblico e del pannello admin: homepage, gestione gallerie e
             impostazioni.
           </p>
 
-          <div className="project-case-gallery__viewport mt-10">
+          <div className="project-case-gallery__viewport">
             <ProjectScreenshotCarousel items={SCREENSHOTS} />
           </div>
         </section>

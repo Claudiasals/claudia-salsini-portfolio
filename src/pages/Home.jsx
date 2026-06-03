@@ -5,7 +5,7 @@ import SkillsContactZone from '../components/SkillsContactZone'
 
 const Home = () => {
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-site text-white">
       <Hero />
       <About />
       <Projects />

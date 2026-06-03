@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
 import ProjectScreenshotCarousel from '../../components/ProjectScreenshotCarousel'
 import { useVideoVolumeBoost } from '../../hooks/useVideoVolumeBoost'
 
@@ -148,7 +149,7 @@ const WorkHubProject = () => {
   const demoVideoRef = useVideoVolumeBoost(1.35)
 
   return (
-  <main className="min-h-screen bg-slate-950 text-white">
+  <main className="min-h-screen bg-site text-white">
     <div className="page-under-navbar px-6 pb-20">
       <article className="project-case mx-auto max-w-6xl">
         <header className="project-case-header">
@@ -164,7 +165,7 @@ const WorkHubProject = () => {
           <h1 className="project-case-intro__title mt-8 w-full text-3xl font-bold text-white md:text-4xl">
             WorkHub: piattaforma gestionale per operazioni aziendali interne
           </h1>
-          <p className="project-case-intro__desc mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+          <p className="project-case-intro__desc">
             Progetto di gruppo con la classe per concludere il percorso Full Stack Web Developer:
             un gestionale che centralizza personale, turni, clienti, magazzino, ordini e ticket,
             con interfaccia role-based per admin e dipendenti.
@@ -179,13 +180,13 @@ const WorkHubProject = () => {
           />
           <div className="project-case-hero__overlay" aria-hidden="true" />
           <div className="project-case-hero__content">
-            <p className="terminal-gradient-label">Case study</p>
+            <p className="project-case-section-label">Case study</p>
             <p className="project-case-hero__desc project-case-hero__desc--compact">
               Capstone di corso in team: abbiamo progettato e sviluppato la piattaforma end-to-end
               — frontend React, API Express, MongoDB — con autenticazione, ruoli e moduli
               operativi per simulare un gestionale aziendale reale.
             </p>
-            <div className="project-case-hero__actions">
+            <ProjectCaseHeroActions>
               <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
                 <span className="btn-primary-inner">
                   <span className="btn-primary-text">Guarda la demo</span>
@@ -194,7 +195,7 @@ const WorkHubProject = () => {
               <a href={EXTERNAL_URL} target="_blank" rel="noreferrer" className="btn-secondary">
                 <span className="btn-secondary-inner">Repository GitHub →</span>
               </a>
-            </div>
+            </ProjectCaseHeroActions>
           </div>
         </section>
 
@@ -210,17 +211,17 @@ const WorkHubProject = () => {
         </section>
 
         <section className="project-case-contribution mt-16" aria-labelledby="workhub-contribution">
-          <p className="terminal-gradient-label">Contesto</p>
-          <h2 id="workhub-contribution" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+          <p className="project-case-section-label">Contesto</p>
+          <h2 id="workhub-contribution" className="project-case-section-title text-2xl font-bold text-white md:text-3xl">
             Il progetto di gruppo
           </h2>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+          <p className="project-case-body">
             WorkHub è il progetto con cui la classe ha chiuso il corso Full Stack Web Developer:
             in team abbiamo progettato l&apos;architettura, definito le API REST e costruito
             un&apos;interfaccia modulare in cui la stessa shell cambia contenuto e permessi in base
             al ruolo JWT (admin o user).
           </p>
-          <ul className="project-case-checklist mt-8 space-y-4">
+          <ul className="project-case-checklist space-y-4">
             {CONTRIBUTION_ITEMS.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -233,11 +234,11 @@ const WorkHubProject = () => {
           aria-labelledby="workhub-demo-heading"
         >
           <div className="project-case-video__intro">
-            <p className="terminal-gradient-label">Demo progetto</p>
-            <h2 id="workhub-demo-heading" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+            <p className="project-case-section-label">Demo progetto</p>
+            <h2 id="workhub-demo-heading" className="project-case-section-title text-2xl font-bold text-white md:text-3xl">
               Walkthrough della piattaforma
             </h2>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+            <p className="project-case-body">
               L&apos;applicazione richiede login con credenziali di test. Ho registrato una demo
               video che mostra i moduli principali, i flussi admin/user e le funzionalità chiave
               del gestionale.
@@ -260,11 +261,11 @@ const WorkHubProject = () => {
         </section>
 
         <section className="mt-16" aria-labelledby="workhub-features">
-          <p className="terminal-gradient-label">Funzionalità principali</p>
-          <h2 id="workhub-features" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+          <p className="project-case-section-label">Funzionalità principali</p>
+          <h2 id="workhub-features" className="project-case-section-title text-2xl font-bold text-white md:text-3xl">
             Cosa fa la piattaforma
           </h2>
-          <ul className="project-case-features mt-8">
+          <ul className="project-case-features">
             {FEATURES.map((feature) => (
               <li key={feature.title} className="project-case-card project-case-card--feature">
                 <h3 className="project-case-card__title">{feature.title}</h3>
@@ -275,18 +276,18 @@ const WorkHubProject = () => {
         </section>
 
         <section className="project-case-stack mt-16" aria-labelledby="workhub-stack">
-          <p className="terminal-gradient-label">Stack tecnologico</p>
-          <h2 id="workhub-stack" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+          <p className="project-case-section-label">Stack tecnologico</p>
+          <h2 id="workhub-stack" className="project-case-section-title text-2xl font-bold text-white md:text-3xl">
             Tecnologie utilizzate
           </h2>
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
             {STACK.map((tech) => (
-              <span key={tech} className="project-case-tag project-case-tag--tech">
-                {tech}
+              <span key={tech} className="nav-btn project-case-stack-tag">
+                <span className="nav-btn-inner">{tech}</span>
               </span>
             ))}
           </div>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+          <p className="project-case-body">
             Stack moderno con separazione netta tra client React (Redux, routing protetto, Context
             per tema e i18n) e API Express su MongoDB, con validazione input e middleware di
             sicurezza.
@@ -294,16 +295,16 @@ const WorkHubProject = () => {
         </section>
 
         <section className="project-case-gallery mt-16" aria-labelledby="workhub-gallery">
-          <p className="terminal-gradient-label">Screenshot</p>
-          <h2 id="workhub-gallery" className="mt-4 text-2xl font-bold text-white md:text-3xl">
+          <p className="project-case-section-label">Screenshot</p>
+          <h2 id="workhub-gallery" className="project-case-section-title text-2xl font-bold text-white md:text-3xl">
             Approfondimento visivo
           </h2>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+          <p className="project-case-body">
             Schermate reali dell&apos;applicazione: dashboard, profili, clienti, magazzino,
             ordini, ticket, impostazioni e viste riservate agli admin.
           </p>
 
-          <div className="project-case-gallery__viewport mt-10">
+          <div className="project-case-gallery__viewport">
             <ProjectScreenshotCarousel items={SCREENSHOTS} />
           </div>
         </section>

@@ -24,7 +24,7 @@ const LegalPageLayout = ({
   children,
 }) => {
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-site text-white">
       <div className="legal-page page-under-navbar px-6 pb-20">
         <div className="legal-page__inner mx-auto max-w-3xl">
           <header className="legal-page__header">

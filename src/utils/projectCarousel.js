@@ -50,12 +50,26 @@ export function getMiddleSetStartIndex(track) {
   return getCarouselSetSize(track)
 }
 
+function getTrackScrollPadding(track) {
+  const style = getComputedStyle(track)
+  const padStart =
+    parseFloat(style.scrollPaddingInlineStart) ||
+    parseFloat(style.scrollPaddingLeft) ||
+    0
+  return padStart
+}
+
+/** Posizione scroll affidabile (layout flex + padding del track). */
 export function getSlideTargetScrollLeft(track, card) {
   const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth)
-  let left = card.offsetLeft
+  const trackRect = track.getBoundingClientRect()
+  const cardRect = card.getBoundingClientRect()
+  let left = cardRect.left - trackRect.left + track.scrollLeft
 
   if (getProjectCarouselInlineAlign() === 'center') {
     left -= (track.clientWidth - card.offsetWidth) / 2
+  } else {
+    left -= getTrackScrollPadding(track)
   }
 
   return Math.max(0, Math.min(left, maxScroll))
@@ -204,18 +218,35 @@ export function scrollProjectCarouselBy(track, direction, behavior = 'smooth') {
 
 export function initProjectCarouselLoop(track) {
   const state = getLoopState(track)
+  track.removeAttribute('data-carousel-ready')
 
   const alignToMiddleSet = () => {
     if (!carouselHasInfiniteLoop(track)) {
       silentJumpToSlide(track, 0)
-      return
+    } else {
+      silentJumpToSlide(track, getMiddleSetStartIndex(track))
     }
-    silentJumpToSlide(track, getMiddleSetStartIndex(track))
+    track.dataset.carouselReady = 'true'
   }
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(alignToMiddleSet)
+  const scheduleAlign = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(alignToMiddleSet)
+    })
+  }
+
+  scheduleAlign()
+
+  let hasAlignedToLayout = false
+
+  const layoutObserver = new ResizeObserver((entries) => {
+    const entry = entries[0]
+    if (!entry || entry.contentRect.width < 1 || hasAlignedToLayout) return
+    hasAlignedToLayout = true
+    alignToMiddleSet()
   })
+
+  layoutObserver.observe(track)
 
   const onScrollEnd = () => {
     onScrollSettled(track, state)
@@ -253,9 +284,11 @@ export function initProjectCarouselLoop(track) {
 
   return () => {
     clearScrollSettleTimer(state)
+    layoutObserver.disconnect()
     track.removeEventListener('scroll', onTrackScroll)
     track.removeEventListener('scrollend', onScrollEnd)
     window.removeEventListener('resize', onResize)
+    track.removeAttribute('data-carousel-ready')
     loopState.delete(track)
   }
 }

@@ -24,7 +24,7 @@ const shouldHandleTarget = (element) => {
 /** Su touch: glow percepibile su tap brevi, senza rettangolo di focus persistente. */
 export const initTouchFocus = () => {
   if (typeof window === 'undefined') return
-  if (!window.matchMedia('(width < 640px)').matches) return
+  if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) return
 
   let active = null
 
