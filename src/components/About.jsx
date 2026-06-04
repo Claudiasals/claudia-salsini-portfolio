@@ -20,7 +20,7 @@ const highlightCards = [
   {
     number: '03',
     title: 'Formazione trasversale',
-    text: 'Web development, psicologia e grafica visiva: percorsi diversi che convergono in un modo di progettare più consapevole e centrato sulla persona.',
+    text: 'Percorsi diversi che convergono in un modo di progettare più consapevole e centrato sulla persona.',
     education: true,
   },
 ]
@@ -82,8 +82,18 @@ const About = () => {
             <div className="about-visual__wrap">
               <div className="about-visual__img-shell">
                 <div className="about-visual__media">
+                  <span className="about-visual__lightbulb-wrap" aria-hidden="true">
+                    <img
+                      src="/images/about-lightbulb.png?v=2"
+                      alt=""
+                      className="about-visual__lightbulb"
+                      decoding="async"
+                      width={256}
+                      height={256}
+                    />
+                  </span>
                   <img
-                    src="/images/foto-ibrida-portfolio.png?v=22"
+                    src="/images/foto-ibrida-portfolio.png?v=24"
                     alt="Claudia Salsini - dalla psicologia allo sviluppo web"
                     className="about-visual__img"
                     loading="lazy"

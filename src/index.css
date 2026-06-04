@@ -5,9 +5,9 @@
   --navbar-scroll-gap: 5rem;
   --section-anchor-offset: calc(var(--navbar-height) + var(--navbar-scroll-gap));
   --top-focus-fade-height: calc(var(--navbar-height) * 2.25);
-  /* Campionato dai bordi di foto-ibrida-portfolio.png (media angoli + bordo) */
-  --site-bg: #000216;
-  --site-bg-rgb: 0, 2, 22;
+  /* Prova: precedente slate-950 (era #000216 campionato da foto-ibrida) */
+  --site-bg: #020617;
+  --site-bg-rgb: 2, 6, 23;
   --accent-border-soft: linear-gradient(
     135deg,
     rgba(147, 51, 234, 0.32),
@@ -545,6 +545,10 @@ html.custom-cursor-active * {
   transition-delay: 0.66s;
 }
 
+#hero .scroll-reveal-item--hero-5 {
+  transition-delay: 0.88s;
+}
+
 .about-section .scroll-reveal-item--head {
   transition-delay: 0.88s;
 }
@@ -736,8 +740,8 @@ html.custom-cursor-active * {
   flex-shrink: 0;
 }
 
-/* Tablet: testo+foto affiancati, card sotto a tutta larghezza */
-@media (width >= 768px) and (width < 1280px) {
+/* Tablet e desktop: testo+foto in alto, card sotto (leggibilità anche su finestra larga) */
+@media (width >= 768px) {
   .about-grid {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
@@ -755,9 +759,9 @@ html.custom-cursor-active * {
 
   .about-lead {
     display: grid;
-    grid-template-columns: minmax(17rem, 1fr) minmax(14rem, 0.95fr);
-    column-gap: 2rem;
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 1.6fr);
+    column-gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: start;
   }
 
   .about-intro {
@@ -772,11 +776,25 @@ html.custom-cursor-active * {
 
   .about-intro .about-copy {
     margin-inline-start: 0;
-    max-width: 38ch;
+    max-width: 42ch;
+  }
+
+  .about-visual {
+    justify-self: center;
+    align-self: start;
+    width: 100%;
+    max-width: min(100%, 32rem);
+    padding-inline: clamp(0.5rem, 3vw, 2rem);
+    margin-top: 0.25rem;
+  }
+
+  .about-visual__wrap {
+    margin-inline: auto;
+    max-width: min(100%, 32rem);
   }
 
   .about-visual__img {
-    max-height: min(36rem, 72vh);
+    max-height: min(46rem, 80vh);
   }
 
   .about-highlights {
@@ -813,84 +831,26 @@ html.custom-cursor-active * {
   }
 }
 
-/* Desktop largo: 3 colonne con larghezze minime (non si schiacciano oltre questo) */
 @media (width >= 1280px) {
-  .about-grid {
-    grid-template-columns:
-      minmax(17.5rem, 0.92fr)
-      minmax(15rem, 1.05fr)
-      minmax(19rem, 1fr);
-    grid-template-areas: "intro visual highlights";
-    column-gap: 2rem;
-    row-gap: 0;
-    align-items: center;
-  }
-
-  .about-highlights {
-    display: flex;
-    flex-direction: column;
-    gap: 0.875rem;
-  }
-
-  .about-highlights > .about-cv-area {
-    grid-column: auto;
-    justify-self: auto;
-    margin-top: 0.5rem;
-    width: auto;
-  }
-
-  .about-highlights > .about-cv-area .about-cv-download {
-    width: 100%;
-    min-width: 0;
-  }
-
   .about-lead {
-    display: contents;
+    grid-template-columns: minmax(0, max(36rem, 1fr)) minmax(20rem, 1.9fr);
+    column-gap: clamp(2.5rem, 6vw, 6rem);
   }
 
-  .about-intro {
-    grid-area: intro;
-    align-self: start;
-    justify-self: end;
-    min-width: 17.5rem;
-    max-width: 22rem;
-    padding-inline-end: 0.5rem;
-    padding-block-start: 0.35rem;
+  .about-intro .about-copy {
+    max-width: 44ch;
   }
 
   .about-visual {
-    grid-area: visual;
-    align-self: center;
-    justify-self: center;
-    min-width: 15rem;
-    padding-top: 0;
-    padding-inline: 0.25rem;
-    margin-top: 0;
+    max-width: min(100%, 36rem);
   }
 
-  .about-highlights {
-    grid-area: highlights;
-    align-self: center;
-    min-width: 19rem;
-  }
-
-  .about-cv-area {
-    order: 0;
-    margin-top: 0.5rem;
-    margin-bottom: 0;
-  }
-
-  .about-intro__title {
-    max-width: none;
-  }
-
-  .about-copy {
-    margin-inline-start: auto;
-    max-width: 42ch;
+  .about-visual__wrap {
+    max-width: min(100%, 36rem);
   }
 
   .about-visual__img {
-    max-height: min(52rem, 78vh);
+    max-height: min(54rem, 85vh);
   }
 }
 
@@ -902,12 +862,12 @@ html.custom-cursor-active * {
   }
 
   .about-visual__wrap {
-    max-width: min(100%, 22rem);
+    max-width: min(100%, 28rem);
     margin-inline: auto;
   }
 
   .about-visual__img {
-    max-height: min(32rem, 70vh);
+    max-height: min(40rem, 76vh);
   }
 }
 
@@ -1303,23 +1263,23 @@ html.custom-cursor-active * {
   -webkit-mask-composite: plus-lighter;
   mask-composite: add;
   -webkit-mask-image:
-    radial-gradient(circle 58px at var(--spot-x) var(--spot-y), #000 0%, #000 48%, rgb(0 0 0 / 94%) 68%, rgb(0 0 0 / 72%) 84%, rgb(0 0 0 / 42%) 94%, transparent 100%),
-    radial-gradient(circle 54px at var(--blob-1-x) var(--blob-1-y), #000 0%, #000 44%, rgb(0 0 0 / 92%) 66%, rgb(0 0 0 / 70%) 82%, rgb(0 0 0 / 40%) 93%, transparent 100%),
-    radial-gradient(circle 52px at var(--blob-2-x) var(--blob-2-y), #000 0%, #000 42%, rgb(0 0 0 / 90%) 64%, rgb(0 0 0 / 68%) 80%, rgb(0 0 0 / 38%) 92%, transparent 100%),
-    radial-gradient(circle 50px at var(--blob-3-x) var(--blob-3-y), #000 0%, #000 40%, rgb(0 0 0 / 88%) 62%, rgb(0 0 0 / 66%) 78%, rgb(0 0 0 / 36%) 91%, transparent 100%),
-    radial-gradient(circle 58px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 48%, rgb(0 0 0 / 94%) 68%, rgb(0 0 0 / 72%) 84%, rgb(0 0 0 / 42%) 94%, transparent 100%),
-    radial-gradient(circle 54px at var(--blob-b-1-x) var(--blob-b-1-y), #000 0%, #000 44%, rgb(0 0 0 / 92%) 66%, rgb(0 0 0 / 70%) 82%, rgb(0 0 0 / 40%) 93%, transparent 100%),
-    radial-gradient(circle 52px at var(--blob-b-2-x) var(--blob-b-2-y), #000 0%, #000 42%, rgb(0 0 0 / 90%) 64%, rgb(0 0 0 / 68%) 80%, rgb(0 0 0 / 38%) 92%, transparent 100%),
-    radial-gradient(circle 50px at var(--blob-b-3-x) var(--blob-b-3-y), #000 0%, #000 40%, rgb(0 0 0 / 88%) 62%, rgb(0 0 0 / 66%) 78%, rgb(0 0 0 / 36%) 91%, transparent 100%);
+    radial-gradient(circle 68px at var(--spot-x) var(--spot-y), #000 0%, #000 24%, rgb(0 0 0 / 82%) 46%, rgb(0 0 0 / 48%) 64%, rgb(0 0 0 / 22%) 80%, rgb(0 0 0 / 08%) 92%, transparent 100%),
+    radial-gradient(circle 64px at var(--blob-1-x) var(--blob-1-y), #000 0%, #000 20%, rgb(0 0 0 / 72%) 42%, rgb(0 0 0 / 38%) 62%, rgb(0 0 0 / 14%) 82%, transparent 100%),
+    radial-gradient(circle 62px at var(--blob-2-x) var(--blob-2-y), #000 0%, #000 18%, rgb(0 0 0 / 68%) 40%, rgb(0 0 0 / 34%) 60%, rgb(0 0 0 / 12%) 80%, transparent 100%),
+    radial-gradient(circle 60px at var(--blob-3-x) var(--blob-3-y), #000 0%, #000 16%, rgb(0 0 0 / 62%) 38%, rgb(0 0 0 / 30%) 58%, rgb(0 0 0 / 10%) 78%, transparent 100%),
+    radial-gradient(circle 68px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 24%, rgb(0 0 0 / 82%) 46%, rgb(0 0 0 / 48%) 64%, rgb(0 0 0 / 22%) 80%, rgb(0 0 0 / 08%) 92%, transparent 100%),
+    radial-gradient(circle 64px at var(--blob-b-1-x) var(--blob-b-1-y), #000 0%, #000 20%, rgb(0 0 0 / 72%) 42%, rgb(0 0 0 / 38%) 62%, rgb(0 0 0 / 14%) 82%, transparent 100%),
+    radial-gradient(circle 62px at var(--blob-b-2-x) var(--blob-b-2-y), #000 0%, #000 18%, rgb(0 0 0 / 68%) 40%, rgb(0 0 0 / 34%) 60%, rgb(0 0 0 / 12%) 80%, transparent 100%),
+    radial-gradient(circle 60px at var(--blob-b-3-x) var(--blob-b-3-y), #000 0%, #000 16%, rgb(0 0 0 / 62%) 38%, rgb(0 0 0 / 30%) 58%, rgb(0 0 0 / 10%) 78%, transparent 100%);
   mask-image:
-    radial-gradient(circle 58px at var(--spot-x) var(--spot-y), #000 0%, #000 48%, rgb(0 0 0 / 94%) 68%, rgb(0 0 0 / 72%) 84%, rgb(0 0 0 / 42%) 94%, transparent 100%),
-    radial-gradient(circle 54px at var(--blob-1-x) var(--blob-1-y), #000 0%, #000 44%, rgb(0 0 0 / 92%) 66%, rgb(0 0 0 / 70%) 82%, rgb(0 0 0 / 40%) 93%, transparent 100%),
-    radial-gradient(circle 52px at var(--blob-2-x) var(--blob-2-y), #000 0%, #000 42%, rgb(0 0 0 / 90%) 64%, rgb(0 0 0 / 68%) 80%, rgb(0 0 0 / 38%) 92%, transparent 100%),
-    radial-gradient(circle 50px at var(--blob-3-x) var(--blob-3-y), #000 0%, #000 40%, rgb(0 0 0 / 88%) 62%, rgb(0 0 0 / 66%) 78%, rgb(0 0 0 / 36%) 91%, transparent 100%),
-    radial-gradient(circle 58px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 48%, rgb(0 0 0 / 94%) 68%, rgb(0 0 0 / 72%) 84%, rgb(0 0 0 / 42%) 94%, transparent 100%),
-    radial-gradient(circle 54px at var(--blob-b-1-x) var(--blob-b-1-y), #000 0%, #000 44%, rgb(0 0 0 / 92%) 66%, rgb(0 0 0 / 70%) 82%, rgb(0 0 0 / 40%) 93%, transparent 100%),
-    radial-gradient(circle 52px at var(--blob-b-2-x) var(--blob-b-2-y), #000 0%, #000 42%, rgb(0 0 0 / 90%) 64%, rgb(0 0 0 / 68%) 80%, rgb(0 0 0 / 38%) 92%, transparent 100%),
-    radial-gradient(circle 50px at var(--blob-b-3-x) var(--blob-b-3-y), #000 0%, #000 40%, rgb(0 0 0 / 88%) 62%, rgb(0 0 0 / 66%) 78%, rgb(0 0 0 / 36%) 91%, transparent 100%);
+    radial-gradient(circle 68px at var(--spot-x) var(--spot-y), #000 0%, #000 24%, rgb(0 0 0 / 82%) 46%, rgb(0 0 0 / 48%) 64%, rgb(0 0 0 / 22%) 80%, rgb(0 0 0 / 08%) 92%, transparent 100%),
+    radial-gradient(circle 64px at var(--blob-1-x) var(--blob-1-y), #000 0%, #000 20%, rgb(0 0 0 / 72%) 42%, rgb(0 0 0 / 38%) 62%, rgb(0 0 0 / 14%) 82%, transparent 100%),
+    radial-gradient(circle 62px at var(--blob-2-x) var(--blob-2-y), #000 0%, #000 18%, rgb(0 0 0 / 68%) 40%, rgb(0 0 0 / 34%) 60%, rgb(0 0 0 / 12%) 80%, transparent 100%),
+    radial-gradient(circle 60px at var(--blob-3-x) var(--blob-3-y), #000 0%, #000 16%, rgb(0 0 0 / 62%) 38%, rgb(0 0 0 / 30%) 58%, rgb(0 0 0 / 10%) 78%, transparent 100%),
+    radial-gradient(circle 68px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 24%, rgb(0 0 0 / 82%) 46%, rgb(0 0 0 / 48%) 64%, rgb(0 0 0 / 22%) 80%, rgb(0 0 0 / 08%) 92%, transparent 100%),
+    radial-gradient(circle 64px at var(--blob-b-1-x) var(--blob-b-1-y), #000 0%, #000 20%, rgb(0 0 0 / 72%) 42%, rgb(0 0 0 / 38%) 62%, rgb(0 0 0 / 14%) 82%, transparent 100%),
+    radial-gradient(circle 62px at var(--blob-b-2-x) var(--blob-b-2-y), #000 0%, #000 18%, rgb(0 0 0 / 68%) 40%, rgb(0 0 0 / 34%) 60%, rgb(0 0 0 / 12%) 80%, transparent 100%),
+    radial-gradient(circle 60px at var(--blob-b-3-x) var(--blob-b-3-y), #000 0%, #000 16%, rgb(0 0 0 / 62%) 38%, rgb(0 0 0 / 30%) 58%, rgb(0 0 0 / 10%) 78%, transparent 100%);
 }
 
 /* Hero e Skills/Contact: nucleo spotlight più acceso */
@@ -1327,23 +1287,23 @@ html.custom-cursor-active * {
 .skills-contact-circuits .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   filter: brightness(2.45) saturate(1.52);
   -webkit-mask-image:
-    radial-gradient(circle 72px at var(--spot-x) var(--spot-y), #000 0%, #000 56%, #000 72%, rgb(0 0 0 / 96%) 84%, rgb(0 0 0 / 74%) 92%, rgb(0 0 0 / 44%) 97%, transparent 100%),
-    radial-gradient(circle 66px at var(--blob-1-x) var(--blob-1-y), #000 0%, #000 52%, rgb(0 0 0 / 98%) 74%, rgb(0 0 0 / 78%) 88%, rgb(0 0 0 / 48%) 96%, transparent 100%),
-    radial-gradient(circle 64px at var(--blob-2-x) var(--blob-2-y), #000 0%, #000 50%, rgb(0 0 0 / 96%) 72%, rgb(0 0 0 / 76%) 86%, rgb(0 0 0 / 46%) 95%, transparent 100%),
-    radial-gradient(circle 62px at var(--blob-3-x) var(--blob-3-y), #000 0%, #000 48%, rgb(0 0 0 / 94%) 70%, rgb(0 0 0 / 74%) 84%, rgb(0 0 0 / 44%) 94%, transparent 100%),
-    radial-gradient(circle 72px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 56%, #000 72%, rgb(0 0 0 / 96%) 84%, rgb(0 0 0 / 74%) 92%, rgb(0 0 0 / 44%) 97%, transparent 100%),
-    radial-gradient(circle 66px at var(--blob-b-1-x) var(--blob-b-1-y), #000 0%, #000 52%, rgb(0 0 0 / 98%) 74%, rgb(0 0 0 / 78%) 88%, rgb(0 0 0 / 48%) 96%, transparent 100%),
-    radial-gradient(circle 64px at var(--blob-b-2-x) var(--blob-b-2-y), #000 0%, #000 50%, rgb(0 0 0 / 96%) 72%, rgb(0 0 0 / 76%) 86%, rgb(0 0 0 / 46%) 95%, transparent 100%),
-    radial-gradient(circle 62px at var(--blob-b-3-x) var(--blob-b-3-y), #000 0%, #000 48%, rgb(0 0 0 / 94%) 70%, rgb(0 0 0 / 74%) 84%, rgb(0 0 0 / 44%) 94%, transparent 100%);
+    radial-gradient(circle 84px at var(--spot-x) var(--spot-y), #000 0%, #000 28%, rgb(0 0 0 / 86%) 50%, rgb(0 0 0 / 52%) 68%, rgb(0 0 0 / 24%) 84%, rgb(0 0 0 / 08%) 94%, transparent 100%),
+    radial-gradient(circle 76px at var(--blob-1-x) var(--blob-1-y), #000 0%, #000 22%, rgb(0 0 0 / 76%) 44%, rgb(0 0 0 / 40%) 64%, rgb(0 0 0 / 16%) 84%, transparent 100%),
+    radial-gradient(circle 74px at var(--blob-2-x) var(--blob-2-y), #000 0%, #000 20%, rgb(0 0 0 / 72%) 42%, rgb(0 0 0 / 36%) 62%, rgb(0 0 0 / 14%) 82%, transparent 100%),
+    radial-gradient(circle 72px at var(--blob-3-x) var(--blob-3-y), #000 0%, #000 18%, rgb(0 0 0 / 68%) 40%, rgb(0 0 0 / 32%) 60%, rgb(0 0 0 / 12%) 80%, transparent 100%),
+    radial-gradient(circle 84px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 28%, rgb(0 0 0 / 86%) 50%, rgb(0 0 0 / 52%) 68%, rgb(0 0 0 / 24%) 84%, rgb(0 0 0 / 08%) 94%, transparent 100%),
+    radial-gradient(circle 76px at var(--blob-b-1-x) var(--blob-b-1-y), #000 0%, #000 22%, rgb(0 0 0 / 76%) 44%, rgb(0 0 0 / 40%) 64%, rgb(0 0 0 / 16%) 84%, transparent 100%),
+    radial-gradient(circle 74px at var(--blob-b-2-x) var(--blob-b-2-y), #000 0%, #000 20%, rgb(0 0 0 / 72%) 42%, rgb(0 0 0 / 36%) 62%, rgb(0 0 0 / 14%) 82%, transparent 100%),
+    radial-gradient(circle 72px at var(--blob-b-3-x) var(--blob-b-3-y), #000 0%, #000 18%, rgb(0 0 0 / 68%) 40%, rgb(0 0 0 / 32%) 60%, rgb(0 0 0 / 12%) 80%, transparent 100%);
   mask-image:
-    radial-gradient(circle 72px at var(--spot-x) var(--spot-y), #000 0%, #000 56%, #000 72%, rgb(0 0 0 / 96%) 84%, rgb(0 0 0 / 74%) 92%, rgb(0 0 0 / 44%) 97%, transparent 100%),
-    radial-gradient(circle 66px at var(--blob-1-x) var(--blob-1-y), #000 0%, #000 52%, rgb(0 0 0 / 98%) 74%, rgb(0 0 0 / 78%) 88%, rgb(0 0 0 / 48%) 96%, transparent 100%),
-    radial-gradient(circle 64px at var(--blob-2-x) var(--blob-2-y), #000 0%, #000 50%, rgb(0 0 0 / 96%) 72%, rgb(0 0 0 / 76%) 86%, rgb(0 0 0 / 46%) 95%, transparent 100%),
-    radial-gradient(circle 62px at var(--blob-3-x) var(--blob-3-y), #000 0%, #000 48%, rgb(0 0 0 / 94%) 70%, rgb(0 0 0 / 74%) 84%, rgb(0 0 0 / 44%) 94%, transparent 100%),
-    radial-gradient(circle 72px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 56%, #000 72%, rgb(0 0 0 / 96%) 84%, rgb(0 0 0 / 74%) 92%, rgb(0 0 0 / 44%) 97%, transparent 100%),
-    radial-gradient(circle 66px at var(--blob-b-1-x) var(--blob-b-1-y), #000 0%, #000 52%, rgb(0 0 0 / 98%) 74%, rgb(0 0 0 / 78%) 88%, rgb(0 0 0 / 48%) 96%, transparent 100%),
-    radial-gradient(circle 64px at var(--blob-b-2-x) var(--blob-b-2-y), #000 0%, #000 50%, rgb(0 0 0 / 96%) 72%, rgb(0 0 0 / 76%) 86%, rgb(0 0 0 / 46%) 95%, transparent 100%),
-    radial-gradient(circle 62px at var(--blob-b-3-x) var(--blob-b-3-y), #000 0%, #000 48%, rgb(0 0 0 / 94%) 70%, rgb(0 0 0 / 74%) 84%, rgb(0 0 0 / 44%) 94%, transparent 100%);
+    radial-gradient(circle 84px at var(--spot-x) var(--spot-y), #000 0%, #000 28%, rgb(0 0 0 / 86%) 50%, rgb(0 0 0 / 52%) 68%, rgb(0 0 0 / 24%) 84%, rgb(0 0 0 / 08%) 94%, transparent 100%),
+    radial-gradient(circle 76px at var(--blob-1-x) var(--blob-1-y), #000 0%, #000 22%, rgb(0 0 0 / 76%) 44%, rgb(0 0 0 / 40%) 64%, rgb(0 0 0 / 16%) 84%, transparent 100%),
+    radial-gradient(circle 74px at var(--blob-2-x) var(--blob-2-y), #000 0%, #000 20%, rgb(0 0 0 / 72%) 42%, rgb(0 0 0 / 36%) 62%, rgb(0 0 0 / 14%) 82%, transparent 100%),
+    radial-gradient(circle 72px at var(--blob-3-x) var(--blob-3-y), #000 0%, #000 18%, rgb(0 0 0 / 68%) 40%, rgb(0 0 0 / 32%) 60%, rgb(0 0 0 / 12%) 80%, transparent 100%),
+    radial-gradient(circle 84px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 28%, rgb(0 0 0 / 86%) 50%, rgb(0 0 0 / 52%) 68%, rgb(0 0 0 / 24%) 84%, rgb(0 0 0 / 08%) 94%, transparent 100%),
+    radial-gradient(circle 76px at var(--blob-b-1-x) var(--blob-b-1-y), #000 0%, #000 22%, rgb(0 0 0 / 76%) 44%, rgb(0 0 0 / 40%) 64%, rgb(0 0 0 / 16%) 84%, transparent 100%),
+    radial-gradient(circle 74px at var(--blob-b-2-x) var(--blob-b-2-y), #000 0%, #000 20%, rgb(0 0 0 / 72%) 42%, rgb(0 0 0 / 36%) 62%, rgb(0 0 0 / 14%) 82%, transparent 100%),
+    radial-gradient(circle 72px at var(--blob-b-3-x) var(--blob-b-3-y), #000 0%, #000 18%, rgb(0 0 0 / 68%) 40%, rgb(0 0 0 / 32%) 60%, rgb(0 0 0 / 12%) 80%, transparent 100%);
 }
 
 .hero-bg__circuit-spotlight::after {
@@ -1376,11 +1336,11 @@ html.custom-cursor-active * {
 html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   filter: brightness(2.1) saturate(1.4);
   -webkit-mask-image:
-    radial-gradient(circle 62px at var(--spot-x) var(--spot-y), #000 0%, #000 45%, transparent 100%),
-    radial-gradient(circle 62px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 45%, transparent 100%);
+    radial-gradient(circle 72px at var(--spot-x) var(--spot-y), #000 0%, #000 26%, rgb(0 0 0 / 72%) 48%, rgb(0 0 0 / 32%) 68%, transparent 100%),
+    radial-gradient(circle 72px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 26%, rgb(0 0 0 / 72%) 48%, rgb(0 0 0 / 32%) 68%, transparent 100%);
   mask-image:
-    radial-gradient(circle 62px at var(--spot-x) var(--spot-y), #000 0%, #000 45%, transparent 100%),
-    radial-gradient(circle 62px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 45%, transparent 100%);
+    radial-gradient(circle 72px at var(--spot-x) var(--spot-y), #000 0%, #000 26%, rgb(0 0 0 / 72%) 48%, rgb(0 0 0 / 32%) 68%, transparent 100%),
+    radial-gradient(circle 72px at var(--spot-b-x) var(--spot-b-y), #000 0%, #000 26%, rgb(0 0 0 / 72%) 48%, rgb(0 0 0 / 32%) 68%, transparent 100%);
 }
 
 .hero-bg__glow {
@@ -1405,6 +1365,11 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     transparent 72%
   );
   filter: blur(2px);
+}
+
+/* Hero: niente alone “luna” dietro titolo e nome */
+#hero .hero-bg__glow::before {
+  content: none;
 }
 
 .hero-bg__glow::after {
@@ -1495,6 +1460,10 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
   .hero-lead {
     margin-top: 2.5rem;
+  }
+
+  .hero-cta {
+    margin-top: 2rem;
   }
 }
 
@@ -2449,7 +2418,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   display: flex;
   justify-content: center;
   margin-inline: auto;
-  max-width: min(100%, 28rem);
+  max-width: min(100%, 32rem);
   overflow: visible;
 }
 
@@ -2466,6 +2435,25 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   line-height: 0;
 }
 
+.about-visual__lightbulb-wrap {
+  position: absolute;
+  z-index: 2;
+  top: 15%;
+  left: 38%;
+  width: calc(clamp(2.75rem, 9.5%, 5.25rem) + 38px);
+  transform: translate(calc(-50% - 75px), calc(-100% - 20px));
+  pointer-events: none;
+  isolation: isolate;
+  line-height: 0;
+  background-color: var(--site-bg);
+}
+
+.about-visual__lightbulb {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .about-visual__img {
   display: block;
   width: auto;
@@ -2479,13 +2467,13 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   image-rendering: auto;
 }
 
-/* Foto centrata verticalmente rispetto a testo e card laterali */
+/* Foto centrata nella colonna tra testo e margine destro */
 @media (width >= 768px) {
   .about-lead > .about-visual {
-    align-self: center;
+    align-self: start;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
   }
@@ -2493,11 +2481,11 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   .about-visual__wrap {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
-    max-width: none;
-    margin-inline: 0;
+    max-width: min(100%, 32rem);
+    margin-inline: auto;
     height: auto;
     min-height: 0;
     overflow: visible;
@@ -2515,9 +2503,15 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     width: auto;
     max-width: 100%;
     height: auto;
-    max-height: 38rem;
+    max-height: 46rem;
     object-fit: contain;
     object-position: center center;
+  }
+
+  .about-visual__lightbulb-wrap {
+    top: 14.5%;
+    left: 37.5%;
+    width: calc(clamp(3rem, 8.5%, 5.75rem) + 38px);
   }
 }
 
@@ -2639,7 +2633,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   }
 
   .about-visual__wrap {
-    max-width: min(100%, 20rem);
+    max-width: min(100%, 26rem);
     margin-inline: auto;
     margin-block: 0 0.25rem;
   }
@@ -2651,7 +2645,13 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   }
 
   .about-visual__img {
-    max-height: min(28rem, 62vh);
+    max-height: min(34rem, 72vh);
+  }
+
+  .about-visual__lightbulb-wrap {
+    top: 16%;
+    left: 39%;
+    width: calc(clamp(2.5rem, 14vw, 4rem) + 38px);
   }
 
   .about-highlights {
@@ -3719,7 +3719,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   align-items: center;
   justify-content: center;
   padding: 1.25rem;
-  background: rgba(0, 2, 22, 0.92);
+  background: rgba(var(--site-bg-rgb), 0.92);
   backdrop-filter: blur(6px);
 }
 

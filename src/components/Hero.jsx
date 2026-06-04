@@ -1,7 +1,16 @@
+import { useLocation, useNavigate } from 'react-router-dom'
+import { navigateToHomeSection } from '../utils/scrollToSection'
 import HeroBackground from './HeroBackground'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
 
 const Hero = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const handleProjectsClick = (event) => {
+    event.preventDefault()
+    navigateToHomeSection('/#projects', location, navigate, 'smooth')
+  }
   return (
     <section
       id="hero"
@@ -38,11 +47,23 @@ const Hero = () => {
         </ScrollRevealItem>
 
         <ScrollRevealItem tier="hero-4">
-          <p className="hero-lead section-lead mx-auto mt-8 max-w-3xl">
-            Creo applicazioni web moderne, responsive e orientate all&apos;esperienza utente,
-            con attenzione a interfacce chiare, flussi semplici e soluzioni digitali pensate
+          <p className="hero-lead section-lead mx-auto mt-4 max-w-3xl">
+            Creo applicazioni web moderne, responsive e orientate all&apos;esperienza utente, <br />
+            con attenzione a interfacce chiare, flussi semplici e soluzioni digitali <br /> pensate
             per esigenze reali.
           </p>
+        </ScrollRevealItem>
+
+        <ScrollRevealItem tier="hero-5">
+          <a
+            href="/#projects"
+            className="btn-primary hero-cta mt-8 md:mt-10"
+            onClick={handleProjectsClick}
+          >
+            <span className="btn-primary-inner">
+              <span className="btn-primary-text">Guarda i miei progetti</span>
+            </span>
+          </a>
         </ScrollRevealItem>
       </ScrollReveal>
     </section>
