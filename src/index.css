@@ -10,11 +10,10 @@
   --site-bg-rgb: 2, 6, 23;
   --accent-border-soft: linear-gradient(
     135deg,
-    rgba(147, 51, 234, 0.22),
-    rgba(56, 189, 248, 0.18),
-    rgba(110, 231, 183, 0.16)
+    rgba(147, 51, 234, 0.32),
+    rgba(56, 189, 248, 0.28),
+    rgba(110, 231, 183, 0.24)
   );
-  --accent-border: linear-gradient(135deg, #9333ea, #38bdf8, #6ee7b7);
 }
 
 .bg-site {
@@ -578,10 +577,6 @@ html.custom-cursor-active * {
   transition-delay: 0.18s;
 }
 
-.about-section .scroll-reveal-item--about-6 {
-  transition-delay: 0.24s;
-}
-
 .scroll-reveal-item--visible {
   opacity: 1;
   transform: translate3d(0, 0, 0);
@@ -684,17 +679,6 @@ html.custom-cursor-active * {
   }
 }
 
-.about-cv-download {
-  width: 100%;
-  min-width: 0;
-}
-
-.about-cv-download .btn-primary-inner {
-  width: 100%;
-  padding: calc(0.75rem + 2px) calc(2.75rem + 2px);
-  justify-content: center;
-}
-
 .about-grid {
   display: grid;
   gap: 2rem;
@@ -734,13 +718,6 @@ html.custom-cursor-active * {
   min-width: 0;
 }
 
-.about-cv-area {
-  order: 0;
-  margin-top: 0.375rem;
-  margin-bottom: 0;
-  flex-shrink: 0;
-}
-
 /* Tablet e desktop: testo+foto in alto, card sotto (leggibilità anche su finestra larga) */
 @media (width >= 768px) {
   .about-grid {
@@ -750,12 +727,6 @@ html.custom-cursor-active * {
       "highlights";
     row-gap: 2.5rem;
     align-items: start;
-  }
-
-  .about-cv-area {
-    order: 0;
-    margin-top: 0.375rem;
-    margin-bottom: 0;
   }
 
   .about-lead {
@@ -815,21 +786,6 @@ html.custom-cursor-active * {
     flex: 1;
   }
 
-  .about-highlights > .about-cv-area {
-    grid-column: 1 / -1;
-    justify-self: center;
-    margin-top: 0.5rem;
-    width: auto;
-  }
-
-  .about-highlights > .about-cv-area .about-cv-download {
-    width: auto;
-    min-width: 11.5rem;
-  }
-
-  .about-highlights > .about-cv-area .about-cv-download .btn-primary-inner {
-    width: auto;
-  }
 }
 
 @media (width >= 1280px) {
@@ -1687,7 +1643,13 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   border-radius: 1.75rem;
   background:
     linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.92)) padding-box,
-    var(--accent-border) border-box;
+    linear-gradient(
+      135deg,
+      rgba(147, 51, 234, 0.85),
+      rgba(56, 189, 248, 0.85),
+      rgba(110, 231, 183, 0.75)
+    )
+      border-box;
   opacity: 0;
   transform: translate3d(0, 14px, 0);
   transition:
@@ -1793,48 +1755,32 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
 @media (hover: hover), (pointer: fine) {
   .skills-skill-mini:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     background:
       linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.92)) padding-box,
-      var(--accent-border) border-box;
-    box-shadow: none;
+      linear-gradient(
+        135deg,
+        rgba(147, 51, 234, 0.85),
+        rgba(56, 189, 248, 0.85),
+        rgba(110, 231, 183, 0.75)
+      )
+        border-box;
+    box-shadow:
+      0 0 20px rgba(56, 189, 248, 0.12),
+      0 0 32px rgba(147, 51, 234, 0.08);
   }
 
   .skills-skill-mini:hover .skills-skill-mini__inner {
-    background: rgba(var(--site-bg-rgb), 0.94);
+    background: rgba(56, 189, 248, 0.05);
   }
 
   .skills-skill-mini:hover .skills-skill-mini__icon {
-    transform: scale(1.05);
+    transform: scale(1.08);
   }
 
   .skills-skill-mini:hover .skills-skill-mini__icon-img {
-    transform: scale(1.05);
+    transform: scale(1.08);
   }
-}
-
-html.use-hover-effects .skills-skill-mini:hover {
-  transform: translateY(-2px);
-  background:
-    linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.92)) padding-box,
-    var(--accent-border) border-box;
-  box-shadow: none;
-}
-
-html.use-hover-effects .skills-skill-mini:hover .skills-skill-mini__inner {
-  background: rgba(var(--site-bg-rgb), 0.94);
-}
-
-html.use-hover-effects .skills-skill-mini:hover .skills-skill-mini__icon,
-html.use-hover-effects .skills-skill-mini:hover .skills-skill-mini__icon-img {
-  transform: scale(1.05);
-}
-
-.skills-skill-mini:focus-within {
-  background:
-    linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.92)) padding-box,
-    var(--accent-border) border-box;
-  outline: none;
 }
 
 .skills-skill-mini__icon {
@@ -1916,10 +1862,7 @@ html.use-hover-effects .skills-skill-mini:hover .skills-skill-mini__icon-img {
 
   .skills-skill-mini:hover,
   .skills-skill-mini:hover .skills-skill-mini__icon,
-  .skills-skill-mini:hover .skills-skill-mini__icon-img,
-  html.use-hover-effects .skills-skill-mini:hover,
-  html.use-hover-effects .skills-skill-mini:hover .skills-skill-mini__icon,
-  html.use-hover-effects .skills-skill-mini:hover .skills-skill-mini__icon-img {
+  .skills-skill-mini:hover .skills-skill-mini__icon-img {
     transform: none;
   }
 }
@@ -4254,19 +4197,6 @@ html.cookie-consent-visible .scroll-to-top {
     box-shadow: none;
   }
 
-  html:not(.use-hover-effects) .skills-skill-mini:hover {
-    transform: none;
-    background:
-      linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.92)) padding-box,
-      var(--accent-border-soft) border-box;
-    box-shadow: none;
-  }
-
-  html:not(.use-hover-effects) .skills-skill-mini:hover .skills-skill-mini__icon,
-  html:not(.use-hover-effects) .skills-skill-mini:hover .skills-skill-mini__icon-img {
-    transform: none;
-  }
-
   .nav-btn:active::before,
   .nav-btn.touch-feedback::before,
   .nav-btn:focus::before,
@@ -4291,22 +4221,6 @@ html.cookie-consent-visible .scroll-to-top {
   .projects-carousel-nav:focus::before,
   .projects-carousel-nav:focus-visible::before {
     opacity: 0.6;
-  }
-
-  .skills-skill-mini:active,
-  .skills-skill-mini.touch-feedback {
-    transform: translateY(-2px);
-    background:
-      linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.92)) padding-box,
-      var(--accent-border) border-box;
-    box-shadow: none;
-  }
-
-  .skills-skill-mini:active .skills-skill-mini__icon,
-  .skills-skill-mini:active .skills-skill-mini__icon-img,
-  .skills-skill-mini.touch-feedback .skills-skill-mini__icon,
-  .skills-skill-mini.touch-feedback .skills-skill-mini__icon-img {
-    transform: scale(1.05);
   }
 
   .contact-form-input-wrap:active,

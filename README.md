@@ -30,7 +30,7 @@ Il portfolio presenta il percorso professionale di Claudia — dalla formazione 
 | Sezione | Contenuto |
 |--------|-----------|
 | **Hero** | Presentazione e value proposition |
-| **About Me** | Background, approccio UX, formazione, download CV |
+| **About Me** | Background, approccio UX, formazione |
 | **Projects** | Carousel dei progetti principali con link a demo e repository |
 | **Skills** | Competenze tecniche organizzate per area (Frontend, Backend, Tools) |
 | **Contact** | Form mailto, email, telefono, GitHub, LinkedIn, WhatsApp |
@@ -121,8 +121,7 @@ claudia-salsini-portfolio/
 ├── docs/
 │   └── screenshots/          # Anteprime per README e documentazione
 ├── public/
-│   ├── images/               # Asset statici (hero, about, progetti)
-│   └── cv-claudia-salsini.pdf
+│   └── images/               # Asset statici (hero, about, progetti)
 ├── scripts/
 │   └── capture-readme-screenshots.mjs
 ├── src/
