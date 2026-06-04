@@ -9,19 +9,19 @@ const educationItems = [
 const highlightCards = [
   {
     number: '01',
-    title: 'Background psicologico',
-    text: 'Formazione in Scienze e Tecniche Psicologiche ed esperienza nei settori psicologico, educativo e direct marketing: uno sguardo utile per leggere bisogni, comportamenti e percorsi delle persone.',
+    title: 'Formazione trasversale',
+    text: 'Uno sguardo utile su bisogni, comportamenti e percorsi delle persone, per un modo di progettare più consapevole e centrato sull\'utente.',
+    education: true,
   },
   {
     number: '02',
-    title: 'Approccio UX',
-    text: 'Attenzione a interfacce chiare, accessibili e facili da usare: progettare spazi digitali in cui orientarsi, scegliere e interagire deve risultare naturale.',
+    title: 'Sviluppo end-to-end',
+    text: 'Dal design al deploy: esperienza su flussi completi a partire dal mockup con Figma alla creazione del frontend e lo sviluppo backend fino alla messa in produzione. Interfaccia, logica applicativa e dati, dall\'usabilità all\'uso concreto, non solo esercizi isolati.',
   },
   {
     number: '03',
-    title: 'Formazione trasversale',
-    text: 'Percorsi diversi che convergono in un modo di progettare più consapevole e centrato sulla persona.',
-    education: true,
+    title: 'Approccio UX',
+    text: 'Attenzione a interfacce chiare, accessibili e facili da usare per costruire siti e applicazioni più efficaci: progettare spazi digitali in cui orientarsi, scegliere e interagire deve risultare naturale.',
   },
 ]
 
@@ -110,7 +110,7 @@ const About = () => {
           <div className="about-highlights">
             {highlightCards.map((card, index) => (
               <ScrollRevealItem
-                key={card.number}
+                key={card.title}
                 tier={`about-${index + 3}`}
                 revealMargin={REVEAL_HIGHLIGHTS[index]}
               >

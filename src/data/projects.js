@@ -4,7 +4,7 @@ export const projects = [
     category: 'SaaS B2B per contratti online e firme digitali',
     title: 'InklySign',
     description:
-      'Piattaforma full stack, sviluppata durante lo stage presso Mirai Bay, per digitalizzare il workflow contrattuale: creazione contratti, firma in presenza o da remoto con OTP, gestione utenti e processo documentale centralizzato per aziende.',
+      'Piattaforma full stack sviluppata durante lo stage presso Mirai Bay per digitalizzare il workflow contrattuale: creazione contratti, firma in presenza o da remoto con OTP, gestione utenti e processo documentale centralizzato per aziende.',
     image: '/images/projects/inklysign.png',
     imageAlt: 'Anteprima dashboard InklySign',
     tech: ['React', 'Vite', 'Tailwind CSS', 'PHP', 'Laravel', 'MySQL'],
@@ -26,7 +26,7 @@ export const projects = [
     category: 'Portfolio fotografico con pannello admin',
     title: 'Francesca Gandelli',
     description:
-      'Progetto personale sviluppato in autonomia: portfolio fotografico con sito pubblico e pannello admin per categorie, gallerie e contenuti.',
+      'Progetto personale sviluppato in autonomia: portfolio fotografico con sito pubblico e pannello admin per gestire in autonomia contenuti, immagini e pagine informative.',
     image: '/images/projects/francesca-gandelli.png',
     imageAlt: 'Anteprima del portfolio fotografico Francesca Gandelli con pannello admin',
     tech: ['React', 'Vite', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB Atlas', 'Cloudinary'],

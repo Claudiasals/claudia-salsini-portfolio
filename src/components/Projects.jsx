@@ -95,9 +95,9 @@ const Projects = () => {
 
         <ScrollRevealItem tier="body">
           <p className="section-lead section-after-title max-w-3xl">
-            Una selezione di progetti sviluppati durante il percorso da Full Stack
-            Developer, tra applicazioni gestionali, piattaforme full stack e siti
-            con pannello di amministrazione.
+            Ecco una selezione di progetti del percorso Full Stack Developer: stage, corso di formazione
+            e progetti personali. In evidenza applicazioni gestionali, piattaforme full stack e siti con pannello di
+            amministrazione.
           </p>
         </ScrollRevealItem>
 

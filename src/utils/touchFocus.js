@@ -1,5 +1,5 @@
 const INTERACTIVE_SELECTOR =
-  'a, button, .nav-btn, .btn-primary, .btn-secondary, .contact-detail-link, .contact-form-input-wrap, .projects-carousel-nav, .project-detail-back, .legal-page__email, .site-footer__link'
+  'a, button, .nav-btn, .btn-primary, .btn-secondary, .contact-detail-link, .contact-form-input-wrap, .projects-carousel-nav, .project-detail-back, .legal-page__email, .site-footer__link, .skills-skill-mini'
 
 const TOUCH_FEEDBACK_CLASS = 'touch-feedback'
 /** Durata minima visibile della sfumatura dopo un tap breve (ms). */
