@@ -11,7 +11,7 @@ const CURSOR_SVG = `
       <filter id="custom-cursor-outer-glow" x="-120%" y="-120%" width="340%" height="340%" color-interpolation-filters="sRGB">
         <feMorphology operator="dilate" radius="1.15" in="SourceAlpha" result="dilate" />
         <feGaussianBlur in="dilate" stdDeviation="3.2" result="blurWide" />
-        <feFlood flood-color="#00f0ff" flood-opacity="0.92" result="glowColor" />
+        <feFlood flood-color="#38bdf8" flood-opacity="0.92" result="glowColor" />
         <feComposite in="glowColor" in2="blurWide" operator="in" result="coloredGlow" />
         <feGaussianBlur in="coloredGlow" stdDeviation="1.4" result="softGlow" />
         <feMerge>

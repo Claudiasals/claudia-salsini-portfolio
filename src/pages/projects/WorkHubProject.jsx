@@ -209,14 +209,14 @@ const WorkHubProject = () => (
         </header>
 
         <ProjectCaseHeroActions>
-          <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
-            <span className="btn-primary-inner">
-              <span className="btn-primary-text">Guarda la demo</span>
-            </span>
-          </a>
           <a href={EXTERNAL_URL} target="_blank" rel="noreferrer" className="btn-primary">
             <span className="btn-primary-inner btn-primary-inner--spectrum">
               <span className="btn-primary-text">Repository GitHub →</span>
+            </span>
+          </a>
+          <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+            <span className="btn-primary-inner">
+              <span className="btn-primary-text">Guarda la demo</span>
             </span>
           </a>
         </ProjectCaseHeroActions>
@@ -344,14 +344,14 @@ const WorkHubProject = () => (
         </section>
 
         <ProjectCaseHeroActions className="project-detail-actions">
-          <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
-            <span className="btn-primary-inner">
-              <span className="btn-primary-text">Guarda la demo</span>
-            </span>
-          </a>
           <a href={EXTERNAL_URL} target="_blank" rel="noreferrer" className="btn-primary">
             <span className="btn-primary-inner btn-primary-inner--spectrum">
               <span className="btn-primary-text">Repository GitHub →</span>
+            </span>
+          </a>
+          <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+            <span className="btn-primary-inner">
+              <span className="btn-primary-text">Guarda la demo</span>
             </span>
           </a>
         </ProjectCaseHeroActions>

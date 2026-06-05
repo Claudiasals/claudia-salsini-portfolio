@@ -1,18 +1,22 @@
 import { Link } from 'react-router-dom'
 import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
+import { ProjectDemoVideo } from '../../components/ProjectDemoVideo'
 import { ProjectFeatureScreens } from '../../components/ProjectFeatureScreens'
 
 const CATEGORY = 'Portfolio fotografico con pannello admin'
 const TITLE = 'Francesca Gandelli'
+const DEMO_SECTION_ID = 'francesca-gandelli-demo'
 const SITE_URL = 'https://francescagandelli.netlify.app/'
 const GITHUB_URL = 'https://github.com/Claudiasals/francescagandelli'
 
 const CONTRIBUTION_ITEMS = [
+  'adeguamento dell’interfaccia alle richieste della cliente: tipografia, palette colori e impostazione del layout',
   'progettazione e sviluppo full stack del portfolio: sito pubblico, area admin e API REST',
   'frontend React/Vite con React Router e Tailwind CSS: homepage, gallerie dinamiche, pagine Chi sono e Contatti',
   'backend Node.js ed Express con MongoDB Atlas: modelli dati, autenticazione JWT e upload immagini',
-  'integrazione Cloudinary per storage foto, Multer per upload e Nodemailer per il form contatti',
-  'pannello admin per copertina, categorie, gallerie, testi, contatti, impostazioni e pagine legali',
+  'pannello admin per inserire categorie e foto, modificare testi, contatti e pagine legali in autonomia',
+  'recupero password con verifica OTP via email: richiesta codice, conferma e impostazione nuova password',
+  'integrazione Cloudinary per storage foto, Multer per upload e Nodemailer per form contatti e OTP',
   'deploy frontend su Netlify e backend su Render, con configurazione variabili d’ambiente',
 ]
 
@@ -20,12 +24,12 @@ const OVERVIEW_CARDS = [
   {
     title: 'Il punto di partenza',
     text:
-      'La fotografa aveva bisogno di un portfolio online curato e di uno strumento per aggiornare gallerie, testi e pagine legali senza dipendere da interventi tecnici esterni.',
+      'La cliente cercava un portfolio online con un’identità visiva precisa — font, colori e impostazione del sito — e la possibilità di aggiornare gallerie e testi senza supporto tecnico.',
   },
   {
     title: 'La soluzione sviluppata',
     text:
-      'Un sito pubblico con gallerie e pagine informative, affiancato da un pannello admin protetto per gestire contenuti, immagini su Cloudinary e impostazioni di contatto.',
+      'Ho seguito le richieste estetiche della cliente per sito pubblico e pannello admin, poi ho aggiunto il backend completo per gestire in autonomia categorie, foto, contenuti e impostazioni.',
   },
   {
     title: 'Tech stack',
@@ -46,42 +50,67 @@ const OVERVIEW_CARDS = [
 
 const FEATURES = [
   {
-    title: 'Sito pubblico',
+    title: 'Accesso area riservata',
     text:
-      'Home con copertina e categorie fotografiche, gallerie dinamiche per ogni categoria, pagine Chi sono e Contatti con form messaggi.',
-    tags: 'React · Vite · Tailwind CSS',
-    src: '/images/projects/francesca-gandelli/public-home.png',
-    alt: 'Homepage pubblica del portfolio Francesca Gandelli con copertina e categorie fotografiche',
+      'Login con username e password per entrare nel pannello admin; dal link «Password dimenticata» si avvia il flusso di recupero credenziali.',
+    tags: 'JWT · Admin',
+    src: '/images/projects/francesca-gandelli/admin-login.png',
+    alt: 'Pagina di login admin con username, password e link Password dimenticata',
   },
   {
-    title: 'Area admin',
+    title: 'Recupero password con OTP',
     text:
-      'Login protetto da JWT per modificare copertina, categorie, foto, didascalie, testi delle pagine e impostazioni di contatto.',
-    tags: 'JWT · React Router · Admin',
-    src: '/images/projects/francesca-gandelli/admin-home.png',
-    alt: 'Pannello admin homepage con gestione copertina e categorie fotografiche',
+      'Flusso guidato in tre step: inserimento email collegata all’account, verifica del codice OTP ricevuto per posta e scelta di una nuova password.',
+    tags: 'Nodemailer · OTP · Sicurezza',
+    screens: [
+      {
+        src: '/images/projects/francesca-gandelli/admin-password-recovery.png',
+        alt: 'Modale recupero password con campo indirizzo email',
+        label: 'Richiesta email',
+      },
+      {
+        src: '/images/projects/francesca-gandelli/admin-otp-verify.png',
+        alt: 'Modale verifica codice OTP inviato per email',
+        label: 'Verifica OTP',
+      },
+      {
+        src: '/images/projects/francesca-gandelli/admin-new-password.png',
+        alt: 'Modale nuova password con conferma',
+        label: 'Nuova password',
+      },
+    ],
   },
   {
-    title: 'Gestione immagini',
+    title: 'Gestione categorie',
     text:
-      'Upload, eliminazione, riordino e sostituzione foto in galleria; immagini archiviate e servite tramite Cloudinary.',
+      'Dalla sezione Photography la cliente può creare nuove categorie, riordinarle ed eliminarle con i pulsanti dedicati, senza interventi tecnici.',
+    tags: 'MongoDB · Express · Categorie',
+    src: '/images/projects/francesca-gandelli/admin-photography.png',
+    alt: 'Pannello admin Photography con pulsanti aggiungi categoria, riordina ed elimina categoria',
+  },
+  {
+    title: 'Conferma eliminazioni',
+    text:
+      'Prima di cancellare categorie o foto compare un modale di conferma, per evitare eliminazioni accidentali e rendere le operazioni più sicure.',
+    tags: 'UX · Admin · Sicurezza',
+    src: '/images/projects/francesca-gandelli/admin-categories.png',
+    alt: 'Modale di conferma eliminazione categoria nel pannello admin',
+  },
+  {
+    title: 'Gestione foto in galleria',
+    text:
+      'All’interno di ogni galleria sono presenti pulsanti per aggiungere foto, riordinarle ed eliminarle. Multer gestisce l’upload dal pannello admin; Cloudinary archivia e serve le immagini con ottimizzazione automatica e CDN. Servizio scelto per non appesantire il backend e rendere le gallerie più veloci da caricare.',
     tags: 'Cloudinary · Multer · Gallerie',
     src: '/images/projects/francesca-gandelli/admin-gallery.png',
-    alt: 'Pannello admin galleria con upload, riordino e didascalie delle foto',
+    alt: 'Pannello admin galleria con pulsanti aggiungi foto, riordina ed elimina foto',
   },
   {
-    title: 'Contenuti e legali',
+    title: 'Testi modificabili',
     text:
-      'Privacy Policy, Cookie Policy e Termini di Servizio modificabili dal pannello; gestione email e Instagram.',
+      'In tutte le sezioni del sito con contenuto testuale modificabile compare l’indicazione «clicca sul testo per modificarlo»: la cliente può personalizzare i contenuti direttamente dall’admin.',
     tags: 'MongoDB · Express · Contenuti',
-    src: '/images/projects/francesca-gandelli/admin-settings.png',
-    alt: 'Impostazioni admin con email, Instagram, password e pagine legali',
-  },
-  {
-    title: 'Deploy e servizi',
-    text:
-      'Frontend su Netlify, API su Render, database MongoDB Atlas e invio email tramite SMTP con Nodemailer.',
-    tags: 'Netlify · Render · Nodemailer',
+    src: '/images/projects/francesca-gandelli/admin-contacts.png',
+    alt: 'Pagina Contatti admin con invito a cliccare sul testo per modificarlo e form messaggi',
   },
 ]
 
@@ -89,20 +118,20 @@ const STACK_HIGHLIGHTS = [
   {
     title: 'Frontend e UX',
     text:
-      'React e Vite per un sito vetrina veloce, con React Router, Tailwind CSS e layout responsive per homepage, gallerie e pagine informative.',
+      'React e Vite per un sito vetrina veloce, con tipografia, colori e layout allineati al brief della cliente e interfaccia responsive per gallerie e pagine informative.',
     tags: 'JavaScript · React · Vite · React Router · Tailwind CSS',
   },
   {
     title: 'Backend e dati',
     text:
-      'API Express con MongoDB Atlas per contenuti, autenticazione admin e modelli dati organizzati per categorie, gallerie e testi.',
+      'API Express con MongoDB Atlas per contenuti, autenticazione admin, recupero password con OTP via email e modelli dati per categorie, gallerie e testi.',
     tags: 'Node.js · Express · MongoDB Atlas · JWT',
   },
   {
     title: 'Media e produzione',
     text:
-      'Cloudinary per le immagini, Nodemailer per il form contatti e deploy su Netlify e Render con variabili d’ambiente.',
-    tags: 'Cloudinary · Nodemailer · Netlify · Render',
+      'Multer per l’upload delle foto dal pannello admin, Cloudinary per archiviazione e delivery delle immagini, Nodemailer per form contatti e invio OTP di recupero password, deploy su Netlify e Render.',
+    tags: 'Multer · Cloudinary · Nodemailer · Netlify · Render',
   },
 ]
 
@@ -124,25 +153,30 @@ const FrancescaGandelliProject = () => (
             Portfolio fotografico con gestione contenuti da pannello admin
           </h1>
           <p className="project-case-intro__desc">
-            Progetto personale sviluppato in autonomia, fuori dal percorso formativo: sito full stack
-            per Francesca Gandelli con area pubblica e pannello admin per gallerie, testi e pagine
-            legali.
+            Progetto personale sviluppato in autonomia per Francesca Gandelli: ho seguito le
+            richieste della cliente per lo stile del sito — font, colori e impostazione generale —
+            e ho costruito il portfolio full stack con area pubblica e pannello admin.
           </p>
           <p className="project-case-intro__desc mt-4">
-            Progetto individuale realizzato da sola: ho curato sito pubblico e pannello admin con API
-            su Render, frontend su Netlify e media su Cloudinary, così la fotografa può aggiornare il
-            portfolio in autonomia.
+            Oltre al front-end curato sul brief estetico, ho aggiunto tutta la parte backend perché
+            la cliente potesse gestire in autonomia l’inserimento di categorie e foto, le modifiche
+            ai testi e le impostazioni del sito, senza dipendere da interventi tecnici.
           </p>
         </header>
 
         <ProjectCaseHeroActions>
+          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn-secondary">
+            <span className="btn-secondary-inner">Repository GitHub →</span>
+          </a>
+          <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+            <span className="btn-primary-inner">
+              <span className="btn-primary-text">Guarda la demo</span>
+            </span>
+          </a>
           <a href={SITE_URL} target="_blank" rel="noreferrer" className="btn-primary">
             <span className="btn-primary-inner btn-primary-inner--spectrum">
               <span className="btn-primary-text">Visita il sito →</span>
             </span>
-          </a>
-          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn-secondary">
-            <span className="btn-secondary-inner">Repository GitHub →</span>
           </a>
         </ProjectCaseHeroActions>
 
@@ -175,15 +209,42 @@ const FrancescaGandelliProject = () => (
             Come ho realizzato il portfolio
           </h2>
           <p className="project-case-body">
-            Ho sviluppato il portfolio da sola, in parallelo alla formazione: architettura
-            client/server con React e API Express, MongoDB Atlas per i contenuti e Cloudinary per
-            le immagini, con autenticazione admin e deploy su Netlify e Render.
+            Ho sviluppato il portfolio da sola, in parallelo alla formazione: prima ho allineato
+            l’interfaccia alle richieste estetiche della cliente, poi ho progettato l’architettura
+            client/server con React, API Express, MongoDB Atlas e Cloudinary, con autenticazione
+            admin e deploy su Netlify e Render.
           </p>
           <ul className="project-case-checklist space-y-4">
             {CONTRIBUTION_ITEMS.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
+        </section>
+
+        <section
+          id={DEMO_SECTION_ID}
+          className="project-case-video"
+          aria-labelledby="francesca-demo-heading"
+        >
+          <div className="project-case-video__intro">
+            <p className="project-case-section-label">Demo progetto</p>
+            <h2
+              id="francesca-demo-heading"
+              className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
+            >
+              Una panoramica del pannello admin
+            </h2>
+            <p className="project-case-body">
+              Demo video del pannello admin e dei flussi principali per gestire gallerie, contenuti
+              e impostazioni. Ho registrato questa parte perché l’area riservata non è accessibile
+              dal link pubblico: da lì si vede solo il portfolio, com’è per chi visita il sito.
+            </p>
+          </div>
+
+          <ProjectDemoVideo
+            src="/videos/francescagandelli-demo.mp4"
+            poster="/images/projects/francesca-gandelli/admin-photography.png"
+          />
         </section>
 
         <section aria-labelledby="francesca-features">
@@ -195,9 +256,9 @@ const FrancescaGandelliProject = () => (
             Cosa fa la piattaforma
           </h2>
           <p className="project-case-body">
-            Il progetto combina un sito pubblico per mostrare il lavoro della fotografa e un
-            pannello admin per gestire contenuti e media. Le schermate seguenti illustrano le aree
-            principali del sito e del back-office.
+            Le schermate seguenti illustrano le funzionalità del pannello admin: login con recupero
+            password via OTP, gestione categorie e foto, modali di conferma per le eliminazioni e
+            modifica inline dei testi su tutte le pagine del sito.
           </p>
           <ProjectFeatureScreens features={FEATURES} />
         </section>
@@ -225,29 +286,30 @@ const FrancescaGandelliProject = () => (
 
           <div className="project-case-stack-narrative">
             <p>
-              Stack pensato per un sito vetrina performante e un admin affidabile: React e Vite sul
-              client, Express e Mongoose sul server, con servizi gestiti per hosting, database, media
-              e email.
-            </p>
-            <p>
-              Il frontend gestisce homepage, gallerie dinamiche e pagine informative; il backend
-              espone API REST per contenuti, upload e autenticazione dell’area riservata.
-            </p>
-            <p>
-              Cloudinary archivia le immagini, mentre Netlify e Render ospitano rispettivamente sito
-              e API in produzione.
+              Lo stack è stato scelto per costruire un portfolio performante sul lato pubblico e un
+              pannello admin solido sul lato gestionale. Il risultato è un portfolio fotografico che
+              combina una presenza online curata con strumenti di gestione semplici e autonomi. Non si
+              tratta solo di un sito vetrina, ma di una piattaforma completa con area pubblica e
+              pannello di amministrazione, pensata per permettere alla cliente di gestire il portfolio
+              nel tempo senza dipendere da interventi tecnici per aggiornare contenuti, gallerie e
+              immagini.
             </p>
           </div>
         </section>
 
         <ProjectCaseHeroActions className="project-detail-actions">
+          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn-secondary">
+            <span className="btn-secondary-inner">Repository GitHub →</span>
+          </a>
+          <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+            <span className="btn-primary-inner">
+              <span className="btn-primary-text">Guarda la demo</span>
+            </span>
+          </a>
           <a href={SITE_URL} target="_blank" rel="noreferrer" className="btn-primary">
             <span className="btn-primary-inner btn-primary-inner--spectrum">
               <span className="btn-primary-text">Visita il sito →</span>
             </span>
-          </a>
-          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn-secondary">
-            <span className="btn-secondary-inner">Repository GitHub →</span>
           </a>
         </ProjectCaseHeroActions>
       </article>

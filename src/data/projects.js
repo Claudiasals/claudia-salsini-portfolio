@@ -26,9 +26,9 @@ export const projects = [
     category: 'Portfolio fotografico con pannello admin',
     title: 'Francesca Gandelli',
     description:
-      'Progetto personale sviluppato in autonomia: portfolio fotografico con sito pubblico e pannello admin per gestire in autonomia contenuti, immagini e pagine informative.',
+      'Progetto personale: portfolio fotografico con stile su misura per la cliente e pannello admin per gestire categorie, foto, testi e recupero password con verifica OTP via email.',
     image: '/images/projects/francesca-gandelli.png',
-    imageAlt: 'Anteprima del portfolio fotografico Francesca Gandelli con pannello admin',
+    imageAlt: 'Anteprima del portfolio Francesca Gandelli con pannello admin e griglia categorie',
     tech: ['React', 'Vite', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB Atlas', 'Cloudinary'],
     externalUrl: 'https://francescagandelli.netlify.app/',
   },

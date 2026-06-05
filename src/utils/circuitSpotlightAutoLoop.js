@@ -20,16 +20,18 @@ const AUTO_CLASS = 'hero-bg__circuit-spotlight--auto'
 const IDLE_CLASS = 'hero-bg__circuit-spotlight--idle'
 const LITE_CLASS = 'hero-bg__circuit-spotlight--lite'
 const VISIBILITY_ROOT_MARGIN = '100px 0px'
-const TRACE_SWEEP_SEC = 12
-/** Fine/inizio traccia: sfuma la luce per evitare salti tra una coppia e l’altra. */
-const PAIR_EDGE_FADE = 0.1
+const TRACE_SWEEP_SEC = 4
+/** Bordo traccia: fade minimo per evitare buchi lunghi senza luce. */
+const PAIR_EDGE_FADE = 0.02
+/** Luminosità minima: le due luci restano sempre percepibili. */
+const MIN_SPOT_VISIBILITY = 0.82
 const SMOOTH_MS = 48
-const LAYOUT_STABLE_FRAMES = 12
-const LAYOUT_SETTLE_MS = 600
-/** Attesa dopo layout stabile prima di far partire l’orologio (evita sweep “in corsa” al refresh). */
-const CLOCK_START_FRAMES = 3
-/** Fade-in luminosità all’avvio: l’orologio resta a progress 0 finché non è visibile. */
-const FADE_IN_MS = 520
+const LAYOUT_STABLE_FRAMES = 1
+const LAYOUT_SETTLE_MS = 0
+/** Fade-in all’avvio disattivato: visibilità immediata al caricamento. */
+const FADE_IN_MS = 0
+/** Anticipo orologio al boot così la luce è già in movimento al primo frame. */
+const BOOT_CLOCK_PREROLL_MS = 2200
 const TRAIL_BACK_1_SVG = 20
 const TRAIL_BACK_2_SVG = 42
 const TRAIL_BACK_3_SVG = 64
@@ -49,12 +51,21 @@ let animStartMs = null
 let lastFrameMs = null
 let lastSmoothMs = null
 
-const easeInOutSine = (t) => -(Math.cos(Math.PI * t) - 1) / 2
-
 const pairSweepVisibility = (progress) => {
-  if (progress < PAIR_EDGE_FADE) return progress / PAIR_EDGE_FADE
-  if (progress > 1 - PAIR_EDGE_FADE) return (1 - progress) / PAIR_EDGE_FADE
-  return 1
+  let visibility = 1
+  if (progress < PAIR_EDGE_FADE) visibility = progress / PAIR_EDGE_FADE
+  if (progress > 1 - PAIR_EDGE_FADE) visibility = (1 - progress) / PAIR_EDGE_FADE
+  return Math.max(MIN_SPOT_VISIBILITY, visibility)
+}
+
+const getPairFrame = (elapsedSec) => {
+  const pairCount = HERO_CIRCUIT_TRACE_PAIRS.length
+  const cycleDuration = pairCount * TRACE_SWEEP_SEC
+  const cycleT = cycleDuration > 0 ? elapsedSec % cycleDuration : 0
+  const pairIndex = Math.floor(cycleT / TRACE_SWEEP_SEC) % pairCount
+  const progress = (cycleT % TRACE_SWEEP_SEC) / TRACE_SWEEP_SEC
+
+  return { pairIndex, progress }
 }
 
 const lerpPx = (from, to, alpha) => from + (to - from) * alpha
@@ -73,9 +84,6 @@ const lerpChannel = (from, to, alpha) => ({
 let booting = false
 let cancelBoot = null
 let resizeDebounceId = null
-/** Orologio non ancora partito: primi frame solo snap + fade, senza avanzare sul filo. */
-let clockPending = false
-let clockStartFramesLeft = 0
 /** Boot già completato o in corso (evita doppio avvio Hero + Skills). */
 let animationArmed = false
 
@@ -111,10 +119,9 @@ const getSmoothState = (pattern) => {
   let state = smoothByPattern.get(pattern)
   if (!state) {
     state = {
-      pairIndex: -1,
-      spotActive: 0,
-      progressA: 0,
-      progressB: 0,
+      primaryPairIndex: -1,
+      secondaryPairIndex: -1,
+      spotActive: MIN_SPOT_VISIBILITY,
       a: emptyChannel(),
       b: emptyChannel(),
     }
@@ -123,28 +130,44 @@ const getSmoothState = (pattern) => {
   return state
 }
 
+const activePairFrame = (frame) => {
+  const primaryVis = pairSweepVisibility(frame.primary.progress)
+  const secondaryVis = pairSweepVisibility(frame.secondary.progress)
+  return secondaryVis > primaryVis + 0.03 ? frame.secondary : frame.primary
+}
+
+const channelTargetsForFrame = (pattern, frame) => {
+  const active = activePairFrame(frame)
+  const [traceA, traceB] = HERO_CIRCUIT_TRACE_PAIRS[active.pairIndex]
+
+  return {
+    active,
+    targetA: targetChannel(pattern, traceA, active.progress),
+    targetB: targetChannel(pattern, traceB, active.progress),
+  }
+}
+
 /** Allinea subito maschera e stato al frame corrente (niente inseguimento da 0,0). */
-const snapPatternToFrame = (pattern, frame) => {
+const snapPatternToFrame = (pattern, frame, now = performance.now()) => {
   if (!isCircuitLayoutReady(pattern)) return
 
   getCachedCircuitLayout(pattern)
 
-  const [traceA, traceB] = HERO_CIRCUIT_TRACE_PAIRS[frame.pairIndex]
-  const progress = frame.progress
-  const targetA = targetChannel(pattern, traceA, progress)
-  const targetB = targetChannel(pattern, traceB, progress)
+  const { active, targetA, targetB } = channelTargetsForFrame(pattern, frame)
+  const primaryVis = pairSweepVisibility(frame.primary.progress)
+  const secondaryVis = pairSweepVisibility(frame.secondary.progress)
+  const spotActive = fadeInFactor(now) * Math.max(MIN_SPOT_VISIBILITY, primaryVis, secondaryVis)
 
   smoothByPattern.set(pattern, {
-    pairIndex: frame.pairIndex,
-    spotActive: 0,
-    progressA: progress,
-    progressB: progress,
+    primaryPairIndex: active.pairIndex,
+    secondaryPairIndex: active.pairIndex,
+    spotActive,
     a: targetA,
     b: targetB,
   })
 
   pattern.classList.add(AUTO_CLASS)
-  pattern.style.setProperty('--spot-active', '0')
+  pattern.style.setProperty('--spot-active', String(spotActive))
   applyChannelPositions(pattern, 'a', targetA)
   applyChannelPositions(pattern, 'b', targetB)
 }
@@ -195,13 +218,13 @@ const renderPatternFrame = (pattern, frame, now, smoothAlpha) => {
   getCachedCircuitLayout(pattern)
 
   const state = getSmoothState(pattern)
-  const [traceA, traceB] = HERO_CIRCUIT_TRACE_PAIRS[frame.pairIndex]
-  const progress = frame.progress
-  const targetA = targetChannel(pattern, traceA, progress)
-  const targetB = targetChannel(pattern, traceB, progress)
+  const { active, targetA, targetB } = channelTargetsForFrame(pattern, frame)
+  const primaryVis = pairSweepVisibility(frame.primary.progress)
+  const secondaryVis = pairSweepVisibility(frame.secondary.progress)
 
-  if (frame.pairIndex !== state.pairIndex) {
-    state.pairIndex = frame.pairIndex
+  if (active.pairIndex !== state.primaryPairIndex) {
+    state.primaryPairIndex = active.pairIndex
+    state.secondaryPairIndex = active.pairIndex
     state.a = targetA
     state.b = targetB
   } else {
@@ -209,9 +232,8 @@ const renderPatternFrame = (pattern, frame, now, smoothAlpha) => {
     state.b = lerpChannel(state.b, targetB, smoothAlpha)
   }
 
-  state.progressA = progress
-  state.progressB = progress
-  state.spotActive = fadeInFactor(now) * pairSweepVisibility(progress)
+  state.spotActive =
+    fadeInFactor(now) * Math.max(MIN_SPOT_VISIBILITY, primaryVis, secondaryVis)
 
   pattern.classList.add(AUTO_CLASS)
   pattern.style.setProperty('--spot-active', String(Math.max(0, Math.min(1, state.spotActive))))
@@ -221,6 +243,7 @@ const renderPatternFrame = (pattern, frame, now, smoothAlpha) => {
 
 const fadeInFactor = (now) => {
   if (animStartMs === null) return 0
+  if (FADE_IN_MS <= 0) return 1
   return Math.min(1, Math.max(0, (now - animStartMs) / FADE_IN_MS))
 }
 
@@ -246,17 +269,11 @@ const endClockPause = () => {
 }
 
 const frameFromClock = (now) => {
-  const motionElapsed = Math.max(0, now - animStartMs - FADE_IN_MS - clockOffsetMs(now)) / 1000
-  const pairCount = HERO_CIRCUIT_TRACE_PAIRS.length
-  const cycleDuration = pairCount * TRACE_SWEEP_SEC
-  const cycleT = cycleDuration > 0 ? motionElapsed % cycleDuration : 0
-  const pairIndex = Math.floor(cycleT / TRACE_SWEEP_SEC) % pairCount
-  const linear = (cycleT % TRACE_SWEEP_SEC) / TRACE_SWEEP_SEC
+  const motionElapsed = Math.max(0, now - animStartMs - clockOffsetMs(now)) / 1000
 
   return {
-    pairIndex,
-    progress: easeInOutSine(linear),
-    inCooldown: false,
+    primary: getPairFrame(motionElapsed),
+    secondary: getPairFrame(motionElapsed + TRACE_SWEEP_SEC),
   }
 }
 
@@ -266,26 +283,6 @@ const tick = (now) => {
   if (patterns.size === 0) {
     lastFrameMs = null
     return
-  }
-
-  if (clockPending) {
-    if (clockStartFramesLeft > 0) {
-      clockStartFramesLeft -= 1
-      const holdFrame = { pairIndex: 0, progress: 0, inCooldown: false }
-      for (const pattern of patterns) {
-        snapPatternToFrame(pattern, holdFrame)
-      }
-      rafId = window.requestAnimationFrame(tick)
-      return
-    }
-
-    clockPending = false
-    animStartMs = now
-    lastFrameMs = null
-    const startFrame = frameFromClock(now)
-    for (const pattern of patterns) {
-      snapPatternToFrame(pattern, startFrame)
-    }
   }
 
   if (animStartMs === null) {
@@ -378,7 +375,6 @@ const ensureScrollHook = () => {
 
 const shouldRunLoop = () => {
   if (patterns.size === 0) return false
-  if (clockPending) return true
   if (document.hidden) return false
   if (isScrolling()) return false
   if (animStartMs === null) return false
@@ -399,14 +395,6 @@ const startLoop = () => {
   rafId = window.requestAnimationFrame(tick)
 }
 
-const armClockStart = () => {
-  clockPending = true
-  clockStartFramesLeft = CLOCK_START_FRAMES
-  animStartMs = null
-  lastFrameMs = null
-  lastSmoothMs = null
-}
-
 const stopLoop = () => {
   if (rafId !== null) {
     window.cancelAnimationFrame(rafId)
@@ -415,13 +403,6 @@ const stopLoop = () => {
   lastFrameMs = null
   lastSmoothMs = null
   beginClockPause()
-}
-
-const hideAllPatterns = () => {
-  for (const pattern of patterns) {
-    hidePattern(pattern)
-    smoothByPattern.delete(pattern)
-  }
 }
 
 const waitForStableLayout = (element, onReady) => {
@@ -456,24 +437,19 @@ const waitForStableLayout = (element, onReady) => {
     raf = window.requestAnimationFrame(step)
   }
 
-  const start = async () => {
-    if (document.fonts?.ready) {
-      try {
-        await document.fonts.ready
-      } catch {
-        /* ignore */
-      }
+  const start = () => {
+    if (LAYOUT_SETTLE_MS > 0) {
+      window.setTimeout(() => {
+        if (cancelled) return
+        raf = window.requestAnimationFrame(step)
+      }, LAYOUT_SETTLE_MS)
+      return
     }
 
-    if (cancelled) return
-
-    window.setTimeout(() => {
-      if (cancelled) return
-      raf = window.requestAnimationFrame(step)
-    }, LAYOUT_SETTLE_MS)
+    raf = window.requestAnimationFrame(step)
   }
 
-  void start()
+  start()
 
   return () => {
     cancelled = true
@@ -488,7 +464,6 @@ const tryBoot = () => {
   if (!first) return
 
   booting = true
-  hideAllPatterns()
 
   cancelBoot = waitForStableLayout(first, () => {
     booting = false
@@ -496,13 +471,16 @@ const tryBoot = () => {
     animationArmed = true
 
     lockCircuitLayoutViewport()
+    animStartMs = performance.now() - BOOT_CLOCK_PREROLL_MS
+    lastSmoothMs = null
 
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        armClockStart()
-        startLoop()
-      })
-    })
+    const frame = frameFromClock(performance.now())
+    for (const pattern of patterns) {
+      if (!isPatternVisible(pattern)) continue
+      snapPatternToFrame(pattern, frame, performance.now())
+    }
+
+    startLoop()
   })
 }
 
@@ -514,14 +492,10 @@ export const registerCircuitAutoPattern = (element) => {
   ensureScrollHook()
   patterns.add(element)
   element.classList.add(AUTO_CLASS)
-  hidePattern(element)
   attachPatternVisibilityObserver(element)
 
-  if (clockPending) {
-    const holdFrame = { pairIndex: 0, progress: 0, inCooldown: false }
-    snapPatternToFrame(element, holdFrame)
-  } else if (animStartMs !== null) {
-    snapPatternToFrame(element, frameFromClock(performance.now()))
+  if (animStartMs !== null) {
+    snapPatternToFrame(element, frameFromClock(performance.now()), performance.now())
   }
 
   tryBoot()
@@ -540,8 +514,6 @@ export const registerCircuitAutoPattern = (element) => {
       cancelBoot = null
       animStartMs = null
       animationArmed = false
-      clockPending = false
-      clockStartFramesLeft = 0
       clockPauseMs = 0
       clockPauseStartedAt = null
       unlockCircuitLayoutViewport()

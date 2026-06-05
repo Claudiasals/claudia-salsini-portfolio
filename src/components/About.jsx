@@ -81,23 +81,23 @@ const About = () => {
             <div className="about-visual__wrap">
               <div className="about-visual__img-shell">
                 <div className="about-visual__media">
-                  <span className="about-visual__lightbulb-wrap" aria-hidden="true">
-                    <img
-                      src="/images/about-lightbulb.png?v=2"
-                      alt=""
-                      className="about-visual__lightbulb"
-                      decoding="async"
-                      width={256}
-                      height={256}
-                    />
-                  </span>
+                  <svg className="about-visual__filter-defs" aria-hidden="true" focusable="false">
+                    <defs>
+                      <filter id="about-portrait-blue-boost" colorInterpolationFilters="sRGB">
+                        <feColorMatrix
+                          type="matrix"
+                          values="1 0 0 0 0  0 1 0 0 0  0 0 1.14 0 0  0 0 0 1 0"
+                        />
+                      </filter>
+                    </defs>
+                  </svg>
                   <img
-                    src="/images/foto-ibrida-portfolio.png?v=24"
+                    src="/images/about-portrait.png?v=5"
                     alt="Claudia Salsini - dalla psicologia allo sviluppo web"
                     className="about-visual__img"
                     loading="lazy"
                     decoding="async"
-                    width={858}
+                    width={854}
                     height={1024}
                   />
                 </div>

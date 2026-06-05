@@ -95,9 +95,9 @@ const Projects = () => {
 
         <ScrollRevealItem tier="body">
           <p className="section-lead section-after-title max-w-3xl">
-            Ecco una selezione di progetti del percorso Full Stack Developer: stage, corso di formazione
-            e progetti personali. In evidenza applicazioni gestionali, piattaforme full stack e siti con pannello di
-            amministrazione.
+            Una selezione di progetti full stack sviluppati tra stage, formazione e iniziative
+            personali: applicazioni web complete, interfacce curate e soluzioni nate per
+            trasformare esigenze concrete in strumenti digitali funzionali.
           </p>
         </ScrollRevealItem>
 

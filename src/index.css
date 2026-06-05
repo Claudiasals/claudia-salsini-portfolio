@@ -240,7 +240,7 @@ html.custom-cursor-active * {
 
 .custom-cursor__shape {
   fill: none !important;
-  stroke: #00eeff;
+  stroke: #38bdf8;
   stroke-width: 2.35;
   vector-effect: non-scaling-stroke;
   paint-order: stroke;
@@ -731,7 +731,7 @@ html.custom-cursor-active * {
 
   .about-lead {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, 1.6fr);
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 1.85fr);
     column-gap: clamp(2rem, 4vw, 4.5rem);
     align-items: start;
   }
@@ -755,18 +755,18 @@ html.custom-cursor-active * {
     justify-self: center;
     align-self: start;
     width: 100%;
-    max-width: min(100%, 32rem);
-    padding-inline: clamp(0.5rem, 3vw, 2rem);
+    max-width: min(100%, 40rem);
+    padding-inline: clamp(0.25rem, 2vw, 1.25rem);
     margin-top: 0.25rem;
   }
 
   .about-visual__wrap {
     margin-inline: auto;
-    max-width: min(100%, 32rem);
+    max-width: min(100%, 40rem);
   }
 
   .about-visual__img {
-    max-height: min(46rem, 80vh);
+    max-height: min(56rem, 88vh);
   }
 
   .about-highlights {
@@ -790,7 +790,7 @@ html.custom-cursor-active * {
 
 @media (width >= 1280px) {
   .about-lead {
-    grid-template-columns: minmax(0, max(36rem, 1fr)) minmax(20rem, 1.9fr);
+    grid-template-columns: minmax(0, max(34rem, 1fr)) minmax(22rem, 2.1fr);
     column-gap: clamp(2.5rem, 6vw, 6rem);
   }
 
@@ -799,15 +799,15 @@ html.custom-cursor-active * {
   }
 
   .about-visual {
-    max-width: min(100%, 36rem);
+    max-width: min(100%, 44rem);
   }
 
   .about-visual__wrap {
-    max-width: min(100%, 36rem);
+    max-width: min(100%, 44rem);
   }
 
   .about-visual__img {
-    max-height: min(54rem, 85vh);
+    max-height: min(64rem, 92vh);
   }
 }
 
@@ -819,12 +819,12 @@ html.custom-cursor-active * {
   }
 
   .about-visual__wrap {
-    max-width: min(100%, 28rem);
+    max-width: min(100%, 36rem);
     margin-inline: auto;
   }
 
   .about-visual__img {
-    max-height: min(40rem, 76vh);
+    max-height: min(50rem, 84vh);
   }
 }
 
@@ -2375,7 +2375,8 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   display: flex;
   justify-content: center;
   margin-inline: auto;
-  max-width: min(100%, 32rem);
+  margin-top: -30px;
+  max-width: min(100%, 40rem);
   overflow: visible;
 }
 
@@ -2387,28 +2388,18 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 }
 
 .about-visual__media {
-  position: relative;
-  display: inline-block;
-  line-height: 0;
-}
-
-.about-visual__lightbulb-wrap {
-  position: absolute;
-  z-index: 2;
-  top: 15%;
-  left: 38%;
-  width: calc(clamp(2.75rem, 9.5%, 5.25rem) + 46px);
-  transform: translate(calc(-50% - 75px - 2mm), calc(-100% - 20px - 5mm));
-  pointer-events: none;
-  isolation: isolate;
-  line-height: 0;
-  background-color: var(--site-bg);
-}
-
-.about-visual__lightbulb {
-  display: block;
+  display: flex;
+  justify-content: center;
   width: 100%;
-  height: auto;
+  line-height: 0;
+}
+
+.about-visual__filter-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .about-visual__img {
@@ -2416,12 +2407,14 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   width: auto;
   max-width: 100%;
   height: auto;
-  max-height: clamp(44rem, 184vw, 80rem);
+  max-height: clamp(47rem, 196vw, 84rem);
   object-fit: contain;
   object-position: center center;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   image-rendering: auto;
+  /* Solo canale blu: wireframe più vivo senza schiarire volto/mani. */
+  filter: url(#about-portrait-blue-boost);
 }
 
 /* Foto centrata nella colonna tra testo e margine destro */
@@ -2441,7 +2434,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     justify-content: flex-start;
     align-items: center;
     width: 100%;
-    max-width: min(100%, 32rem);
+    max-width: min(100%, 40rem);
     margin-inline: auto;
     height: auto;
     min-height: 0;
@@ -2451,7 +2444,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   .about-visual__img-shell,
   .about-visual__media {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     width: 100%;
   }
@@ -2460,16 +2453,11 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     width: auto;
     max-width: 100%;
     height: auto;
-    max-height: 46rem;
+    max-height: 56rem;
     object-fit: contain;
     object-position: center center;
   }
 
-  .about-visual__lightbulb-wrap {
-    top: 14.5%;
-    left: 37.5%;
-    width: calc(clamp(3rem, 8.5%, 5.75rem) + 46px);
-  }
 }
 
 .about-highlight-card {
@@ -2590,9 +2578,10 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   }
 
   .about-visual__wrap {
-    max-width: min(100%, 26rem);
+    max-width: min(100%, 28rem);
     margin-inline: auto;
-    margin-block: 0 0.25rem;
+    margin-top: -30px;
+    margin-bottom: 0.25rem;
   }
 
   .about-intro {
@@ -2602,13 +2591,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   }
 
   .about-visual__img {
-    max-height: min(34rem, 72vh);
-  }
-
-  .about-visual__lightbulb-wrap {
-    top: 16%;
-    left: 39%;
-    width: calc(clamp(2.5rem, 14vw, 4rem) + 46px);
+    max-height: min(37rem, 76vh);
   }
 
   .about-highlights {

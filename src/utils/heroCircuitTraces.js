@@ -59,10 +59,11 @@ export const HERO_CIRCUIT_TRACES = [
   ],
 ]
 
+/** Coppie incrociate orizzontale/verticale: due luci su zone distanti del circuito. */
 export const HERO_CIRCUIT_TRACE_PAIRS = [
-  [0, 1],
-  [2, 3],
-  [4, 5],
+  [0, 3],
+  [1, 4],
+  [2, 5],
 ]
 
 const dist = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1])
