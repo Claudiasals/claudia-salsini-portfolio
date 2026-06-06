@@ -9,24 +9,38 @@ const EXTERNAL_URL = 'https://github.com/Claudiasals/workhub'
 const DEMO_SECTION_ID = 'workhub-demo'
 
 const CONTRIBUTION_ITEMS = [
-  'progetto finale di gruppo del percorso Full Stack Web Developer, realizzato con la classe',
-  'progettazione e sviluppo full stack condiviso: architettura, moduli e API REST',
-  'frontend con React 19, Redux Toolkit e React Router: layout responsive, routing protetto e UI role-based (admin / user)',
-  'backend Node.js ed Express 5 con MongoDB: autenticazione JWT, 2FA opzionale, validazione Joi e middleware di sicurezza',
-  'moduli operativi: personale e turni, clienti, magazzino, ordini, ticketing e bacheca eventi aziendali',
-  'integrazioni UI: calendario turni (react-big-calendar), grafici ticket (@mui/x-charts), export PDF (jspdf) ed Excel (xlsx)',
+  {
+    title: 'Lavoro in team su un gestionale completo',
+    text: 'sviluppo coordinato di frontend, backend e database.',
+  },
+  {
+    title: 'Interfaccia React modulare e responsive',
+    text: 'navigazione protetta e schermate diverse in base al ruolo dell’utente.',
+  },
+  {
+    title: 'Backend con Node.js, Express e MongoDB',
+    text: 'autenticazione JWT, 2FA opzionale, validazione Joi e middleware di sicurezza.',
+  },
+  {
+    title: 'Funzionalità operative per la gestione aziendale',
+    text: 'personale, turni, clienti, magazzino, ordini, ticket e comunicazioni interne.',
+  },
+  {
+    title: 'Integrazioni UI',
+    text: 'calendario dei turni, grafici sui ticket, esportazione in PDF ed Excel.',
+  },
 ]
 
 const OVERVIEW_CARDS = [
   {
     title: 'Il punto di partenza',
     text:
-      'Per chiudere il percorso formativo serviva un gestionale interno credibile: unire personale, turni, clienti, magazzino, ordini e ticket in un flusso più chiaro, senza strumenti separati per ogni attività.',
+      'Un’azienda con più reparti operativi ha bisogno di una vista unica su personale, magazzino, ordini e ticket: senza un gestionale integrato, ogni attività resta isolata e le informazioni si disallineano.',
   },
   {
     title: 'La soluzione sviluppata',
     text:
-      'WorkHub riunisce in un’unica piattaforma dashboard, calendario, anagrafiche, magazzino, ordini e ticketing, con interfaccia e permessi diversi per admin e dipendenti.',
+      'WorkHub riunisce in un’unica piattaforma dashboard, calendario, anagrafiche, magazzino, ordini e ticketing. L’interfaccia è stata progettata per l’usabilità: navigazione chiara, flussi operativi lineari e viste role-based per admin e dipendenti.',
   },
   {
     title: 'Tech stack',
@@ -48,113 +62,135 @@ const FEATURES = [
   {
     title: 'Dashboard e calendario',
     text:
-      'Overview con KPI, bacheca eventi e calendario turni/eventi: viste giorno, settimana e mese con filtri per reparto nella vista admin.',
-    tags: 'React · Redux · react-big-calendar',
+      'La overview riunisce indicatori riepilogativi, bacheca eventi e calendario turni con viste giorno, settimana e mese. Il dipendente consulta la dashboard in sola lettura; l’amministratore accede alla stessa area con funzioni aggiuntive, come la modifica degli eventi in bacheca.',
+    tags: 'Overview · react-big-calendar · Role-based · Joi',
     screens: [
       {
-        src: '/images/projects/workhub/overview-light.png',
-        alt: 'Dashboard WorkHub con KPI, bacheca eventi e calendario turni settimanale',
-        label: 'Overview e calendario',
-      },
-      {
-        src: '/images/projects/workhub/admin-overview.png',
-        alt: 'Vista admin WorkHub con Bacheca CRUD, KPI e calendario con filtri reparto',
-        label: 'Overview admin',
+        src: '/images/projects/workhub/warehouse.png',
+        alt: 'Overview dipendente WorkHub con indicatori riepilogativi, bacheca eventi, prodotti in esaurimento e calendario turni',
+        label: 'Overview dipendente',
       },
       {
         src: '/images/projects/workhub/admin-board-edit.png',
-        alt: 'Modifica evento bacheca admin WorkHub tramite drawer laterale',
-        label: 'Bacheca eventi (admin)',
+        alt: 'Overview amministratore WorkHub con modifica evento sulla bacheca aziendale',
+        label: 'Overview amministratore',
       },
     ],
   },
   {
-    title: 'Personale e profili',
+    title: 'Gestione magazzino',
     text:
-      'Vista personale per i dipendenti (turni, ferie, permessi) e registro completo del personale con CRUD per gli admin.',
-    tags: 'React Router · JWT · Ruoli',
+      'Gestione inventario con elenco prodotti, filtri e soglie di riordino; caricamento giacenza tramite drawer, verifica disponibilità in altre sedi, scheda prodotto con export PDF e conferma dell’operazione aggiornata.',
+    tags: 'Pipeline magazzino · jspdf',
     screens: [
-      {
-        src: '/images/projects/workhub/employee-profile.png',
-        alt: 'Profilo dipendente WorkHub con anagrafica, turni settimanali, ferie e permessi',
-        label: 'Profilo dipendente',
-      },
-      {
-        src: '/images/projects/workhub/admin-personale.png',
-        alt: 'Gestione personale admin WorkHub con registro dipendenti e azioni CRUD',
-        label: 'Personale (admin)',
-      },
-    ],
-  },
-  {
-    title: 'Clienti e magazzino',
-    text:
-      'Anagrafica clienti con storico ordini ed export Excel; gestione prodotti, giacenze, soglie di riordino ed export PDF.',
-    tags: 'Express · MongoDB · jspdf · xlsx',
-    screens: [
-      {
-        src: '/images/projects/workhub/customers.png',
-        alt: 'Anagrafica clienti WorkHub con ricerca e tabella clienti',
-        label: 'Anagrafica clienti',
-      },
-      {
-        src: '/images/projects/workhub/customer-detail.png',
-        alt: 'Dettaglio cliente WorkHub con affiliazione, punti fedeltà e storico ordini',
-        label: 'Dettaglio cliente',
-      },
-      {
-        src: '/images/projects/workhub/warehouse.png',
-        alt: 'Dashboard magazzino WorkHub con SKU, giacenze, filtri e soglie di riordino',
-        label: 'Magazzino',
-      },
       {
         src: '/images/projects/workhub/product-detail.png',
-        alt: 'Scheda prodotto WorkHub con dati anagrafici, immagine e export PDF',
-        label: 'Scheda prodotto e PDF',
-      },
-    ],
-  },
-  {
-    title: 'Ordini e ticketing',
-    text:
-      'Creazione ordini con breakdown per cliente; sistema ticket con apertura per gli utenti e analytics con grafici per gli admin.',
-    tags: 'MUI Charts · Ticketing · API REST',
-    screens: [
-      {
-        src: '/images/projects/workhub/orders.png',
-        alt: 'Gestione ordini WorkHub con tabella prodotti, stati e corrieri',
-        label: 'Gestione ordini',
+        alt: 'Magazzino WorkHub con elenco prodotti, filtri, giacenze, promo e soglie di riordino',
+        label: 'Elenco prodotti',
       },
       {
-        src: '/images/projects/workhub/orders-detail.png',
-        alt: 'Dettaglio ordine WorkHub con breakdown per cliente e giacenza disponibile',
-        label: 'Dettaglio ordine',
+        src: '/images/projects/workhub/overview-light.png',
+        alt: 'Magazzino WorkHub con drawer Aggiungi Giacenza: prodotto cercato, quantità da aggiungere e conferma incremento stock',
+        label: 'Aggiungi giacenza',
       },
       {
         src: '/images/projects/workhub/ticketing.png',
-        alt: 'Sistema ticketing WorkHub con ticket aperti e chiusi',
-        label: 'Ticketing interno',
+        alt: 'Magazzino WorkHub con modale di conferma Operazione completata dopo l’aggiornamento giacenza',
+        label: 'Conferma giacenza',
       },
       {
-        src: '/images/projects/workhub/admin-ticket.png',
-        alt: 'Dashboard ticket admin WorkHub con grafico trend e filtri per periodo',
-        label: 'Analytics ticket (admin)',
+        src: '/images/projects/workhub/customers.png',
+        alt: 'Magazzino WorkHub con drawer Disponibilità in altre Sedi per verificare lo stock di un prodotto in un altro punto vendita',
+        label: 'Disponibilità altre sedi',
+      },
+      {
+        src: '/images/projects/workhub/admin-overview.png',
+        alt: 'Scheda prodotto WorkHub aperta dal magazzino con dati anagrafici, immagine, note allegati ed export PDF',
+        label: 'Scheda prodotto',
+      },
+    ],
+  },
+  {
+    title: 'Gestione ordini',
+    text:
+      'Elenco ordini con ricerca e ordinamento; espandendo una riga si vedono dettaglio prodotto, breakdown per cliente, totali e giacenza disponibile. Dal pulsante «Nuovo Ordine» si apre un drawer per selezionare punto vendita, prodotto, quantità totale e clienti associati.',
+    tags: 'Pipeline ordini · Joi',
+    screens: [
+      {
+        src: '/images/projects/workhub/settings.png',
+        alt: 'Modulo Ordini WorkHub con tabella ordini in lavorazione, corriere, totale e pulsante Nuovo Ordine',
+        label: 'Elenco ordini',
+      },
+      {
+        src: '/images/projects/workhub/order-detail-expanded.png',
+        alt: 'Dettaglio ordine WorkHub espanso con prodotto, clienti associati, quantità, totali e giacenza disponibile',
+        label: 'Dettaglio ordine',
+      },
+      {
+        src: '/images/projects/workhub/order-new-drawer.png',
+        alt: 'Modulo Ordini WorkHub con drawer Nuovo Ordine per punto vendita, prodotto, quantità e clienti',
+        label: 'Nuovo ordine',
+      },
+    ],
+  },
+  {
+    title: 'Gestione ticketing',
+    text:
+      'Sistema di richieste interne: l’utente consulta i ticket aperti e chiusi e ne apre di nuovi; l’amministratore visualizza andamento e lista completa con grafici, filtri per intervallo date, utente e stato.',
+    tags: 'Pipeline ticketing · MUI Charts',
+    screens: [
+      {
+        src: '/images/projects/workhub/admin-personale.png',
+        alt: 'Modulo Ticket WorkHub con elenco ticket aperti e chiusi e pulsante Apri ticket',
+        label: 'I miei ticket',
+      },
+      {
+        src: '/images/projects/workhub/orders-detail.png',
+        alt: 'Modulo Ticket WorkHub con drawer Apri ticket per inserire titolo e descrizione della richiesta',
+        label: 'Apri ticket',
+      },
+      {
+        src: '/images/projects/workhub/admin-ticket-analytics.png',
+        alt: 'Vista admin Ticket WorkHub con grafico andamento ticket, lista completa e filtri per data, utente e stato',
+        label: 'Ticketing admin',
+      },
+      {
+        src: '/images/projects/workhub/admin-ticket-date-filter.png',
+        alt: 'Modulo Ticket admin WorkHub con modale per selezionare l’intervallo date del filtro',
+        label: 'Filtro ticket',
       },
     ],
   },
   {
     title: 'Sicurezza e accessi',
     text:
-      'Autenticazione JWT, ruoli admin/user, 2FA opzionale (TOTP), recupero password e route protette lato frontend e backend.',
-    tags: 'JWT · 2FA · Joi · Middleware',
-    src: '/images/projects/workhub/settings.png',
-    alt: 'Impostazioni WorkHub con password, 2FA, profilo, lingua e tema',
+      'Login con autenticazione a due fattori opzionale e area impostazioni per password, abilitazione 2FA, anagrafica utente, lingua e tema predefinito.',
+    tags: 'Login · Settings · JWT · 2FA · Joi',
+    screens: [
+      {
+        src: '/images/projects/workhub/employee-profile.png',
+        alt: 'Schermata di login WorkHub con campo opzionale per codice 2FA',
+        label: 'Login con 2FA',
+      },
+      {
+        src: '/images/projects/workhub/admin-ticket.png',
+        alt: 'Impostazioni WorkHub con modifica password, 2FA, anagrafica utente, lingua e tema chiaro/scuro',
+        label: 'Impostazioni account',
+      },
+    ],
   },
   {
     title: 'UI/UX',
     text:
-      'Tema chiaro e scuro, switch IT/EN, layout responsive con Tailwind CSS 4 e Phosphor Icons.',
-    tags: 'Tailwind CSS · i18n · Tema chiaro/scuro',
+      'Switch IT/EN e dark/light mode attivabile dall’header: il tema scuro adatta tutti gli elementi dell’interfaccia mantenendo leggibilità e coerenza visiva su tutta la piattaforma.',
+    tags: 'i18n · Dark/Light Mode',
+    screens: [
+      {
+        src: '/images/projects/workhub/overview-dark-mode.png',
+        alt: 'Overview WorkHub in dark mode con indicatori riepilogativi, bacheca, prodotti in esaurimento e calendario turni',
+        label: 'Dark mode',
+      },
+    ],
   },
 ]
 
@@ -197,13 +233,13 @@ const WorkHubProject = () => (
             WorkHub: piattaforma gestionale per operazioni aziendali interne
           </h1>
           <p className="project-case-intro__desc">
-            Progetto di gruppo con la classe per concludere il percorso Full Stack Web Developer:
+            Progetto di gruppo svolto per concludere il percorso Full Stack Web Developer:
             un gestionale che centralizza personale, turni, clienti, magazzino, ordini e ticket,
             con interfaccia role-based per admin e dipendenti.
           </p>
           <p className="project-case-intro__desc mt-4">
-            Capstone di corso in team: abbiamo progettato e sviluppato la piattaforma end-to-end —
-            frontend React, API Express, MongoDB — con autenticazione, ruoli e moduli operativi per
+            Capstone di corso in team: abbiamo progettato e sviluppato la piattaforma end-to-end con
+            React sul frontend, API Express e MongoDB, autenticazione, ruoli e moduli operativi per
             simulare un gestionale aziendale reale.
           </p>
         </header>
@@ -250,14 +286,19 @@ const WorkHubProject = () => (
             Come abbiamo realizzato WorkHub
           </h2>
           <p className="project-case-body">
-            WorkHub è il progetto con cui la classe ha chiuso il corso Full Stack Web Developer:
-            in team abbiamo progettato l&apos;architettura, definito le API REST e costruito
-            un&apos;interfaccia modulare in cui la stessa shell cambia contenuto e permessi in base
-            al ruolo JWT (admin o user).
+            WorkHub rappresenta il progetto conclusivo del percorso Full Stack Web Developer e
+            sintetizza le competenze maturate nello sviluppo full stack. Architettura, convenzioni e
+            stile dell&apos;interfaccia sono stati definiti insieme all&apos;avvio del progetto; il
+            lavoro è stato poi ripartito per moduli del gestionale (personale, clienti, magazzino,
+            ordini, ticket, dashboard), con ogni componente del gruppo responsabile del proprio ambito
+            end-to-end — componenti React, logica frontend, endpoint Express, modelli e query
+            MongoDB — integrando tutto nelle API REST condivise.
           </p>
           <ul className="project-case-checklist space-y-4">
             {CONTRIBUTION_ITEMS.map((item) => (
-              <li key={item}>{item}</li>
+              <li key={item.title}>
+                <strong>{item.title}</strong>: {item.text}
+              </li>
             ))}
           </ul>
         </section>
@@ -297,9 +338,13 @@ const WorkHubProject = () => (
             Cosa fa la piattaforma
           </h2>
           <p className="project-case-body">
-            WorkHub copre l&apos;operatività interna dell&apos;azienda: dalla dashboard con KPI e
-            calendario alle anagrafiche clienti, dal magazzino agli ordini fino al ticketing con
-            analytics per gli admin. Ogni blocco riassume un modulo con le schermate reali
+            WorkHub supporta le principali attività operative dell&apos;azienda attraverso un unico
+            gestionale. La piattaforma include una dashboard con indicatori riepilogativi su
+            magazzino, ordini, personale e prodotti da riordinare, e calendario integrato per
+            visualizzare turni ed eventi aziendali. Sono presenti moduli dedicati alla gestione dei
+            clienti, del magazzino, degli ordini e dei ticket, con strumenti di analisi riservati
+            agli amministratori. Ogni sezione
+            di questa pagina presenta uno specifico modulo attraverso schermate reali
             dell&apos;applicazione.
           </p>
           <ProjectFeatureScreens features={FEATURES} />
@@ -328,17 +373,34 @@ const WorkHubProject = () => (
 
           <div className="project-case-stack-narrative">
             <p>
-              Stack moderno con separazione netta tra client React (Redux, routing protetto, Context
-              per tema e i18n) e API Express su MongoDB, con validazione input e middleware di
-              sicurezza.
+              Per questo progetto abbiamo utilizzato uno stack full stack basato su React, Vite,
+              Tailwind CSS, Redux Toolkit, Node.js, Express e MongoDB, scelto per costruire un
+              gestionale interno strutturato, modulare e adatto alla gestione di personale, turni,
+              clienti, magazzino, ordini, ticket e flussi operativi aziendali.
             </p>
             <p>
-              React 19 e Vite sul frontend, con Tailwind CSS 4 per un layout responsive; Redux
-              Toolkit e React Router 7 per stato globale e navigazione protetta in base al ruolo.
+              React, Vite e Tailwind CSS hanno permesso di sviluppare un&apos;interfaccia modulare,
+              con componenti riutilizzabili per dashboard, tabelle, drawer, form e aree riservate
+              con viste role-based per admin e dipendenti. Vite ha reso più rapido il processo di
+              sviluppo e build; Redux Toolkit e React Router hanno gestito stato globale, routing
+              protetto e integrazione tra i moduli dell&apos;applicazione.
             </p>
             <p>
-              Node.js ed Express 5 sul backend, con MongoDB per la persistenza e Joi per validare
-              payload e richieste API in modo coerente.
+              Node.js ed Express hanno fornito una struttura solida per gestire autenticazione JWT,
+              2FA opzionale, ruoli, API REST, logiche server, validazioni Joi, middleware di
+              sicurezza e i flussi legati a ordini, inventario, ticketing ed eventi aziendali.
+            </p>
+            <p>
+              MongoDB ha supportato la persistenza dei dati, consentendo di organizzare utenti,
+              turni, ferie, clienti, prodotti, giacenze, ordini, punti vendita, ticket ed eventi
+              della bacheca in un&apos;architettura flessibile, con separazione netta tra client e
+              server.
+            </p>
+            <p>
+              Questo stack ci ha permesso di lavorare su un percorso completo in team: dalla
+              progettazione dell&apos;interfaccia e della shell condivisa alla definizione dei modelli
+              e delle query MongoDB, dalle logiche applicative lato server fino all&apos;integrazione
+              end-to-end di ogni modulo nelle API REST condivise.
             </p>
           </div>
         </section>
