@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
+import { ProjectDemoLink } from '../../components/ProjectDemoLink'
 import { ProjectDemoVideo } from '../../components/ProjectDemoVideo'
 import { ProjectFeatureScreens } from '../../components/ProjectFeatureScreens'
 
@@ -250,11 +251,11 @@ const WorkHubProject = () => (
               <span className="btn-primary-text">Repository GitHub →</span>
             </span>
           </a>
-          <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+          <ProjectDemoLink sectionId={DEMO_SECTION_ID} className="btn-primary">
             <span className="btn-primary-inner">
               <span className="btn-primary-text">Guarda la demo</span>
             </span>
-          </a>
+          </ProjectDemoLink>
         </ProjectCaseHeroActions>
 
         <section className="project-case-overview-cards" aria-label="Punto di partenza, soluzione e stack">
@@ -305,7 +306,7 @@ const WorkHubProject = () => (
 
         <section
           id={DEMO_SECTION_ID}
-          className="project-case-video"
+          className="project-case-video section-scroll-anchor"
           aria-labelledby="workhub-demo-heading"
         >
           <div className="project-case-video__intro">
@@ -411,11 +412,11 @@ const WorkHubProject = () => (
               <span className="btn-primary-text">Repository GitHub →</span>
             </span>
           </a>
-          <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+          <ProjectDemoLink sectionId={DEMO_SECTION_ID} className="btn-primary">
             <span className="btn-primary-inner">
               <span className="btn-primary-text">Guarda la demo</span>
             </span>
-          </a>
+          </ProjectDemoLink>
         </ProjectCaseHeroActions>
       </article>
     </div>

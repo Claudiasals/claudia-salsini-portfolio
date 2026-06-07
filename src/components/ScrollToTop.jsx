@@ -15,7 +15,8 @@ const ScrollToTop = () => {
   }, [])
 
   useEffect(() => {
-    if (pathname === '/' && hash) return
+    // Con hash attivo ScrollToHash gestisce lo scroll (home e pagine progetto).
+    if (hash) return
 
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
   }, [pathname, hash])

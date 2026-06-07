@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
+import { ProjectDemoLink } from '../../components/ProjectDemoLink'
 import { ProjectDemoVideo } from '../../components/ProjectDemoVideo'
 import { ProjectFeatureScreens } from '../../components/ProjectFeatureScreens'
 
@@ -168,11 +169,11 @@ const FrancescaGandelliProject = () => (
           <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn-secondary">
             <span className="btn-secondary-inner">Repository GitHub →</span>
           </a>
-          <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+          <ProjectDemoLink sectionId={DEMO_SECTION_ID} className="btn-primary">
             <span className="btn-primary-inner">
               <span className="btn-primary-text">Guarda la demo</span>
             </span>
-          </a>
+          </ProjectDemoLink>
           <a href={SITE_URL} target="_blank" rel="noreferrer" className="btn-primary">
             <span className="btn-primary-inner btn-primary-inner--spectrum">
               <span className="btn-primary-text">Visita il sito →</span>
@@ -223,7 +224,7 @@ const FrancescaGandelliProject = () => (
 
         <section
           id={DEMO_SECTION_ID}
-          className="project-case-video"
+          className="project-case-video section-scroll-anchor"
           aria-labelledby="francesca-demo-heading"
         >
           <div className="project-case-video__intro">
@@ -301,11 +302,11 @@ const FrancescaGandelliProject = () => (
           <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn-secondary">
             <span className="btn-secondary-inner">Repository GitHub →</span>
           </a>
-          <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+          <ProjectDemoLink sectionId={DEMO_SECTION_ID} className="btn-primary">
             <span className="btn-primary-inner">
               <span className="btn-primary-text">Guarda la demo</span>
             </span>
-          </a>
+          </ProjectDemoLink>
           <a href={SITE_URL} target="_blank" rel="noreferrer" className="btn-primary">
             <span className="btn-primary-inner btn-primary-inner--spectrum">
               <span className="btn-primary-text">Visita il sito →</span>

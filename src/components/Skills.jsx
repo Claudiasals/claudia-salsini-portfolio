@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import '../skills.css'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
 import TechRadar from './TechRadar'
 import { SECTION_REVEAL_EVENT, elementIntersectsViewport } from '../utils/sectionReveal'

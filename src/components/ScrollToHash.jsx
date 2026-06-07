@@ -6,11 +6,7 @@ const ScrollToHash = () => {
   const { pathname, hash } = useLocation()
 
   useEffect(() => {
-    if (pathname !== '/') return undefined
-
-    if (!hash) {
-      return undefined
-    }
+    if (!hash) return undefined
 
     const id = hash.replace('#', '')
     const behavior = window.matchMedia('(hover: none), (pointer: coarse)').matches

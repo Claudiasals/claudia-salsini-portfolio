@@ -1,8 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { FaPause, FaPlay } from 'react-icons/fa'
+import { FaCompress, FaExpand, FaPause, FaPlay } from 'react-icons/fa'
 import { useVideoVolumeBoost } from '../hooks/useVideoVolumeBoost'
 
 const PAUSE_CONTROL_HIDE_MS = 1000
+
+const isIOSDevice = () => {
+  if (typeof navigator === 'undefined') return false
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  )
+}
 
 function formatVideoTime(seconds) {
   if (!Number.isFinite(seconds) || seconds < 0) return '0:00'
@@ -37,11 +45,13 @@ function playWhenReady(video) {
  * finché il cursore non esce dal video e vi rientra. Barra seek sempre in basso.
  */
 export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '' }) {
+  const frameRef = useRef(null)
   const videoRef = useVideoVolumeBoost(volumeGain)
   const hidePauseTimerRef = useRef(null)
   const isSeekingRef = useRef(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [showPauseControl, setShowPauseControl] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
 
@@ -176,6 +186,44 @@ export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '
     clearHidePauseTimer()
   }, [isPlaying, clearHidePauseTimer])
 
+  const toggleFullscreen = useCallback(async () => {
+    const frame = frameRef.current
+    const video = videoRef.current
+    if (!frame && !video) return
+
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen()
+        return
+      }
+
+      if (isIOSDevice() && video?.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen()
+        return
+      }
+
+      if (frame?.requestFullscreen) {
+        await frame.requestFullscreen()
+        return
+      }
+
+      if (video?.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen()
+      }
+    } catch {
+      /* fullscreen non supportato o rifiutato */
+    }
+  }, [videoRef])
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement))
+    }
+
+    document.addEventListener('fullscreenchange', onFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
+  }, [])
+
   const frameClass = [
     'project-case-video__frame',
     'project-case-video__frame--contain',
@@ -190,6 +238,7 @@ export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '
 
   return (
     <div
+      ref={frameRef}
       className={frameClass}
       onMouseEnter={handleFrameMouseEnter}
       onMouseLeave={handleFrameMouseLeave}
@@ -232,6 +281,26 @@ export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '
           <span className="project-case-video__time-sep">/</span>
           <span>{formatVideoTime(duration)}</span>
         </div>
+      </div>
+
+      <div className="project-case-video__fullscreen-wrap">
+        <button
+          type="button"
+          className="nav-btn project-case-video__fullscreen-btn"
+          onClick={(event) => {
+            event.stopPropagation()
+            void toggleFullscreen()
+          }}
+          aria-label={isFullscreen ? 'Esci da schermo intero' : 'Schermo intero'}
+        >
+          <span className="nav-btn-inner flex items-center justify-center">
+            {isFullscreen ? (
+              <FaCompress className="project-case-video__fullscreen-icon" aria-hidden />
+            ) : (
+              <FaExpand className="project-case-video__fullscreen-icon" aria-hidden />
+            )}
+          </span>
+        </button>
       </div>
 
       <div className="project-case-video__toggle-wrap">

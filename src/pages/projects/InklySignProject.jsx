@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
+import { ProjectDemoLink } from '../../components/ProjectDemoLink'
 import { ProjectDemoVideo } from '../../components/ProjectDemoVideo'
 import { ProjectFeatureScreens } from '../../components/ProjectFeatureScreens'
 
@@ -152,11 +153,11 @@ const InklySignProject = () => {
           </header>
 
           <ProjectCaseHeroActions>
-            <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+            <ProjectDemoLink sectionId={DEMO_SECTION_ID} className="btn-primary">
               <span className="btn-primary-inner">
                 <span className="btn-primary-text">Guarda la demo</span>
               </span>
-            </a>
+            </ProjectDemoLink>
             <a href={EXTERNAL_URL} target="_blank" rel="noreferrer" className="btn-primary">
               <span className="btn-primary-inner btn-primary-inner--spectrum">
                 <span className="btn-primary-text">Visita InklySign →</span>
@@ -205,7 +206,7 @@ const InklySignProject = () => {
 
           <section
             id={DEMO_SECTION_ID}
-            className="project-case-video"
+            className="project-case-video section-scroll-anchor"
             aria-labelledby="inklysign-demo-heading"
           >
             <div className="project-case-video__intro">
@@ -302,11 +303,11 @@ const InklySignProject = () => {
           </section>
 
           <ProjectCaseHeroActions className="project-detail-actions">
-            <a href={`#${DEMO_SECTION_ID}`} className="btn-primary">
+            <ProjectDemoLink sectionId={DEMO_SECTION_ID} className="btn-primary">
               <span className="btn-primary-inner">
                 <span className="btn-primary-text">Guarda la demo</span>
               </span>
-            </a>
+            </ProjectDemoLink>
             <a href={EXTERNAL_URL} target="_blank" rel="noreferrer" className="btn-primary">
               <span className="btn-primary-inner btn-primary-inner--spectrum">
                 <span className="btn-primary-text">Visita InklySign →</span>
