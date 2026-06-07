@@ -107,6 +107,27 @@ export function getActiveProjectCarouselSlideIndex(
   return bestIndex
 }
 
+/** Indice logico del progetto (0 … setSize-1), indipendente dai blocchi loop. */
+export function getActiveProjectIndex(track) {
+  const setSize = getCarouselSetSize(track)
+  if (setSize <= 0) return 0
+
+  return getActiveProjectCarouselSlideIndex(track) % setSize
+}
+
+/** Scorre al progetto nel blocco centrale (loop infinito). */
+export function scrollProjectCarouselToProjectIndex(track, projectIndex, behavior = 'smooth') {
+  const setSize = getCarouselSetSize(track)
+  if (setSize <= 0) return
+
+  const normalizedIndex = ((projectIndex % setSize) + setSize) % setSize
+  const slideIndex = carouselHasInfiniteLoop(track)
+    ? getMiddleSetStartIndex(track) + normalizedIndex
+    : normalizedIndex
+
+  scrollProjectCarouselToSlideIndex(track, slideIndex, behavior)
+}
+
 /** Se sei nel primo o terzo blocco, salta alla stessa card nel blocco centrale. */
 export function normalizeLoopSlideIndex(track, slideIndex) {
   const setSize = getCarouselSetSize(track)

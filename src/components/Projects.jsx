@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { projects } from '../data/projects'
 import ProjectCarouselCard from './ProjectCarouselCard'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
 import {
+  getActiveProjectIndex,
   initProjectCarouselLoop,
   scrollProjectCarouselBy,
+  scrollProjectCarouselToProjectIndex,
 } from '../utils/projectCarousel'
 
 const LOOP_SET_COUNT = 3
@@ -64,17 +66,40 @@ const Projects = () => {
   const slides = useMemo(() => buildCarouselSlides(projects), [])
   const slidesKey = slides.map((slide) => slide.key).join('|')
   const loopEnabled = projects.length > 1
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0)
 
   useEffect(() => {
     const track = trackRef.current
     if (!track) return undefined
-    return initProjectCarouselLoop(track)
+
+    const syncActiveProject = () => {
+      const nextIndex = getActiveProjectIndex(track)
+      setActiveProjectIndex((current) => (current === nextIndex ? current : nextIndex))
+    }
+
+    const cleanup = initProjectCarouselLoop(track)
+
+    syncActiveProject()
+    track.addEventListener('scroll', syncActiveProject, { passive: true })
+    track.addEventListener('scrollend', syncActiveProject, { passive: true })
+
+    return () => {
+      track.removeEventListener('scroll', syncActiveProject)
+      track.removeEventListener('scrollend', syncActiveProject)
+      cleanup?.()
+    }
   }, [slidesKey])
 
   const scrollProjects = (direction) => {
     const track = trackRef.current
     if (!track) return
     scrollProjectCarouselBy(track, direction)
+  }
+
+  const goToProject = (projectIndex) => {
+    const track = trackRef.current
+    if (!track) return
+    scrollProjectCarouselToProjectIndex(track, projectIndex)
   }
 
   return (
@@ -108,17 +133,6 @@ const Projects = () => {
         </ScrollRevealItem>
 
         <div className="projects-carousel mt-10">
-          <button
-            type="button"
-            className="projects-carousel-nav"
-            onClick={() => scrollProjects(-1)}
-            aria-label="Progetto precedente"
-          >
-            <span className="projects-carousel-nav-inner">
-              <ChevronIcon direction="left" />
-            </span>
-          </button>
-
           <div
             ref={trackRef}
             className="projects-carousel-track"
@@ -135,16 +149,47 @@ const Projects = () => {
             ))}
           </div>
 
-          <button
-            type="button"
-            className="projects-carousel-nav"
-            onClick={() => scrollProjects(1)}
-            aria-label="Progetto successivo"
-          >
-            <span className="projects-carousel-nav-inner">
-              <ChevronIcon direction="right" />
-            </span>
-          </button>
+          {loopEnabled ? (
+            <div className="projects-carousel-controls" aria-label="Navigazione progetti">
+              <button
+                type="button"
+                className="projects-carousel-nav"
+                onClick={() => scrollProjects(-1)}
+                aria-label="Progetto precedente"
+              >
+                <span className="projects-carousel-nav-inner">
+                  <ChevronIcon direction="left" />
+                </span>
+              </button>
+
+              <div className="projects-carousel-dots" role="tablist" aria-label="Progetti">
+                {projects.map((project, index) => (
+                  <button
+                    key={project.slug}
+                    type="button"
+                    role="tab"
+                    className={`projects-carousel-dot${
+                      activeProjectIndex === index ? ' projects-carousel-dot--active' : ''
+                    }`}
+                    aria-selected={activeProjectIndex === index}
+                    aria-label={`Vai a ${project.title}`}
+                    onClick={() => goToProject(index)}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                className="projects-carousel-nav"
+                onClick={() => scrollProjects(1)}
+                aria-label="Progetto successivo"
+              >
+                <span className="projects-carousel-nav-inner">
+                  <ChevronIcon direction="right" />
+                </span>
+              </button>
+            </div>
+          ) : null}
         </div>
       </ScrollReveal>
     </section>

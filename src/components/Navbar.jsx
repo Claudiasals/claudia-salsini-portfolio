@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { FaHome } from 'react-icons/fa'
-import { navigateToHomeSection, smoothScrollToY, isCoarsePointer } from '../utils/scrollToSection'
+import { RiHomeFill } from 'react-icons/ri'
+import { navigateToHomeSection, smoothScrollToY, isCoarsePointer, getSectionIdFromHref } from '../utils/scrollToSection'
+import { useHomeActiveSection, HOME_NAV_SECTION_IDS } from '../utils/useHomeActiveSection'
 
 const MOBILE_NAV_MEDIA = '(width < 768px)'
 const MENU_CLOSE_ON_SCROLL_PX = 8
@@ -17,8 +18,58 @@ const Navbar = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [clickedSection, setClickedSection] = useState(null)
+  const [navScrolling, setNavScrolling] = useState(false)
+  const activeSection = useHomeActiveSection()
 
   const closeMenu = () => setMenuOpen(false)
+
+  useEffect(() => {
+    if (!clickedSection) return
+
+    const clickedIdx = HOME_NAV_SECTION_IDS.indexOf(clickedSection)
+    const activeIdx = HOME_NAV_SECTION_IDS.indexOf(activeSection)
+
+    if (clickedSection === activeSection) {
+      setClickedSection(null)
+      setNavScrolling(false)
+      return
+    }
+
+    if (activeIdx === -1 || clickedIdx === -1) return
+
+    if (activeIdx > clickedIdx) {
+      setClickedSection(null)
+      setNavScrolling(false)
+      return
+    }
+
+    if (activeIdx < clickedIdx && !navScrolling) {
+      setClickedSection(null)
+    }
+  }, [activeSection, clickedSection, navScrolling])
+
+  useEffect(() => {
+    if (!clickedSection) return undefined
+
+    const cancelNavOverride = () => {
+      setNavScrolling(false)
+      setClickedSection(null)
+    }
+
+    window.addEventListener('wheel', cancelNavOverride, { passive: true })
+    window.addEventListener('touchmove', cancelNavOverride, { passive: true })
+
+    return () => {
+      window.removeEventListener('wheel', cancelNavOverride)
+      window.removeEventListener('touchmove', cancelNavOverride)
+    }
+  }, [clickedSection])
+
+  useEffect(() => {
+    setClickedSection(null)
+    setNavScrolling(false)
+  }, [location.pathname])
 
   useEffect(() => {
     closeMenu()
@@ -80,6 +131,8 @@ const Navbar = () => {
 
     event.preventDefault()
     closeMenu()
+    setClickedSection(null)
+    setNavScrolling(false)
 
     const scrollHome = () => {
       if (isCoarsePointer()) {
@@ -103,6 +156,8 @@ const Navbar = () => {
   const handleSectionClick = (event, href) => {
     event.preventDefault()
     closeMenu()
+    setClickedSection(getSectionIdFromHref(href))
+    setNavScrolling(true)
     navigateToHomeSection(href, location, navigate, 'smooth')
   }
 
@@ -115,25 +170,36 @@ const Navbar = () => {
         onClick={handleHomeClick}
       >
         <span className="nav-btn-inner h-11 w-11">
-          <FaHome className="text-base" />
+          <RiHomeFill className="text-xl" aria-hidden="true" />
         </span>
       </Link>
     </li>
   )
 
-  const sectionItems = navLinks.map((link) => (
-    <li key={link.href}>
-      <a
-        href={link.href}
-        className="nav-btn"
-        onClick={(event) => handleSectionClick(event, link.href)}
-      >
-        <span className="nav-btn-inner px-5 text-xs font-semibold uppercase leading-none tracking-[0.2em] md:text-sm">
-          {link.label}
-        </span>
-      </a>
-    </li>
-  ))
+  const sectionItems = navLinks.map((link) => {
+    const sectionId = getSectionIdFromHref(link.href)
+    const highlightedSection = clickedSection ?? activeSection
+    const isCurrent = location.pathname === '/' && highlightedSection === sectionId
+
+    return (
+      <li key={link.href}>
+        <a
+          href={link.href}
+          className="nav-btn"
+          aria-current={isCurrent ? 'location' : undefined}
+          onClick={(event) => handleSectionClick(event, link.href)}
+        >
+          <span
+            className={`nav-btn-inner nav-btn-inner--section px-5 text-xs font-semibold uppercase leading-none tracking-[0.2em] md:text-sm${
+              isCurrent ? ' nav-btn-inner--current' : ''
+            }`}
+          >
+            {link.label}
+          </span>
+        </a>
+      </li>
+    )
+  })
 
   return (
     <header className="site-header fixed left-0 top-0 z-50 flex w-full items-center px-4 py-2.5 md:min-h-[120px] md:py-3">

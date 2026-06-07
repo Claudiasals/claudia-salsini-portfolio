@@ -1,61 +1,424 @@
-/* Sezione Competenze tecniche + Tech Radar */
+/* Skills showcase */
 
 .skills-section {
   position: relative;
   z-index: 1;
-  overflow: visible;
-}
-/* Skills */
-.skills-section__head {
-  text-align: left;
-}
-
-.skills-lead {
-  margin-bottom: 0;
+  overflow-x: clip;
+  background:
+    radial-gradient(circle at 45% 34%, rgba(59, 130, 246, 0.14), transparent 32rem),
+    radial-gradient(circle at 88% 24%, rgba(124, 58, 237, 0.13), transparent 26rem),
+    radial-gradient(circle at 16% 76%, rgba(14, 165, 233, 0.08), transparent 24rem);
 }
 
-.tech-radar-layout.section-after-title {
-  margin-top: 2.75rem;
+.skills-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  bottom: -4rem;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 62%,
+    rgba(var(--site-bg-rgb), 0.22) 88%,
+    rgb(var(--site-bg-rgb)) 100%
+  );
+  pointer-events: none;
 }
 
-.tech-radar {
+.skills-showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr) minmax(0, 0.92fr);
+  grid-template-areas:
+    "intro radar side"
+    "process process process"
+    "stack stack stack";
+  align-items: center;
+  gap: clamp(1.6rem, 3vw, 3.1rem);
+}
+
+.skills-intro {
+  grid-area: intro;
+  align-self: stretch;
   display: flex;
   flex-direction: column;
-  gap: 1.35rem;
+  justify-content: center;
+  min-width: 0;
 }
 
-.tech-radar__tabs {
+.skills-intro__tabs {
+  margin-top: 2rem;
+}
+
+.skills-category-tabs {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.skills-title {
+  max-width: 22ch;
+}
+
+.skills-copy {
+  max-width: 42ch;
+}
+
+.skills-radar-wrap {
+  grid-area: radar;
+  position: relative;
+  min-width: 0;
+}
+
+.skills-side {
+  grid-area: side;
+  min-width: 0;
+}
+
+.skills-category-tab {
+  height: auto;
+}
+
+.skills-category-tab__inner {
+  padding: 0.5rem 1.125rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.skills-detail-card {
+  border: 2px solid transparent;
+  border-radius: 1.25rem;
+  background:
+    linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.92)) padding-box,
+    linear-gradient(135deg, #9333ea, #38bdf8, #6ee7b7) border-box;
+  padding: 1.25rem;
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.skills-detail-card__category {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.skills-detail-card__body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.skills-detail-card__icon {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  color: var(--skill-color, #38bdf8);
+  font-size: 2.5rem;
+  line-height: 1;
+  filter:
+    drop-shadow(0 0 8px color-mix(in srgb, var(--skill-color, #38bdf8) 72%, transparent))
+    drop-shadow(0 0 16px color-mix(in srgb, var(--skill-color, #38bdf8) 22%, transparent));
+}
+
+.skills-detail-card__copy {
+  min-width: 0;
+}
+
+.skills-detail-card__name {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #ffffff;
+}
+
+.skills-detail-card__desc {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+
+.skills-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.skills-process {
+  grid-area: process;
+  margin-top: clamp(1.1rem, 2.4vw, 2.5rem);
+}
+
+.skills-stack {
+  grid-area: stack;
+  margin-top: clamp(1.1rem, 2.4vw, 2.5rem);
+}
+
+.skills-stack-detail {
+  max-width: 28rem;
+  margin: 0 auto 1.25rem;
+}
+
+.skills-panel-heading--process {
+  margin-bottom: 1.15rem;
+}
+
+.skills-panel-heading__dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  flex: 0 0 auto;
+  border-radius: 9999px;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.35);
+}
+
+.skills-panel-heading h3 {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.skills-stack-panel {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.65rem;
-}
-
-.tech-radar__tab--active {
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  padding: 1.25rem 1.1rem;
+  border: 1px solid rgba(59, 130, 246, 0.22);
+  border-radius: 0.5rem;
+  background:
+    linear-gradient(180deg, rgba(8, 13, 31, 0.82), rgba(3, 7, 18, 0.76)) padding-box,
+    radial-gradient(circle at 0 0, rgba(124, 58, 237, 0.2), transparent 32%) border-box;
   box-shadow:
-    0 0 16px rgba(56, 189, 248, 0.6),
-    0 0 28px rgba(56, 189, 248, 0.35);
+    inset 0 0 32px rgba(37, 99, 235, 0.045),
+    0 0 42px rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(8px);
 }
 
-.tech-radar__content {
+.skills-stack-item {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(15rem, 18rem);
-  gap: 2.25rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.skills-stack-item:hover {
+  transform: scale(1.06);
+}
+
+.skills-stack-item--active {
+  transform: scale(1.08);
+}
+
+.skills-stack-item:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 4px;
+  border-radius: 0.5rem;
+}
+
+.skills-stack-item__icon {
+  display: grid;
+  place-items: center;
+  width: 3.75rem;
+  height: 3.75rem;
+  color: var(--skill-color, #38bdf8);
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.skills-panel-heading--process::after {
+  content: '';
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(96, 165, 250, 0.28), transparent);
+}
+
+.skills-process-track {
+  position: relative;
+  isolation: isolate;
+}
+
+.skills-process-list {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: stretch;
+  gap: clamp(0.25rem, 0.8vw, 0.5rem);
+  margin: 0;
+  padding: 0;
+}
+
+.skills-process-arrow-slot {
+  display: flex;
+  flex: 0 0 clamp(1.75rem, 3.2vw, 3.25rem);
   align-items: center;
+  align-self: center;
+  justify-content: center;
+  min-width: 0;
+  margin-top: 0.35rem;
+  pointer-events: none;
+}
+
+.skills-process-arrow {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.skills-process-arrow__path {
+  fill: none;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-dasharray: 3 5;
+  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.3));
+}
+
+.skills-process-card {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.skills-process-card__inner {
+  display: flex;
+  width: 100%;
+  height: 15.5rem;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: center;
+}
+
+.skills-process-card__content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.skills-process-card:not(:last-child)::after,
+.skills-process-card:not(:last-child)::before {
+  content: none;
+  display: none;
+}
+
+.skills-process-card__icon {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  width: 4.15rem;
+  height: 4.15rem;
+  margin-bottom: 1rem;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--skill-color, #38bdf8);
+  font-size: 2rem;
+}
+
+.skills-process-card__icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from 210deg,
+    color-mix(in srgb, var(--skill-color, #38bdf8) 16%, transparent),
+    color-mix(in srgb, var(--skill-color, #38bdf8) 78%, white 16%) 48deg,
+    var(--skill-color, #38bdf8) 82deg,
+    color-mix(in srgb, var(--skill-color, #38bdf8) 28%, transparent) 132deg,
+    color-mix(in srgb, var(--skill-color, #38bdf8) 12%, transparent) 188deg,
+    color-mix(in srgb, var(--skill-color, #38bdf8) 62%, white 10%) 248deg,
+    color-mix(in srgb, var(--skill-color, #38bdf8) 34%, transparent) 302deg,
+    color-mix(in srgb, var(--skill-color, #38bdf8) 16%, transparent)
+  );
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.skills-process-card__icon svg {
+  position: relative;
+  z-index: 1;
+  width: 1em;
+  height: 1em;
+}
+
+.skills-process-card strong {
+  color: var(--skill-color, #38bdf8);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+}
+
+.skills-process-card p {
+  max-width: 13rem;
+  margin: 0.5rem 0 0;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.skill-glyph__icon {
+  display: block;
+  font-size: inherit;
+  line-height: 1;
+}
+
+.skill-glyph__img {
+  display: block;
+  width: 1em;
+  height: 1em;
+  object-fit: contain;
+}
+
+.tech-radar {
+  width: 100%;
 }
 
 .tech-radar__stage {
   position: relative;
-  width: min(100%, 45rem);
+  width: min(100%, 34.5rem);
   aspect-ratio: 1;
   margin-inline: auto;
   isolation: isolate;
 }
 
-.tech-radar__view {
-  position: absolute;
-  inset: 0;
-  animation: tech-radar-view-in 0.32s ease forwards;
+.tech-radar__stage::before {
+  content: none;
+  display: none;
+}
+
+.tech-radar__field {
+  display: none;
 }
 
 .tech-radar__svg {
@@ -72,110 +435,66 @@
 }
 
 .tech-radar__svg--overlay {
-  z-index: 6;
-}
-
-.tech-radar__field {
-  opacity: 0.65;
+  z-index: 4;
 }
 
 .tech-radar__ring {
   fill: none;
-  stroke: rgba(56, 189, 248, 0.08);
-  stroke-width: 0.06;
-  opacity: 0.22;
+  stroke: rgba(14, 165, 233, 0.22);
+  stroke-width: 0.11;
 }
 
-.tech-radar__hub-outer {
-  fill: rgba(15, 23, 42, 0.92);
-  stroke: url(#tech-radar-accent-border);
-  stroke-width: 0.34;
-  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.35));
+.tech-radar__ring:nth-of-type(2n) {
+  stroke: rgba(99, 102, 241, 0.18);
 }
 
-.tech-radar__spoke {
-  stroke: url(#tech-radar-accent-border);
-  stroke-width: 0.1;
+.tech-radar__ring--outer {
+  stroke: rgba(14, 165, 233, 0.28);
+  stroke-dasharray: 0.75 1.18;
   stroke-linecap: round;
-  opacity: 1;
-  transition:
-    stroke-width 0.22s ease,
-    opacity 0.22s ease;
-}
-
-.tech-radar__spoke--active {
   stroke-width: 0.12;
-  opacity: 1;
 }
 
-.tech-radar__joint-group {
-  transition: opacity 0.22s ease;
+.tech-radar__mesh-line {
+  fill: none;
+  stroke: url(#skill-radar-polygon);
+  stroke-width: 0.35;
 }
 
-.tech-radar__joints {
-  pointer-events: none;
-}
-
-.tech-radar__joint-halo {
-  fill: url(#tech-radar-accent-border);
-  opacity: 0.42;
-}
-
-.tech-radar__joint-group--hub .tech-radar__joint-halo {
-  opacity: 0.72;
-}
-
-.tech-radar__joint-core {
-  fill: url(#tech-radar-accent-border);
-}
-
-.tech-radar__joint-group--terminal .tech-radar__joint-halo {
-  opacity: 0.22;
-}
-
-.tech-radar__joint-group--terminal .tech-radar__joint-core {
-  opacity: 0.38;
-}
-
-.tech-radar__joint-group--terminal.tech-radar__joint-group--highlighted .tech-radar__joint-halo {
-  opacity: 0.34;
-}
-
-.tech-radar__joint-group--terminal.tech-radar__joint-group--highlighted .tech-radar__joint-core {
-  opacity: 0.55;
-}
-
-.tech-radar__joint-group--highlighted .tech-radar__joint-core {
-  filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.65));
+.tech-radar__hub-hex {
+  fill: rgba(19, 16, 45, 0.82);
+  stroke: url(#skill-radar-hub);
+  stroke-width: 0.42;
 }
 
 .tech-radar__center {
   position: absolute;
   left: 50%;
   top: 50%;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #f8fafc;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 5rem;
+  height: 5rem;
+  color: #c084fc;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
-.tech-radar__center-label {
-  max-width: 5.75rem;
-  font-size: clamp(0.62rem, 1.45vw, 0.8rem);
-  line-height: 1.15;
-  text-align: center;
-  text-transform: uppercase;
-  color: #ffffff;
-  letter-spacing: 0.08em;
+.tech-radar__center-code {
+  font-family: "JetBrains Mono", "Inter", system-ui, sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-shadow:
+    0 0 10px rgba(168, 85, 247, 0.82),
+    0 0 24px rgba(99, 102, 241, 0.46);
 }
 
 .tech-radar__nodes {
   position: absolute;
   inset: 0;
-  z-index: 5;
+  z-index: 6;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -183,288 +502,198 @@
 
 .tech-radar__node-wrap {
   position: absolute;
-  z-index: 5;
   opacity: 0;
   transform: translate(-50%, -50%);
-  transition: opacity 0.3s ease;
 }
 
-.tech-radar--active .tech-radar__view .tech-radar__node-wrap {
-  animation: tech-radar-node-in 0.4s ease forwards;
+.tech-radar--active .tech-radar__node-wrap {
+  animation: tech-radar-node-in 0.44s ease forwards;
   animation-delay: var(--tech-radar-delay, 0ms);
 }
 
 .tech-radar__node {
   display: flex;
-  width: 5.95rem;
-  min-height: 4.85rem;
+  width: 7.4rem;
+  min-height: 5.8rem;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.26rem;
+  gap: 0.45rem;
   padding: 0;
   border: 0;
   background: transparent;
-  color: #e2e8f0;
+  color: #f8fafc;
   cursor: pointer;
-  transition:
-    transform 0.28s ease,
-    filter 0.28s ease;
-}
-
-.tech-radar__node-icon-wrap {
-  display: grid;
-  place-items: center;
-  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--tech-radar-glow, #38bdf8) 55%, transparent));
-  transition: filter 0.22s ease;
 }
 
 .tech-radar__node-icon {
-  font-size: 1.72rem;
+  display: grid;
+  place-items: center;
+  color: var(--skill-color, #38bdf8);
+  font-size: 3rem;
   line-height: 1;
-}
-
-.tech-radar__node-icon-img {
-  width: 1.72rem;
-  height: 1.72rem;
-  object-fit: contain;
+  transition: transform 0.22s ease;
 }
 
 .tech-radar__node-label {
-  max-width: 6rem;
-  font-size: 0.74rem;
-  font-weight: 700;
+  max-width: 7rem;
+  color: #f8fafc;
+  font-size: 0.96rem;
+  font-weight: 500;
   line-height: 1.15;
-  color: #e5e7eb;
   text-align: center;
-  text-shadow: 0 0 12px rgba(2, 6, 23, 0.95);
-  transition: color 0.28s ease;
+}
+
+.tech-radar__node--active .tech-radar__node-icon,
+.tech-radar__node:focus-visible .tech-radar__node-icon {
+  transform: translateY(-1px) scale(1.08);
+}
+
+.tech-radar--dense .tech-radar__node {
+  width: 6.1rem;
+  min-height: 4.9rem;
+  gap: 0.35rem;
+}
+
+.tech-radar--dense .tech-radar__node-icon {
+  font-size: 2.2rem;
+}
+
+.tech-radar--dense .tech-radar__node-label {
+  max-width: 5.8rem;
+  font-size: 0.72rem;
 }
 
 .tech-radar__node:focus-visible {
   outline: none;
 }
 
-.tech-radar__node:focus-visible .tech-radar__node-icon-wrap {
-  outline: 2px solid #38bdf8;
-  outline-offset: 4px;
-  border-radius: 0.25rem;
+.tech-radar__spoke {
+  stroke: color-mix(in srgb, var(--skill-color, #38bdf8) 82%, #38bdf8);
+  stroke-width: 0.18;
+  stroke-linecap: round;
+  opacity: 0.75;
+  transition:
+    opacity 0.22s ease,
+    stroke-width 0.22s ease;
 }
 
-.tech-radar__node:hover,
-.tech-radar__node--active {
-  z-index: 10;
+.tech-radar__spoke--active {
+  opacity: 1;
+  stroke-width: 0.26;
 }
 
-.tech-radar__node:hover .tech-radar__node-icon-wrap,
-.tech-radar__node--active .tech-radar__node-icon-wrap {
-  filter: drop-shadow(0 0 12px var(--tech-radar-glow, #38bdf8));
+.tech-radar__joint-glow {
+  fill: var(--skill-color, #38bdf8);
+  opacity: 0.36;
 }
 
-.tech-radar__detail {
-  position: relative;
-  min-height: 17.6rem;
-  padding: 1.35rem;
-  border: 2px solid transparent;
-  border-radius: 1.25rem;
-  background:
-    linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.92)) padding-box,
-    var(--accent-border-soft) border-box;
-  box-shadow:
-    0 0 40px rgba(56, 189, 248, 0.12),
-    0 0 60px rgba(147, 51, 234, 0.1);
-  transition: box-shadow 0.3s ease;
+.tech-radar__joint-core {
+  fill: color-mix(in srgb, var(--skill-color, #38bdf8) 82%, #ffffff);
+  opacity: 0.9;
 }
 
-.tech-radar__detail::before {
-  content: '';
-  position: absolute;
-  left: -2.15rem;
-  top: 50%;
-  width: 2.15rem;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.76));
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
-}
-
-.tech-radar__detail::after {
-  content: '';
-  position: absolute;
-  left: -2.32rem;
-  top: calc(50% - 0.18rem);
-  width: 0.36rem;
-  height: 0.36rem;
-  border-radius: 9999px;
-  background: #38bdf8;
-  box-shadow: 0 0 12px #38bdf8;
-}
-
-.tech-radar__detail--visible {
-  box-shadow:
-    0 0 40px rgba(56, 189, 248, 0.12),
-    0 0 60px rgba(147, 51, 234, 0.1),
-    0 0 24px color-mix(in srgb, var(--tech-radar-glow, #38bdf8) 22%, transparent);
-}
-
-.tech-radar__detail-kicker {
-  margin: 0 0 1rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #38bdf8;
-}
-
-.tech-radar__detail-title-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.tech-radar__detail-title {
-  margin: 0;
-  font-size: 1.45rem;
-  font-weight: 800;
-  color: var(--tech-radar-glow, #38bdf8);
-}
-
-.tech-radar__detail-icon.tech-radar__node-icon {
-  font-size: 2.05rem;
-}
-
-.tech-radar__detail-icon.tech-radar__node-icon-img {
-  width: 2.05rem;
-  height: 2.05rem;
-}
-
-.tech-radar__detail-text {
-  margin: 0;
-  color: #cbd5e1;
-  font-size: 0.94rem;
-  line-height: 1.72;
-}
-
-.tech-radar__detail-level {
-  display: flex;
-  align-items: center;
-  gap: 0.38rem;
-  margin-top: 1.6rem;
-  color: #94a3b8;
-  font-size: 0.78rem;
-}
-
-.tech-radar__detail-level span {
-  margin-right: 0.3rem;
-}
-
-.tech-radar__detail-level i {
-  width: 0.78rem;
-  height: 0.42rem;
-  border-radius: 0.2rem;
-  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.75);
-}
-
-.tech-radar__detail-level i:last-child {
-  background: rgba(30, 58, 95, 0.9);
-  box-shadow: none;
-}
-
-@keyframes tech-radar-view-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+.tech-radar__joint--active .tech-radar__joint-glow,
+.tech-radar__joint--terminal .tech-radar__joint-glow {
+  opacity: 0.72;
 }
 
 @keyframes tech-radar-node-in {
   from {
     opacity: 0;
+    transform: translate(-50%, -50%) scale(0.84);
   }
 
   to {
     opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 
-@media (width < 1100px) {
-  .tech-radar__content {
-    grid-template-columns: 1fr;
+@media (width < 1280px) {
+  .skills-showcase {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    grid-template-areas:
+      "intro radar"
+      "side side"
+      "process process"
+      "stack stack";
   }
 
-  .tech-radar__stage {
-    width: min(100%, 42rem);
+  .skills-intro {
+    justify-content: start;
+  }
+}
+
+@media (width < 900px) {
+  .skills-showcase {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "intro"
+      "radar"
+      "side"
+      "process"
+      "stack";
   }
 
-  .tech-radar__detail {
-    width: min(100%, 34rem);
-    margin-inline: auto;
+  .skills-title {
+    max-width: none;
   }
 
-  .tech-radar__detail::before,
-  .tech-radar__detail::after {
+  .skills-copy {
+    max-width: 42rem;
+  }
+
+  .skills-process-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 3vw, 2.9rem);
+  }
+
+  .skills-process-arrow-slot {
     display: none;
   }
+
+  .skills-process-card {
+    flex: unset;
+  }
 }
 
-@media (width < 700px) {
-  .tech-radar-layout.section-after-title {
-    margin-top: 2rem;
-  }
-
+@media (width < 640px) {
   .tech-radar__stage {
-    width: min(100%, 26rem);
+    width: min(100%, 23rem);
   }
 
   .tech-radar__node {
-    width: 4.5rem;
-    min-height: 3.9rem;
+    width: 5.8rem;
+    min-height: 4.8rem;
   }
 
   .tech-radar__node-icon {
-    font-size: 1.32rem;
-  }
-
-  .tech-radar__node-icon-img {
-    width: 1.32rem;
-    height: 1.32rem;
+    font-size: 2.25rem;
   }
 
   .tech-radar__node-label {
-    font-size: 0.6rem;
+    font-size: 0.78rem;
   }
 
-  .tech-radar__center-label {
-    font-size: 0.54rem;
+  .tech-radar__center {
+    width: 3.7rem;
+    height: 3.7rem;
   }
 
-}
-
-@media (width < 520px) {
-  .tech-radar__stage {
-    width: min(100%, 22rem);
+  .tech-radar__center-code {
+    font-size: 1.45rem;
   }
 
-  .tech-radar__node {
-    width: 3.85rem;
-  }
-
-  .tech-radar__node-label {
-    display: none;
+  .skills-process-list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tech-radar__view,
   .tech-radar__node-wrap {
     animation: none;
-  }
-
-  .tech-radar--active .tech-radar__view .tech-radar__node-wrap {
     opacity: 1;
   }
 }

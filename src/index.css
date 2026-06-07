@@ -42,11 +42,27 @@ html {
   scroll-padding-top: var(--section-anchor-offset);
   overflow-x: clip;
   max-width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 #root {
   overflow-x: clip;
   max-width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#root::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 html.is-scrolling .hero-bg__circuit-spotlight--auto {
@@ -71,6 +87,16 @@ html.is-scrolling .hero-bg__circuit-spotlight--auto {
 
 .section-page--default {
   padding-bottom: 5rem;
+}
+
+@media (width >= 768px) {
+  .section-page {
+    padding-top: 7rem;
+  }
+
+  .section-page--default {
+    padding-bottom: 7rem;
+  }
 }
 
 .page-under-navbar {
@@ -186,31 +212,14 @@ body {
   max-width: 100%;
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* Desktop: scrollbar verticale del viewport nascosta (scroll resta attivo) */
-@media (width >= 768px) {
-  html {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  html::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-    display: none;
-  }
-
-  body {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  body::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-    display: none;
-  }
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 html.custom-cursor-active,
@@ -355,6 +364,13 @@ html.custom-cursor-active * {
   background: rgba(var(--site-bg-rgb), 0.95);
   color: #ffffff;
   backdrop-filter: blur(4px);
+}
+
+.nav-btn-inner--section.nav-btn-inner--current {
+  text-decoration: underline;
+  text-decoration-color: #38bdf8;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.35em;
 }
 
 /* Navbar — desktop orizzontale / mobile hamburger a sinistra */
@@ -878,8 +894,11 @@ html.custom-cursor-active * {
 /* Contatti + footer: solo circuiti di sfondo (come prima in Skills+Contact) */
 .contact-footer-grid-zone {
   --circuits-fade-from: 0%;
-  --circuits-fade-mid: 10%;
-  --circuits-fade-to: 22%;
+  --circuits-fade-mid: 14%;
+  --circuits-fade-to: 30%;
+  --circuits-fade-out-from: 72%;
+  --circuits-fade-out-mid: 88%;
+  --circuits-fade-out-to: 100%;
   position: relative;
   overflow: hidden;
   background: var(--site-bg);
@@ -896,7 +915,9 @@ html.custom-cursor-active * {
     transparent var(--circuits-fade-from),
     rgb(0 0 0 / 0.35) var(--circuits-fade-mid),
     #000 var(--circuits-fade-to),
-    #000 100%
+    #000 var(--circuits-fade-out-from),
+    rgb(0 0 0 / 0.46) var(--circuits-fade-out-mid),
+    transparent var(--circuits-fade-out-to)
   );
   mask-image: linear-gradient(
     to bottom,
@@ -904,7 +925,9 @@ html.custom-cursor-active * {
     transparent var(--circuits-fade-from),
     rgb(0 0 0 / 0.35) var(--circuits-fade-mid),
     #000 var(--circuits-fade-to),
-    #000 100%
+    #000 var(--circuits-fade-out-from),
+    rgb(0 0 0 / 0.46) var(--circuits-fade-out-mid),
+    transparent var(--circuits-fade-out-to)
   );
 }
 
@@ -1159,6 +1182,25 @@ html.custom-cursor-active * {
   inset: 0;
   overflow: hidden;
   pointer-events: none;
+}
+
+.hero-section .hero-bg {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 68%,
+    rgb(0 0 0 / 0.78) 80%,
+    rgb(0 0 0 / 0.32) 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 68%,
+    rgb(0 0 0 / 0.78) 80%,
+    rgb(0 0 0 / 0.32) 92%,
+    transparent 100%
+  );
 }
 
 .hero-bg__circuit {
@@ -1630,7 +1672,8 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
 .project-carousel-card .skills-category-inner--project {
   display: flex;
-  height: auto;
+  height: 100%;
+  min-height: 100%;
   flex-direction: column;
   align-items: stretch;
   padding: 1.25rem;
@@ -1649,6 +1692,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 .project-carousel-card__body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
   grid-template-areas:
     'category'
     'media'
@@ -1658,6 +1702,8 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   gap: 1.25rem;
   align-items: start;
   width: 100%;
+  flex: 1;
+  min-height: 0;
   margin-top: 0;
 }
 
@@ -1738,6 +1784,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
   .project-carousel-card__body {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
     grid-template-areas:
       'media category'
       'media title'
@@ -1783,23 +1830,73 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
 /* Projects carousel */
 .projects-carousel {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.projects-carousel-controls {
+  display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
+  gap: clamp(0.75rem, 2.5vw, 1.25rem);
+  padding-top: 0.15rem;
+}
+
+.projects-carousel-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.projects-carousel-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(148, 163, 184, 0.42);
+  cursor: pointer;
+  transition:
+    width 0.25s ease,
+    background 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
+}
+
+.projects-carousel-dot:focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.85);
+  outline-offset: 3px;
+}
+
+@media (hover: hover), (pointer: fine) {
+  .projects-carousel-dot:hover:not(.projects-carousel-dot--active) {
+    background: rgba(186, 230, 253, 0.72);
+    transform: scale(1.15);
+  }
+}
+
+.projects-carousel-dot--active {
+  width: 1.35rem;
+  background: linear-gradient(90deg, #9333ea, #38bdf8, #6ee7b7);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
 }
 
 .projects-carousel-track {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 1.5rem;
   overflow-x: auto;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 0.25rem 0.125rem 0.75rem;
+  padding: 0.25rem 0.125rem 0;
   scroll-padding-inline: 0.125rem;
 }
 
@@ -1813,10 +1910,12 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 }
 
 .project-carousel-card {
+  display: flex;
+  flex-direction: column;
   flex: 0 0 100%;
   min-width: 0;
   box-sizing: border-box;
-  align-self: flex-start;
+  align-self: stretch;
   scroll-snap-align: start;
   container-type: inline-size;
   container-name: project-card;
@@ -1824,10 +1923,11 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
 /* Stesso riempimento e glow del pannello «Contattami via mail» */
 .project-carousel-card.skills-category-panel {
+  overflow: hidden;
   border-radius: 1.25rem;
   box-shadow:
-    0 0 40px rgba(56, 189, 248, 0.12),
-    0 0 60px rgba(147, 51, 234, 0.1);
+    0 0 28px rgba(56, 189, 248, 0.1),
+    0 0 40px rgba(147, 51, 234, 0.08);
 }
 
 .project-carousel-card .skills-category-inner,
@@ -1901,31 +2001,20 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   height: 1.75rem;
 }
 
-/* Carousel progetti compatto: solo smartphone (< 640px) */
+/* Carousel progetti: smartphone con pulsantiera sotto */
 @media (width < 640px) {
   .projects-section {
-    overflow-x: visible;
-  }
-
-  .projects-carousel {
-    position: relative;
-    display: block;
-    width: 100%;
-    margin-inline: 0;
-    max-width: none;
+    overflow-x: clip;
   }
 
   .projects-carousel-track {
-    gap: 0.75rem;
-    padding-inline: 0;
-    scroll-padding-inline: 1.5rem;
-    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    padding: 0.25rem 0 0;
+    -webkit-overflow-scrolling: touch;
   }
 
   .project-carousel-card {
-    flex: 0 0 100%;
-    width: 100%;
-    max-width: 100%;
     scroll-snap-align: center;
   }
 
@@ -1933,13 +2022,10 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     padding: 1.125rem 1rem;
   }
 
-  .project-carousel-card__media {
-    display: none;
-  }
-
   .project-carousel-card__body {
     grid-template-areas:
       'category'
+      'media'
       'title'
       'description'
       'actions';
@@ -1964,54 +2050,18 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
     justify-content: center;
   }
 
+  .projects-carousel-controls {
+    gap: 0.75rem;
+  }
+
   .projects-carousel-nav {
-    position: absolute;
-    top: 50%;
-    z-index: 2;
-    width: auto;
-    height: auto;
-    min-height: 0;
-    align-self: auto;
-    padding: 0.375rem;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    transform: translateY(-50%);
-  }
-
-  .projects-carousel > .projects-carousel-nav:first-child {
-    left: 0.375rem;
-  }
-
-  .projects-carousel > .projects-carousel-nav:last-child {
-    right: 0.375rem;
-  }
-
-  .projects-carousel-nav:active:not(:disabled),
-  .projects-carousel-nav:focus:not(:disabled),
-  .projects-carousel-nav:focus-visible:not(:disabled) {
-    transform: translateY(-50%);
-    box-shadow: none;
-  }
-
-  @media (hover: hover), (pointer: fine) {
-    .projects-carousel-nav:hover:not(:disabled) {
-      transform: translateY(-50%);
-      box-shadow: none;
-    }
-  }
-
-  .projects-carousel-nav-inner {
-    background: transparent;
-    backdrop-filter: none;
-    border-radius: 0;
+    height: 2.875rem;
+    width: 2.875rem;
   }
 
   .projects-carousel-nav__icon {
-    width: 1.125rem;
-    height: 1.125rem;
-    opacity: 0.9;
-    filter: drop-shadow(0 0 6px rgba(var(--site-bg-rgb), 0.85));
+    width: 1.5rem;
+    height: 1.5rem;
   }
 }
 
@@ -2118,6 +2168,13 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   overflow: visible;
   padding-top: 4.25rem;
   padding-bottom: 3.75rem;
+}
+
+@media (width >= 768px) {
+  .about-section {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
 }
 
 .about-visual__wrap {
@@ -2268,8 +2325,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
 .about-education-compact {
   margin: 0.75rem 0 0;
-  padding: 0.625rem 0 0;
-  border-top: 1px solid rgba(51, 65, 85, 0.55);
+  padding: 0;
   list-style: none;
   display: flex;
   flex-direction: column;

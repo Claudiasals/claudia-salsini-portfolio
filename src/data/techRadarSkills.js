@@ -4,43 +4,25 @@ const makeId = (categoryId, name) =>
 const distributeAngles = (count) =>
   Array.from({ length: count }, (_, index) => (360 / count) * index - 90)
 
-const withTieredAngles = (skills, shortRadius, longRadius) =>
+const REGULAR_POLYGON_RADIUS = 30
+
+/** Vertici equidistanti sullo stesso raggio → poligono regolare (esagono, ottagono, …). */
+const withRegularPolygon = (skills, radius = REGULAR_POLYGON_RADIUS) =>
   distributeAngles(skills.length).map((angle, index) => ({
     ...skills[index],
-    radius: index % 2 === 0 ? longRadius : shortRadius,
+    radius,
     angle,
+    scoreRadius: radius * 0.82,
   }))
 
 export const TECH_RADAR_CATEGORIES = [
   {
     id: 'frontend',
     label: 'Frontend',
-    shortRadius: 24,
-    longRadius: 30,
+    polygonRadius: REGULAR_POLYGON_RADIUS,
     accent: '#38bdf8',
-    skills: withTieredAngles(
+    skills: withRegularPolygon(
       [
-        {
-          name: 'React',
-          description:
-            'Libreria JavaScript per costruire interfacce dinamiche, component-based e riutilizzabili.',
-          icon: 'devicon-react-original colored',
-          glow: '#61dafb',
-        },
-        {
-          name: 'JavaScript',
-          description:
-            'Linguaggio usato per logica, interazioni dinamiche e funzionalità lato client.',
-          icon: 'devicon-javascript-plain colored',
-          glow: '#f7df1e',
-        },
-        {
-          name: 'TypeScript',
-          description:
-            'JavaScript tipizzato per scrivere codice più robusto, leggibile e manutenibile.',
-          icon: 'devicon-typescript-plain colored',
-          glow: '#3178c6',
-        },
         {
           name: 'HTML',
           description:
@@ -55,11 +37,25 @@ export const TECH_RADAR_CATEGORIES = [
           glow: '#38bdf8',
         },
         {
+          name: 'JavaScript',
+          description:
+            'Linguaggio usato per logica, interazioni dinamiche e funzionalità lato client.',
+          icon: 'devicon-javascript-plain colored',
+          glow: '#f7df1e',
+        },
+        {
           name: 'Tailwind CSS',
           description:
             'Framework utility-first per styling rapido, responsive e coerente.',
           icon: 'devicon-tailwindcss-original colored',
           glow: '#38bdf8',
+        },
+        {
+          name: 'React',
+          description:
+            'Libreria JavaScript per costruire interfacce dinamiche, component-based e riutilizzabili.',
+          icon: 'devicon-react-original colored',
+          glow: '#61dafb',
         },
         {
           name: 'Redux',
@@ -75,18 +71,22 @@ export const TECH_RADAR_CATEGORIES = [
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg',
           glow: '#646cff',
         },
+        {
+          name: 'TypeScript',
+          description:
+            'JavaScript tipizzato per scrivere codice più robusto, leggibile e manutenibile.',
+          icon: 'devicon-typescript-plain colored',
+          glow: '#3178c6',
+        },
       ],
-      24,
-      30,
     ),
   },
   {
     id: 'backend',
     label: 'Backend',
-    shortRadius: 18,
-    longRadius: 23,
+    polygonRadius: REGULAR_POLYGON_RADIUS,
     accent: '#a78bfa',
-    skills: withTieredAngles(
+    skills: withRegularPolygon(
       [
         {
           name: 'Node.js',
@@ -100,6 +100,13 @@ export const TECH_RADAR_CATEGORIES = [
           description: 'Framework Node.js per API REST, routing e middleware.',
           image: '/icons/express.png',
           glow: '#cbd5e1',
+        },
+        {
+          name: 'MongoDB',
+          description:
+            'Database NoSQL per gestire dati flessibili in formato documento.',
+          icon: 'devicon-mongodb-plain colored',
+          glow: '#47a248',
         },
         {
           name: 'PHP',
@@ -116,30 +123,20 @@ export const TECH_RADAR_CATEGORIES = [
           glow: '#ff2d20',
         },
         {
-          name: 'MongoDB',
-          description:
-            'Database NoSQL per gestire dati flessibili in formato documento.',
-          icon: 'devicon-mongodb-plain colored',
-          glow: '#47a248',
-        },
-        {
           name: 'MySQL',
           description: 'Database relazionale per dati strutturati e query SQL.',
           icon: 'devicon-mysql-original colored',
           glow: '#00758f',
         },
       ],
-      18,
-      23,
     ),
   },
   {
     id: 'tools',
     label: 'Strumenti',
-    shortRadius: 32,
-    longRadius: 38,
+    polygonRadius: REGULAR_POLYGON_RADIUS,
     accent: '#6ee7b7',
-    skills: withTieredAngles(
+    skills: withRegularPolygon(
       [
         {
           name: 'Git',
@@ -201,8 +198,6 @@ export const TECH_RADAR_CATEGORIES = [
           glow: '#94a3b8',
         },
       ],
-      32,
-      38,
     ),
   },
 ]
@@ -220,5 +215,5 @@ export const TECH_RADAR_NODES = TECH_RADAR_CATEGORIES.flatMap((category) =>
 /** @deprecated Usa TECH_RADAR_CATEGORIES */
 export const TECH_RADAR_RINGS = TECH_RADAR_CATEGORIES.map((category) => ({
   id: category.id,
-  radius: category.longRadius,
+  radius: category.polygonRadius,
 }))

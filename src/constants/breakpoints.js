@@ -1,4 +1,4 @@
-/** Sotto questa larghezza: carousel compatto, frecce in card, no anteprima, torna su. */
+/** Sotto questa larghezza: carousel progetti con snap centrale e pulsantiera sotto. */
 export const SMARTPHONE_MEDIA_QUERY = '(width < 640px)'
 
 export const isSmartphoneViewport = () => {
