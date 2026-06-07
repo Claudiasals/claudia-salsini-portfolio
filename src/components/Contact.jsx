@@ -133,7 +133,7 @@ const Contact = () => {
           <div className="contact-layout section-after-title">
             <div className="contact-form-panel">
               <h3 className="contact-form-title terminal-gradient-label">
-                Scrivimi un&apos;email
+                Contattami via mail
               </h3>
 
               <form className="contact-form mt-5 space-y-4" onSubmit={handleSubmit}>

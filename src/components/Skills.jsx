@@ -1,51 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
+import TechRadar from './TechRadar'
 import { SECTION_REVEAL_EVENT, elementIntersectsViewport } from '../utils/sectionReveal'
-import SkillCategoryCard, {
-  SKILLS_ICONS_AFTER_TITLE_MS,
-  SKILLS_ICONS_ANIMATION_MS,
-  SKILLS_ICONS_CATEGORY_GAP_MS,
-} from './SkillCategoryCard'
-import { skillCategories } from '../data/skillCategories'
-
-const SKILLS_LINK_SELECTOR = 'a[href="#skills"], a[href="/#skills"]'
-const TITLE_TYPING_START_MS = 420
-const TYPING_MS = 70
-
-const getCategoryIconsRevealDelay = (categoryIndex) => {
-  const firstTitleLength = skillCategories[0].title.toUpperCase().length
-  const firstIconsAt =
-    TITLE_TYPING_START_MS +
-    firstTitleLength * TYPING_MS +
-    SKILLS_ICONS_AFTER_TITLE_MS
-
-  if (categoryIndex === 0) return firstIconsAt
-
-  return (
-    firstIconsAt +
-    categoryIndex * (SKILLS_ICONS_ANIMATION_MS + SKILLS_ICONS_CATEGORY_GAP_MS)
-  )
-}
 
 const Skills = () => {
-  const layoutRef = useRef(null)
+  const radarRef = useRef(null)
   const wasInViewRef = useRef(false)
   const introDoneRef = useRef(false)
-  const [introDone, setIntroDone] = useState(false)
-  const [typingRun, setTypingRun] = useState(0)
+  const [radarActive, setRadarActive] = useState(false)
 
   const activateIntro = useCallback(() => {
     if (introDoneRef.current) return
 
     wasInViewRef.current = true
     introDoneRef.current = true
-    setIntroDone(true)
-    setTypingRun(1)
+    setRadarActive(true)
   }, [])
 
   useEffect(() => {
-    const layout = layoutRef.current
-    if (!layout) return undefined
+    const radar = radarRef.current
+    if (!radar) return undefined
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -60,18 +34,18 @@ const Skills = () => {
           wasInViewRef.current = false
         }
       },
-      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
     )
 
-    observer.observe(layout)
+    observer.observe(radar)
 
     return () => observer.disconnect()
   }, [activateIntro])
 
   useEffect(() => {
-    const layout = layoutRef.current
+    const radar = radarRef.current
     const skillsAnchor = document.getElementById('skills')
-    if (!layout && !skillsAnchor) return undefined
+    if (!radar && !skillsAnchor) return undefined
 
     const onSectionReveal = (event) => {
       if (introDoneRef.current) return
@@ -81,7 +55,7 @@ const Skills = () => {
 
       const shouldActivate =
         sectionId === 'skills' ||
-        (layout && elementIntersectsViewport(layout, { bottomInset: 48 })) ||
+        (radar && elementIntersectsViewport(radar, { bottomInset: 48 })) ||
         (skillsAnchor && elementIntersectsViewport(skillsAnchor, { bottomInset: 48 }))
 
       if (shouldActivate) activateIntro()
@@ -90,19 +64,6 @@ const Skills = () => {
     window.addEventListener(SECTION_REVEAL_EVENT, onSectionReveal)
     return () => window.removeEventListener(SECTION_REVEAL_EVENT, onSectionReveal)
   }, [activateIntro])
-
-  useEffect(() => {
-    const handleSkillsLinkClick = (event) => {
-      if (!event.target.closest(SKILLS_LINK_SELECTOR)) return
-      if (!introDoneRef.current) return
-
-      setTypingRun((run) => run + 1)
-    }
-
-    document.addEventListener('click', handleSkillsLinkClick)
-
-    return () => document.removeEventListener('click', handleSkillsLinkClick)
-  }, [])
 
   return (
     <section className="skills-section section-page section-page--default">
@@ -121,23 +82,15 @@ const Skills = () => {
             </h2>
 
             <p className="skills-lead section-lead mt-5 max-w-2xl">
-              Uno stack costruito tra formazione, stage curricolare e sviluppo di applicazioni
-              {'\u00A0'}web.
+              Il mio ecosistema tecnologico, visualizzato come un radar: linguaggi,
+              framework e strumenti con cui progetto e sviluppo applicazioni web.
             </p>
           </div>
         </ScrollRevealItem>
 
         <ScrollRevealItem tier="content">
-          <div ref={layoutRef} className="skills-layout section-after-title">
-            {skillCategories.map((category, index) => (
-              <SkillCategoryCard
-                key={category.title}
-                category={category}
-                introDone={introDone}
-                typingTrigger={typingRun}
-                iconsRevealDelayMs={getCategoryIconsRevealDelay(index)}
-              />
-            ))}
+          <div ref={radarRef} className="tech-radar-layout section-after-title">
+            <TechRadar active={radarActive} />
           </div>
         </ScrollRevealItem>
       </ScrollReveal>
