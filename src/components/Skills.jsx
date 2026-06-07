@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import {
   FiCheckSquare,
   FiCode,
@@ -17,7 +17,12 @@ import {
 import { SECTION_REVEAL_EVENT, elementIntersectsViewport } from '../utils/sectionReveal'
 import '../skills.css'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
-import TechRadar, { SkillIcon } from './TechRadar'
+import TechRadar, {
+  ICON_RADIAL_OFFSET,
+  polarToPercent,
+  SkillIcon,
+  SPOKE_HUB_COLOR,
+} from './TechRadar'
 
 const DEFAULT_CATEGORY = 'frontend'
 
@@ -29,28 +34,230 @@ const processIcons = {
   evolution: FiTrendingUp,
 }
 
-const SkillDetailCard = ({ skill }) => (
+const SkillDetailCard = ({ skill, layout = 'horizontal' }) => (
   <article
-    className="skills-detail-card"
+    className={`skills-detail-card skills-detail-card--${layout}`}
     style={{ '--skill-color': skill.glow }}
     aria-live="polite"
   >
-    <p className="skills-detail-card__category terminal-gradient-label">
-      {SKILL_CATEGORIES[skill.category] ?? skill.category}
-    </p>
-
-    <div className="skills-detail-card__body">
-      <span className="skills-detail-card__icon" aria-hidden="true">
-        <SkillIcon skill={skill} />
-      </span>
-
-      <div className="skills-detail-card__copy">
+    {layout === 'vertical' ? (
+      <>
+        <p className="skills-detail-card__category terminal-gradient-label">
+          {SKILL_CATEGORIES[skill.category] ?? skill.category}
+        </p>
+        <span className="skills-detail-card__icon" aria-hidden="true">
+          <SkillIcon skill={skill} />
+        </span>
         <h3 className="skills-detail-card__name">{skill.name}</h3>
         <p className="skills-detail-card__desc">{skill.description}</p>
-      </div>
-    </div>
+      </>
+    ) : (
+      <>
+        <p className="skills-detail-card__category terminal-gradient-label">
+          {SKILL_CATEGORIES[skill.category] ?? skill.category}
+        </p>
+
+        <div className="skills-detail-card__body">
+          <span className="skills-detail-card__icon" aria-hidden="true">
+            <SkillIcon skill={skill} />
+          </span>
+
+          <div className="skills-detail-card__copy">
+            <h3 className="skills-detail-card__name">{skill.name}</h3>
+            <p className="skills-detail-card__desc">{skill.description}</p>
+          </div>
+        </div>
+      </>
+    )}
   </article>
 )
+
+const BRIDGE_ENTRY_RATIO = 0.26
+
+/** Offset extra sul bordo destro del radar, per skill basse */
+const SKILL_BRIDGE_EXTRA_DOWN = {
+  React: 0.055,
+  PHP: 0.05,
+  Postman: 0.045,
+  Figma: 0.045,
+}
+
+const getBridgeVerticalOffset = (skill, iconY, stageTop, stageSpan, stagePad) => {
+  const stageMidY = stageTop + stagePad + stageSpan * 0.5
+  const isUpperIcon = iconY < stageMidY
+  const named = SKILL_BRIDGE_EXTRA_DOWN[skill.name] ?? 0
+
+  if (isUpperIcon) {
+    return {
+      offset: Math.max(0.11, named) * stageSpan,
+      fromAbove: true,
+    }
+  }
+
+  return {
+    offset: Math.max(0.048, named) * stageSpan,
+    fromAbove: false,
+  }
+}
+
+const getSkillIconY = (skill, radarEl, stageRect, toClusterY) => {
+  const iconEl = radarEl.querySelector('.tech-radar__node--active .tech-radar__node-icon')
+
+  if (iconEl) {
+    const iconRect = iconEl.getBoundingClientRect()
+    return toClusterY(iconRect.top + iconRect.height / 2)
+  }
+
+  const point = polarToPercent(skill.radius + ICON_RADIAL_OFFSET, skill.angle)
+  return toClusterY(stageRect.top + (point.y / 100) * stageRect.height)
+}
+
+const buildRadarDetailLayout = (skill, radarEl, slotEl, cardEl) => {
+  if (!skill || !radarEl || !slotEl || !cardEl) return null
+
+  const clusterEl = radarEl.closest('.skills-radar-cluster')
+  const stage = radarEl.querySelector('.tech-radar__stage')
+  if (!clusterEl || !stage) return null
+
+  const clusterRect = clusterEl.getBoundingClientRect()
+  const stageRect = stage.getBoundingClientRect()
+  const slotRect = slotEl.getBoundingClientRect()
+  const cardHeight = cardEl.offsetHeight
+
+  if (clusterRect.width < 1 || clusterRect.height < 1 || cardHeight < 1) {
+    return null
+  }
+
+  const toClusterX = (value) => value - clusterRect.left
+  const toClusterY = (value) => value - clusterRect.top
+
+  const stageTop = toClusterY(stageRect.top)
+  const stageBottom = toClusterY(stageRect.bottom)
+  const slotTop = toClusterY(slotRect.top)
+  const slotHeight = slotRect.height
+  const stagePad = 10
+  const stageSpan = stageBottom - stageTop - stagePad * 2
+
+  let iconY = getSkillIconY(skill, radarEl, stageRect, toClusterY)
+  iconY = Math.min(stageBottom - stagePad, Math.max(stageTop + stagePad, iconY))
+
+  const { offset: bridgeExtra, fromAbove } = getBridgeVerticalOffset(
+    skill,
+    iconY,
+    stageTop,
+    stageSpan,
+    stagePad,
+  )
+  const bridgeStartY = fromAbove
+    ? Math.max(stageTop + stagePad, iconY - bridgeExtra)
+    : Math.min(stageBottom - stagePad, iconY + bridgeExtra)
+
+  let detailTop = iconY - slotTop - cardHeight * BRIDGE_ENTRY_RATIO
+  detailTop = Math.min(slotHeight - cardHeight - 4, Math.max(4, detailTop))
+
+  const endX = toClusterX(slotRect.left)
+  const endY = iconY
+  const radarRight = toClusterX(stageRect.right)
+  const gap = endX - radarRight
+
+  if (gap < 12) return null
+
+  const startX = radarRight
+  const startY = bridgeStartY
+  const elbowX = Math.min(
+    endX - 8,
+    Math.max(radarRight + 5, radarRight + Math.max(8, gap * 0.14)),
+  )
+
+  if (elbowX <= startX + 2) return null
+
+  const d = `M ${startX} ${startY} H ${elbowX} V ${endY} H ${endX}`
+
+  return {
+    detailTop,
+    bridge: {
+      width: clusterRect.width,
+      height: clusterRect.height,
+      d,
+      start: { x: startX, y: startY },
+    },
+  }
+}
+
+const useRadarDetailLayout = (skill, radarRef, slotRef, cardRef) => {
+  const [layout, setLayout] = useState(null)
+
+  const updateLayout = useCallback(() => {
+    const next = buildRadarDetailLayout(
+      skill,
+      radarRef.current,
+      slotRef.current,
+      cardRef.current,
+    )
+    setLayout(next)
+  }, [skill, radarRef, slotRef, cardRef])
+
+  useLayoutEffect(() => {
+    updateLayout()
+  }, [updateLayout])
+
+  useEffect(() => {
+    const clusterEl = radarRef.current?.closest('.skills-radar-cluster')
+    if (!clusterEl) return undefined
+
+    const observer = new ResizeObserver(updateLayout)
+    observer.observe(clusterEl)
+
+    if (slotRef.current) observer.observe(slotRef.current)
+    if (cardRef.current) observer.observe(cardRef.current)
+
+    window.addEventListener('resize', updateLayout)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', updateLayout)
+    }
+  }, [updateLayout, radarRef, slotRef, cardRef, skill])
+
+  return layout
+}
+
+const RadarDetailBridge = ({ geometry }) => {
+  if (!geometry) return null
+
+  return (
+    <div className="skills-radar-bridge-overlay" aria-hidden="true">
+      <svg
+        className="skills-radar-bridge"
+        viewBox={`0 0 ${geometry.width} ${geometry.height}`}
+        preserveAspectRatio="none"
+        focusable="false"
+      >
+        <path className="skills-radar-bridge__glow" d={geometry.d} />
+        <path className="skills-radar-bridge__line" d={geometry.d} />
+        <g
+          className="tech-radar__joint tech-radar__joint--terminal tech-radar__joint--active"
+          style={{ '--joint-color': SPOKE_HUB_COLOR }}
+        >
+          <circle
+            className="skills-radar-bridge__joint-glow"
+            cx={geometry.start.x}
+            cy={geometry.start.y}
+            r="3.25"
+            fill={SPOKE_HUB_COLOR}
+          />
+          <circle
+            className="skills-radar-bridge__joint-core"
+            cx={geometry.start.x}
+            cy={geometry.start.y}
+            r="1.1"
+            fill={SPOKE_HUB_COLOR}
+          />
+        </g>
+      </svg>
+    </div>
+  )
+}
 
 const ProcessArrow = ({ from, to, index, curveUp }) => {
   const gradId = `skills-process-arrow-grad-${index}`
@@ -101,6 +308,8 @@ const ProcessArrow = ({ from, to, index, curveUp }) => {
 
 const Skills = () => {
   const radarRef = useRef(null)
+  const radarDetailSlotRef = useRef(null)
+  const radarCardRef = useRef(null)
   const wasInViewRef = useRef(false)
   const introDoneRef = useRef(false)
   const [radarActive, setRadarActive] = useState(false)
@@ -120,6 +329,13 @@ const Skills = () => {
       categorySkills.find((skill) => skill.id === activeSkillId) ?? categorySkills[0]
     return selected ?? null
   }, [activeSkillId, categorySkills])
+
+  const radarDetailLayout = useRadarDetailLayout(
+    activeSkill,
+    radarRef,
+    radarDetailSlotRef,
+    radarCardRef,
+  )
 
   const activeStackSkill = useMemo(() => {
     const item = DAILY_STACK.find((tool) => tool.name === activeStackName)
@@ -236,8 +452,8 @@ const Skills = () => {
             </div>
           </ScrollRevealItem>
 
-          <ScrollRevealItem tier="content" className="skills-radar-wrap">
-            <div ref={radarRef}>
+          <ScrollRevealItem tier="content" className="skills-radar-cluster">
+            <div className="skills-radar-cluster__radar" ref={radarRef}>
               <TechRadar
                 key={activeCategory}
                 active={radarActive}
@@ -246,12 +462,24 @@ const Skills = () => {
                 onSkillChange={setActiveSkillId}
               />
             </div>
-          </ScrollRevealItem>
 
-          <ScrollRevealItem tier="body" className="skills-side">
-            {activeSkill ? (
-              <SkillDetailCard key={activeSkill.id} skill={activeSkill} />
-            ) : null}
+            <div className="skills-radar-cluster__detail-slot" ref={radarDetailSlotRef}>
+              <div
+                className="skills-radar-cluster__detail"
+                ref={radarCardRef}
+                style={
+                  radarDetailLayout?.detailTop != null
+                    ? { top: `${radarDetailLayout.detailTop}px` }
+                    : undefined
+                }
+              >
+                {activeSkill ? (
+                  <SkillDetailCard key={activeSkill.id} skill={activeSkill} layout="vertical" />
+                ) : null}
+              </div>
+            </div>
+
+            <RadarDetailBridge geometry={radarDetailLayout?.bridge} />
           </ScrollRevealItem>
 
           <ScrollRevealItem tier="content" className="skills-process">

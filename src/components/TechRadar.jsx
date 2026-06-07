@@ -1,10 +1,14 @@
+export const SPOKE_ICON_GAP = 7.5
+export const ICON_RADIAL_OFFSET = 3
+export const TECH_RADAR_OUTER_RING = 48.2
+export const SPOKE_HUB_COLOR = '#00d4ff'
+export const SPOKE_MID_COLOR = '#38bdf8'
+
 const HUB_RADIUS = 12
-const SPOKE_ICON_GAP = 7.5
-const ICON_RADIAL_OFFSET = 3
 const RING_RADII = [10, 16, 22, 28, 34, 40, 46]
 const FIELD_RADIUS = 50
 
-const polarToPercent = (radius, angleDeg) => {
+export const polarToPercent = (radius, angleDeg) => {
   const rad = (angleDeg * Math.PI) / 180
   return {
     x: 50 + radius * Math.cos(rad),
@@ -27,13 +31,13 @@ export const SkillIcon = ({ skill, className = '' }) => {
   return <i className={`${skill.icon} skill-glyph__icon ${className}`.trim()} aria-hidden="true" />
 }
 
-const JointDot = ({ x, y, size = 'mid', isActive = false, glow = '#38bdf8' }) => (
+const JointDot = ({ x, y, size = 'mid', isActive = false, jointColor = SPOKE_MID_COLOR }) => (
   <g
     className={`tech-radar__joint tech-radar__joint--${size}${
       isActive ? ' tech-radar__joint--active' : ''
     }`}
     transform={`translate(${x} ${y})`}
-    style={{ '--skill-color': glow }}
+    style={{ '--joint-color': jointColor }}
   >
     <circle className="tech-radar__joint-glow" r={size === 'terminal' ? 0.9 : 0.64} />
     <circle className="tech-radar__joint-core" r={size === 'terminal' ? 0.36 : 0.24} />
@@ -146,30 +150,75 @@ const TechRadar = ({
           aria-hidden="true"
           focusable="false"
         >
+          <defs>
+            {skills.map((skill) => {
+              const start = polarToPercent(HUB_RADIUS, skill.angle)
+              const end = polarToPercent(skill.radius - SPOKE_ICON_GAP, skill.angle)
+              const gradId = `tech-radar-spoke-grad-${skill.id}`
+
+              return (
+                <linearGradient
+                  key={gradId}
+                  id={gradId}
+                  x1={start.x}
+                  y1={start.y}
+                  x2={end.x}
+                  y2={end.y}
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0%" stopColor={SPOKE_HUB_COLOR} stopOpacity="0.98" />
+                  <stop offset="24%" stopColor={SPOKE_MID_COLOR} stopOpacity="0.94" />
+                  <stop offset="100%" stopColor={skill.glow} stopOpacity="0.96" />
+                </linearGradient>
+              )
+            })}
+          </defs>
+
           {skills.map((skill) => {
             const start = polarToPercent(HUB_RADIUS, skill.angle)
             const mid = polarToPercent((HUB_RADIUS + skill.scoreRadius) / 2, skill.angle)
             const score = polarToPercent(skill.scoreRadius, skill.angle)
             const end = polarToPercent(skill.radius - SPOKE_ICON_GAP, skill.angle)
             const isActive = activeId === skill.id
+            const gradId = `tech-radar-spoke-grad-${skill.id}`
 
             return (
-              <g key={skill.id} style={{ '--skill-color': skill.glow }}>
+              <g
+                key={skill.id}
+                className={`tech-radar__spoke-group${
+                  isActive ? ' tech-radar__spoke-group--active' : ''
+                }`}
+                style={{ '--skill-color': skill.glow }}
+              >
+                <line
+                  className="tech-radar__spoke-glow"
+                  x1={start.x}
+                  y1={start.y}
+                  x2={end.x}
+                  y2={end.y}
+                  stroke={`url(#${gradId})`}
+                />
                 <line
                   className={`tech-radar__spoke${isActive ? ' tech-radar__spoke--active' : ''}`}
                   x1={start.x}
                   y1={start.y}
                   x2={end.x}
                   y2={end.y}
+                  stroke={`url(#${gradId})`}
                 />
-                <JointDot x={start.x} y={start.y} glow={skill.glow} isActive={isActive} />
-                <JointDot x={mid.x} y={mid.y} glow={skill.glow} isActive={isActive} />
-                <JointDot x={score.x} y={score.y} glow={skill.glow} isActive={isActive} />
+                <JointDot
+                  x={start.x}
+                  y={start.y}
+                  jointColor={SPOKE_HUB_COLOR}
+                  isActive={isActive}
+                />
+                <JointDot x={mid.x} y={mid.y} jointColor={SPOKE_MID_COLOR} isActive={isActive} />
+                <JointDot x={score.x} y={score.y} jointColor={skill.glow} isActive={isActive} />
                 <JointDot
                   x={end.x}
                   y={end.y}
                   size="terminal"
-                  glow={skill.glow}
+                  jointColor={skill.glow}
                   isActive={isActive}
                 />
               </g>

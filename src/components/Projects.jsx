@@ -104,7 +104,7 @@ const Projects = () => {
 
   return (
     <section className="projects-section section-page section-page--default">
-      <ScrollReveal className="mx-auto max-w-6xl">
+      <ScrollReveal className="relative z-10 mx-auto max-w-6xl">
         <ScrollRevealItem tier="head">
           <p
             id="projects"

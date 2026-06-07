@@ -953,6 +953,7 @@ html.custom-cursor-active * {
 .projects-section {
   position: relative;
   z-index: 1;
+  overflow-x: clip;
 }
 
 .contact-section {
