@@ -12,7 +12,7 @@ export const SKILL_CATEGORY_TABS = [
 export const SKILL_CATEGORIES = {
   frontend: 'Frontend',
   backend: 'Backend',
-  tools: 'Strumenti e altro',
+  tools: 'Strumenti',
 }
 
 export const getRadarSkillsByCategory = (categoryId) => {
@@ -168,14 +168,14 @@ export const PROCESS_STEPS = [
   {
     number: '04',
     label: 'Deploy',
-    text: 'Rilascio in produzione con performance e sicurezza.',
+    text: 'Pubblicazione online con performance e sicurezza.',
     tone: '#fb923c',
     icon: 'deploy',
   },
   {
     number: '05',
     label: 'Evoluzione',
-    text: 'Monitoraggio, feedback e miglioramento continuo.',
+    text: 'Monitoraggio, feedback e iterazione.',
     tone: '#a855f7',
     icon: 'evolution',
   },

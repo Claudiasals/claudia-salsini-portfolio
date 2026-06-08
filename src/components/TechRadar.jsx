@@ -16,6 +16,17 @@ export const polarToPercent = (radius, angleDeg) => {
   }
 }
 
+const getNodeRadialOffsetPx = (skill) => {
+  const offsetPx = skill.nodeRadialOffsetPx ?? 0
+  if (offsetPx === 0) return { x: 0, y: 0 }
+
+  const rad = (skill.angle * Math.PI) / 180
+  return {
+    x: offsetPx * Math.cos(rad),
+    y: offsetPx * Math.sin(rad),
+  }
+}
+
 export const SkillIcon = ({ skill, className = '' }) => {
   if (skill.image) {
     return (
@@ -113,6 +124,7 @@ const TechRadar = ({
         <ul className="tech-radar__nodes" role="list">
           {skills.map((skill, index) => {
             const point = polarToPercent(skill.radius + ICON_RADIAL_OFFSET, skill.angle)
+            const radialOffset = getNodeRadialOffsetPx(skill)
             const isActive = activeId === skill.id
 
             return (
@@ -124,6 +136,8 @@ const TechRadar = ({
                   top: `${point.y}%`,
                   '--skill-color': skill.glow,
                   '--tech-radar-delay': `${index * 46}ms`,
+                  '--node-radial-offset-x': `${radialOffset.x}px`,
+                  '--node-radial-offset-y': `${radialOffset.y}px`,
                 }}
               >
                 <button

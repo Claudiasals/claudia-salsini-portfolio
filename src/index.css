@@ -367,6 +367,16 @@ html.custom-cursor-active * {
 }
 
 .nav-btn-inner--section.nav-btn-inner--current {
+  color: #38bdf8;
+  text-decoration: underline;
+  text-decoration-color: #38bdf8;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.35em;
+}
+
+.site-nav .nav-btn:focus .nav-btn-inner--section,
+.site-nav .nav-btn:focus-visible .nav-btn-inner--section {
+  color: #38bdf8;
   text-decoration: underline;
   text-decoration-color: #38bdf8;
   text-decoration-thickness: 2px;

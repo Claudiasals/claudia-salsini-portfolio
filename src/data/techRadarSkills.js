@@ -77,6 +77,7 @@ export const TECH_RADAR_CATEGORIES = [
             'JavaScript tipizzato per scrivere codice più robusto, leggibile e manutenibile.',
           icon: 'devicon-typescript-plain colored',
           glow: '#3178c6',
+          nodeRadialOffsetPx: 5,
         },
       ],
     ),
