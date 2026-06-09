@@ -220,23 +220,6 @@ export function scrollProjectCarouselToSlideIndex(track, slideIndex, behavior = 
   track.scrollTo({ left, behavior })
 }
 
-/** Scorre di una card: avanti/indietro nella sequenza ripetuta 1 → 2 → 3 → 1 → 2 → 3 … */
-export function scrollProjectCarouselBy(track, direction, behavior = 'smooth') {
-  const cards = getProjectCarouselCards(track)
-  if (!cards.length || direction === 0) return
-
-  const state = getLoopState(track)
-  const current = getActiveProjectCarouselSlideIndex(track, cards)
-  const next = current + direction
-
-  if (next < 0 || next >= cards.length) return
-
-  state.hadHorizontalScroll = true
-  state.slideIndexAtScrollStart = current
-
-  scrollProjectCarouselToSlideIndex(track, next, behavior)
-}
-
 export function initProjectCarouselLoop(track) {
   const state = getLoopState(track)
   track.removeAttribute('data-carousel-ready')

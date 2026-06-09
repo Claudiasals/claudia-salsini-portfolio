@@ -170,8 +170,6 @@ export const initHeroCircuitTraces = () => {
 
 const getSampler = (traceIndex) => initHeroCircuitTraces()[traceIndex]
 
-export const sampleCircuitTrace = (traceIndex, t) => getSampler(traceIndex).sample(t)
-
 export const getCircuitTraceLength = (traceIndex) => getSampler(traceIndex).total
 
 export const sampleCircuitTraceAtDistance = (traceIndex, distance) => {

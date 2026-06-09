@@ -18,7 +18,11 @@ const COMPACT_RADAR_SKILL_EXTRA_OUTWARD_PX = {
 }
 export const SPOKE_HUB_COLOR = '#00d4ff'
 export const SPOKE_MID_COLOR = '#38bdf8'
+export const BRIDGE_JOINT_GLOW_PX = 3.25
+export const BRIDGE_JOINT_CORE_PX = 1.1
 export { SPOKE_LENGTH_ADJUST_PX_BY_NAME }
+
+const pxToRadarViewBox = (px, stageWidthPx) => (px / stageWidthPx) * 100
 
 const HUB_RADIUS = 12
 export const RADAR_VIEWBOX_SPAN_PX = 552
@@ -112,7 +116,6 @@ const RING_RADII = Array.from({ length: RING_COUNT }, (_, index) => {
   return radius + pxToViewBox(getRingRadiusBoostPx(index))
 })
 
-export const TECH_RADAR_OUTER_RING = RING_RADII[RING_RADII.length - 1]
 const FIELD_RADIUS = 50
 
 const buildClosedPolygonPath = (vertices) => {
@@ -181,10 +184,6 @@ const SPOKE_JOINT_HUB_CORE_R = 0.2
 const SPOKE_JOINT_MID_HALO_R = 0.98
 const SPOKE_JOINT_GLOW_R = 0.58
 const SPOKE_JOINT_CORE_R = 0.18
-const SPOKE_JOINT_TERMINAL_HALO_R = 2.35
-const SPOKE_JOINT_TERMINAL_GLOW_R = 1.45
-const SPOKE_JOINT_TERMINAL_CORE_R = 0.52
-
 const JOINT_DOT_CONFIG = {
   hub: {
     haloR: SPOKE_JOINT_HUB_HALO_R,
@@ -204,30 +203,37 @@ const JOINT_DOT_CONFIG = {
     glowClass: 'skills-radar-bridge__joint-glow tech-radar__spoke-joint-glow--mid',
     coreClass: 'skills-radar-bridge__joint-core tech-radar__spoke-joint-core--mid',
   },
-  terminal: {
-    haloR: SPOKE_JOINT_TERMINAL_HALO_R,
-    glowR: SPOKE_JOINT_TERMINAL_GLOW_R,
-    coreR: SPOKE_JOINT_TERMINAL_CORE_R,
-    fill: SPOKE_HUB_COLOR,
-    haloClass: 'tech-radar__spoke-joint-halo tech-radar__spoke-joint-halo--terminal',
-    glowClass: 'skills-radar-bridge__joint-glow tech-radar__spoke-joint-glow--terminal',
-    coreClass: 'skills-radar-bridge__joint-core tech-radar__spoke-joint-core--terminal',
-  },
 }
 
-const JointDot = ({ x, y, size = 'mid', compact = false }) => {
+const JointDot = ({ x, y, size = 'mid' }) => {
   const config = JOINT_DOT_CONFIG[size] ?? JOINT_DOT_CONFIG.mid
   const fill = config.fill ?? SPOKE_HUB_COLOR
-  const scale = size === 'terminal' && compact ? 0.62 : 1
 
   return (
-    <g
-      className={size === 'terminal' ? 'tech-radar__spoke-joint--terminal' : undefined}
-      transform={`translate(${x} ${y})${scale !== 1 ? ` scale(${scale})` : ''}`}
-    >
+    <g transform={`translate(${x} ${y})`}>
       <circle className={config.haloClass} r={config.haloR} fill={fill} />
       <circle className={config.glowClass} r={config.glowR} fill={fill} />
       <circle className={config.coreClass} r={config.coreR} fill={fill} />
+    </g>
+  )
+}
+
+const BridgeStyleTerminalDot = ({ x, y, stageWidthPx }) => {
+  const glowR = pxToRadarViewBox(BRIDGE_JOINT_GLOW_PX, stageWidthPx)
+  const coreR = pxToRadarViewBox(BRIDGE_JOINT_CORE_PX, stageWidthPx)
+
+  return (
+    <g className="skills-radar-bridge__joint" transform={`translate(${x} ${y})`}>
+      <circle
+        className="skills-radar-bridge__joint-glow"
+        r={glowR}
+        fill={SPOKE_HUB_COLOR}
+      />
+      <circle
+        className="skills-radar-bridge__joint-core"
+        r={coreR}
+        fill={SPOKE_HUB_COLOR}
+      />
     </g>
   )
 }
@@ -490,7 +496,11 @@ const TechRadar = ({
                 ) : (
                   <>
                     <JointDot x={mid.x} y={mid.y} />
-                    <JointDot x={score.x} y={score.y} size="terminal" />
+                    <BridgeStyleTerminalDot
+                      x={score.x}
+                      y={score.y}
+                      stageWidthPx={stageWidthPx}
+                    />
                   </>
                 )}
               </g>

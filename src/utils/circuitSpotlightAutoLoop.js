@@ -48,7 +48,6 @@ let rafId = null
 let clockPauseMs = 0
 let clockPauseStartedAt = null
 let animStartMs = null
-let lastFrameMs = null
 let lastSmoothMs = null
 
 const pairSweepVisibility = (progress) => {
@@ -280,21 +279,14 @@ const frameFromClock = (now) => {
 const tick = (now) => {
   rafId = null
 
-  if (patterns.size === 0) {
-    lastFrameMs = null
-    return
-  }
+  if (patterns.size === 0) return
 
-  if (animStartMs === null) {
-    lastFrameMs = null
-    return
-  }
+  if (animStartMs === null) return
 
   const deltaMs = lastSmoothMs === null ? 16 : Math.min(40, now - lastSmoothMs)
   lastSmoothMs = now
   const smoothAlpha = 1 - Math.exp(-deltaMs / SMOOTH_MS)
 
-  lastFrameMs = now
   const frame = frameFromClock(now)
 
   for (const pattern of patterns) {
@@ -306,7 +298,6 @@ const tick = (now) => {
     rafId = window.requestAnimationFrame(tick)
   } else {
     rafId = null
-    lastFrameMs = null
   }
 }
 
@@ -400,7 +391,6 @@ const stopLoop = () => {
     window.cancelAnimationFrame(rafId)
     rafId = null
   }
-  lastFrameMs = null
   lastSmoothMs = null
   beginClockPause()
 }

@@ -1,6 +1,3 @@
-const makeId = (categoryId, name) =>
-  `${categoryId}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
-
 const distributeAngles = (count) =>
   Array.from({ length: count }, (_, index) => (360 / count) * index - 90)
 
@@ -218,19 +215,3 @@ export const TECH_RADAR_CATEGORIES = [
     ),
   },
 ]
-
-export const TECH_RADAR_NODES = TECH_RADAR_CATEGORIES.flatMap((category) =>
-  category.skills.map((skill) => ({
-    ...skill,
-    id: makeId(category.id, skill.name),
-    categoryId: category.id,
-    category: category.label,
-    categoryAccent: category.accent,
-  })),
-)
-
-/** @deprecated Usa TECH_RADAR_CATEGORIES */
-export const TECH_RADAR_RINGS = TECH_RADAR_CATEGORIES.map((category) => ({
-  id: category.id,
-  radius: category.polygonRadius,
-}))

@@ -98,14 +98,19 @@
       "sidebar cluster"
       "process process";
     column-gap: clamp(1.35rem, 2.8vw, 2.75rem);
-    row-gap: clamp(1.25rem, 2.5vw, 2rem);
+    row-gap: 0;
   }
 
   .skills-showcase__sidebar {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-self: stretch;
+    justify-content: flex-start;
+    align-self: start;
+    margin-top: 3rem;
+  }
+
+  .skills-radar-cluster {
+    margin-top: 3rem;
   }
 
   .skills-showcase__tabs {
@@ -235,6 +240,43 @@
     drop-shadow(0 0 5px rgba(0, 212, 255, 0.42));
 }
 
+@keyframes skills-radar-bridge-draw {
+  from {
+    stroke-dashoffset: var(--bridge-length);
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.skills-radar-bridge--progress:not(.skills-radar-bridge--visible) .skills-radar-bridge__glow,
+.skills-radar-bridge--progress:not(.skills-radar-bridge--visible) .skills-radar-bridge__line {
+  opacity: 0;
+}
+
+.skills-radar-bridge--visible:not(.skills-radar-bridge--drawing) .skills-radar-bridge__glow,
+.skills-radar-bridge--visible:not(.skills-radar-bridge--drawing) .skills-radar-bridge__line {
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+}
+
+.skills-radar-bridge--drawing .skills-radar-bridge__glow,
+.skills-radar-bridge--drawing .skills-radar-bridge__line {
+  stroke-dasharray: var(--bridge-length);
+  stroke-dashoffset: var(--bridge-length);
+  animation: skills-radar-bridge-draw var(--bridge-draw-duration, 720ms) ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-radar-bridge--drawing .skills-radar-bridge__glow,
+  .skills-radar-bridge--drawing .skills-radar-bridge__line {
+    animation: none !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
 .skills-radar-bridge__joint-glow {
   opacity: 0.88;
   filter:
@@ -288,72 +330,48 @@
   filter: drop-shadow(0 0 3px rgba(0, 212, 255, 0.52));
 }
 
-.tech-radar__spoke-joint-glow--terminal {
+/* Raggi attivi + pallino finale: stessa luminosità dei collegamenti card */
+.tech-radar__spoke-group--active .skills-radar-bridge__glow {
+  stroke-width: 3;
+  opacity: 0.28;
+  filter: blur(0.8px);
+}
+
+.tech-radar__spoke-group--active .skills-radar-bridge__line {
+  stroke-width: 1.35;
+  filter:
+    drop-shadow(0 0 1.5px rgba(0, 212, 255, 0.88))
+    drop-shadow(0 0 5px rgba(0, 212, 255, 0.42));
+}
+
+.tech-radar__spoke-group--active .skills-radar-bridge__joint-glow {
   opacity: 0.88;
   filter:
-    drop-shadow(0 0 5px rgba(0, 212, 255, 0.98))
-    drop-shadow(0 0 12px rgba(0, 212, 255, 0.82))
-    drop-shadow(0 0 24px rgba(0, 212, 255, 0.58))
-    drop-shadow(0 0 38px rgba(0, 212, 255, 0.34));
+    drop-shadow(0 0 5px rgba(0, 212, 255, 0.96))
+    drop-shadow(0 0 12px rgba(0, 212, 255, 0.68))
+    drop-shadow(0 0 22px rgba(0, 212, 255, 0.32));
 }
 
-.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-halo--terminal {
-  opacity: 0.24;
-  filter: blur(1.6px);
+.tech-radar__spoke-group--active .skills-radar-bridge__joint-core {
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 3px rgba(0, 212, 255, 1))
+    drop-shadow(0 0 9px rgba(0, 212, 255, 0.62))
+    drop-shadow(0 0 16px rgba(0, 212, 255, 0.28));
 }
 
-.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-glow--terminal {
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .skills-radar-bridge__joint-glow {
   opacity: 0.34;
-  filter: drop-shadow(0 0 3px rgba(0, 212, 255, 0.35));
+  filter:
+    drop-shadow(0 0 3px rgba(0, 212, 255, 0.35))
+    drop-shadow(0 0 8px rgba(0, 212, 255, 0.18));
 }
 
-.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-core--terminal {
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .skills-radar-bridge__joint-core {
   opacity: 0.55;
-  filter: none;
-}
-
-.tech-radar__spoke-group--active .tech-radar__spoke-joint-halo--terminal {
-  opacity: 0.82;
-  filter: blur(7px);
-}
-
-.tech-radar__spoke-group--active .tech-radar__spoke-joint-glow--terminal {
-  opacity: 0.96;
   filter:
-    drop-shadow(0 0 3px rgba(0, 212, 255, 0.95))
-    drop-shadow(0 0 9px rgba(0, 212, 255, 0.88))
-    drop-shadow(0 0 18px rgba(0, 212, 255, 0.68))
-    drop-shadow(0 0 32px rgba(0, 212, 255, 0.44))
-    drop-shadow(0 0 46px rgba(0, 212, 255, 0.24));
-}
-
-.tech-radar__spoke-group--active .tech-radar__spoke-joint-core--terminal {
-  opacity: 0.96;
-  filter:
-    drop-shadow(0 0 5px rgba(0, 212, 255, 0.82))
-    drop-shadow(0 0 14px rgba(0, 212, 255, 0.58))
-    drop-shadow(0 0 26px rgba(0, 212, 255, 0.32));
-}
-
-.tech-radar__spoke-joint-halo--terminal {
-  opacity: 0.68;
-  filter: blur(5px);
-}
-
-.tech-radar__spoke-joint-core--terminal {
-  opacity: 0.42;
-  filter:
-    drop-shadow(0 0 4px rgba(0, 212, 255, 0.9))
-    drop-shadow(0 0 12px rgba(0, 212, 255, 0.62))
-    drop-shadow(0 0 22px rgba(0, 212, 255, 0.36));
-}
-
-.tech-radar__svg--overlay .skills-radar-bridge__joint-glow {
-  opacity: 0.82;
-}
-
-.tech-radar__svg--overlay .skills-radar-bridge__joint-core {
-  opacity: 0.96;
+    drop-shadow(0 0 2px rgba(0, 212, 255, 0.55))
+    drop-shadow(0 0 6px rgba(0, 212, 255, 0.28));
 }
 
 .skills-category-tab__inner {
@@ -737,16 +755,6 @@
   line-height: 1.6;
 }
 
-.skills-pipeline__stage-empty {
-  margin: 1rem 0 0;
-  padding: 0.85rem 1rem;
-  border-radius: 0.75rem;
-  border: 1px dashed rgba(148, 163, 184, 0.28);
-  color: #94a3b8;
-  font-size: 0.875rem;
-  line-height: 1.55;
-}
-
 .skills-pipeline__constellation-groups {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
@@ -772,16 +780,6 @@
   margin-top: 1.35rem;
   padding-top: 1.15rem;
   border-top: 1px solid rgba(148, 163, 184, 0.14);
-}
-
-.skills-pipeline__constellation-label {
-  margin: 0 0 0.85rem;
-  font-family: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
-  font-size: 0.625rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #64748b;
 }
 
 .skills-pipeline__tools {
@@ -1093,13 +1091,15 @@
 }
 
 .tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .skills-radar-bridge__glow {
-  opacity: 0.12;
-  filter: blur(0.6px);
+  opacity: 0.16;
+  filter: blur(0.8px);
 }
 
 .tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .skills-radar-bridge__line {
   opacity: 0.42;
-  filter: none;
+  filter:
+    drop-shadow(0 0 1px rgba(0, 212, 255, 0.5))
+    drop-shadow(0 0 3px rgba(0, 212, 255, 0.22));
 }
 
 .tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-halo--hub,
@@ -1219,6 +1219,14 @@
 }
 
 @media (width < 1280px) {
+  .skills-radar-cluster {
+    padding-bottom: clamp(2.5rem, 6vw, 3.5rem);
+  }
+
+  .skills-process-zone {
+    margin-top: clamp(4.5rem, 10vw, 6rem);
+  }
+
   .skills-process__lede {
     font-size: 0.875rem;
     line-height: 1.55;
@@ -1365,7 +1373,7 @@
   }
 
   .skills-process-zone {
-    margin-top: 1.25rem;
+    margin-top: clamp(3.5rem, 12vw, 5rem);
   }
 
   .skills-pipeline {

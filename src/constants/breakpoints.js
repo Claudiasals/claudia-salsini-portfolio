@@ -13,8 +13,3 @@ export const isSmartphoneViewport = () => {
   if (typeof window === 'undefined') return false
   return window.matchMedia(SMARTPHONE_MEDIA_QUERY).matches
 }
-
-export const isCompactRadarViewport = () => {
-  if (typeof window === 'undefined') return false
-  return window.matchMedia(COMPACT_RADAR_MEDIA_QUERY).matches
-}

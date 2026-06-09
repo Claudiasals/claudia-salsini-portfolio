@@ -82,16 +82,10 @@ const Projects = () => {
         </ScrollRevealItem>
 
         <ScrollRevealItem tier="body">
-          <p className="section-lead section-after-title max-w-3xl">
-            <span className="md:hidden">
-              Progetti full stack selezionati: app complete, interfacce curate e soluzioni
-              funzionali.
-            </span>
-            <span className="hidden md:inline">
-              Una selezione di progetti full stack sviluppati tra stage, formazione e iniziative
-              personali: applicazioni web complete, interfacce curate e soluzioni nate per
-              trasformare esigenze concrete in strumenti digitali funzionali.
-            </span>
+          <p className="section-lead section-after-title max-w-3xl hidden sm:block">
+            Una selezione di progetti full stack sviluppati tra stage, formazione e iniziative
+            personali: applicazioni web complete, interfacce curate e soluzioni nate per
+            trasformare esigenze concrete in strumenti digitali funzionali.
           </p>
         </ScrollRevealItem>
 

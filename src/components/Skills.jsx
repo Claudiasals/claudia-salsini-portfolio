@@ -17,6 +17,8 @@ import { SECTION_REVEAL_EVENT, elementIntersectsViewport } from '../utils/sectio
 import '../skills.css'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
 import TechRadar, {
+  BRIDGE_JOINT_CORE_PX,
+  BRIDGE_JOINT_GLOW_PX,
   ICON_RADIAL_OFFSET,
   polarToPercent,
   SkillIcon,
@@ -33,9 +35,9 @@ const processIcons = {
   evolution: FiTrendingUp,
 }
 
-const SkillDetailCard = ({ skill, layout = 'horizontal' }) => (
+const SkillDetailCard = ({ skill }) => (
   <article
-    className={`skills-detail-card skills-detail-card--${layout}`}
+    className="skills-detail-card skills-detail-card--vertical"
     style={{ '--skill-color': skill.glow }}
     aria-live="polite"
   >
@@ -49,7 +51,6 @@ const SKILL_CARD_EXTRA_DOWN_PX = 15
 
 const SKILL_CARD_EXTRA_DOWN = new Set(['React', 'PHP'])
 
-/** Spostamento simbolico della card lungo l’arco del radar (rispetto a JavaScript) */
 const GIT_CARD_DESC_SHORTEN_SHIFT_PX = 36
 
 const SKILL_CARD_OFFSET = {
@@ -60,15 +61,46 @@ const SKILL_CARD_OFFSET = {
   TypeScript: { x: 0, y: -20 },
   React: { x: -20, y: 0 },
   Redux: { x: 30, y: 0 },
-  Figma: { x: 30, y: 0 },
-  HTML: { x: 0, y: 25 },
-  'Node.js': { x: 0, y: 40 },
-  Git: { x: 0, y: 32 + GIT_CARD_DESC_SHORTEN_SHIFT_PX },
+  Figma: { x: 30, y: -40 },
   PHP: { x: 0, y: 0 },
   Postman: { x: -20, y: 0 },
 }
 
-const getSkillCardOffset = (skill) => SKILL_CARD_OFFSET[skill.name] ?? { x: 0, y: 0 }
+/** Sotto 1280px: tab orizzontali sotto al titolo, radar sotto ai pulsanti */
+const STACKED_SKILLS_LAYOUT_MEDIA = '(width < 1280px)'
+
+const isStackedSkillsLayout = () =>
+  typeof window !== 'undefined' && window.matchMedia(STACKED_SKILLS_LAYOUT_MEDIA).matches
+
+const TOP_ICON_RIGHT_BRIDGE_SKILLS = new Set(['HTML', 'Node.js', 'Git'])
+
+const TOP_ICON_DESKTOP_CARD_OFFSET = {
+  HTML: { x: 0, y: 25 },
+  'Node.js': { x: 0, y: 40 },
+  Git: { x: 0, y: 12 + GIT_CARD_DESC_SHORTEN_SHIFT_PX },
+}
+
+const TOP_ICON_STACKED_CARD_OFFSET = {
+  HTML: { x: 0, y: -20 },
+  'Node.js': { x: 0, y: -20 },
+  Git: { x: 0, y: -20 },
+}
+
+const getSkillCardOffset = (skill) => {
+  if (TOP_ICON_RIGHT_BRIDGE_SKILLS.has(skill.name)) {
+    const offsets = isStackedSkillsLayout()
+      ? TOP_ICON_STACKED_CARD_OFFSET
+      : TOP_ICON_DESKTOP_CARD_OFFSET
+    return offsets[skill.name] ?? { x: 0, y: 0 }
+  }
+
+  return SKILL_CARD_OFFSET[skill.name] ?? { x: 0, y: 0 }
+}
+
+const usesIconAnchoredRightBridge = (skillName) =>
+  skillName === 'Postman' ||
+  skillName === 'GitHub' ||
+  (isStackedSkillsLayout() && TOP_ICON_RIGHT_BRIDGE_SKILLS.has(skillName))
 
 const isLeftSideSkill = (skill) => Math.cos((skill.angle * Math.PI) / 180) < 0
 
@@ -109,8 +141,9 @@ const RENDER_BRIDGE_ICON_GAP_PX = 26
 const FIGMA_BRIDGE_ICON_GAP_PX = 15
 const GITHUB_BRIDGE_ICON_GAP_PX = 26
 const POSTMAN_BRIDGE_ICON_GAP_PX = 26
+/** In layout stacked: accorcia il tratto orizzontale card↔icona (HTML, Node, Git) */
+const STACKED_TOP_ICON_BRIDGE_GAP_RATIO = 0.5
 const ICON_ANCHORED_LEFT_BRIDGE_SKILLS = new Set(['Redux', 'Figma', 'Render'])
-const ICON_ANCHORED_RIGHT_BRIDGE_SKILLS = new Set(['Postman', 'GitHub'])
 const NETLIFY_CARD_SHIFT_UP_PX = 20
 const NETLIFY_BRIDGE_JOINT_SHIFT_DOWN_PX = 30
 const CSS_BRIDGE_ICON_GAP_PX = 23
@@ -142,7 +175,14 @@ const getLeftBridgeIconGapPx = (skillName) => {
 
 const getRightBridgeIconGapPx = (skillName) => {
   if (skillName === 'Postman') return POSTMAN_BRIDGE_ICON_GAP_PX
-  if (skillName === 'GitHub') return GITHUB_BRIDGE_ICON_GAP_PX
+  if (
+    skillName === 'GitHub' ||
+    skillName === 'HTML' ||
+    skillName === 'Node.js' ||
+    skillName === 'Git'
+  ) {
+    return GITHUB_BRIDGE_ICON_GAP_PX
+  }
   return REDUX_BRIDGE_ICON_GAP_PX
 }
 
@@ -239,18 +279,6 @@ const getPolarNodeLayout = (stageRect, radius, angle, toClusterX, toClusterY) =>
       toClusterX(stageRect.left + (point.x / 100) * stageRect.width) +
       stageRect.width * ESTIMATED_ICON_HALF_WIDTH_RATIO,
   }
-}
-
-const getNamedNodeLayout = (radarEl, skillName, stageRect, toClusterX, toClusterY) => {
-  const nodeEl = [...radarEl.querySelectorAll('.tech-radar__node')].find(
-    (el) => el.getAttribute('aria-label') === skillName,
-  )
-
-  if (nodeEl) {
-    return mapNodeElementLayout(nodeEl, toClusterX, toClusterY)
-  }
-
-  return null
 }
 
 const getSkillNodeLayout = (skill, radarEl, stageRect, toClusterX, toClusterY) => {
@@ -495,14 +523,7 @@ const buildMobileRadarDetailLayout = (_skill, radarEl, clusterEl, cardEl) => {
   }
 }
 
-const buildRadarDetailLayout = (
-  skill,
-  radarEl,
-  leftSlotEl,
-  rightSlotEl,
-  cardEl,
-  introAnchorEl,
-) => {
+const buildRadarDetailLayout = (skill, radarEl, leftSlotEl, rightSlotEl, cardEl) => {
   if (!skill || !radarEl || !rightSlotEl || !cardEl) return null
 
   const clusterEl = radarEl.closest('.skills-radar-cluster')
@@ -555,7 +576,7 @@ const buildRadarDetailLayout = (
     )
   }
 
-  if (skill.name === 'Node.js' || skill.name === 'HTML' || skill.name === 'Git') {
+  if (!isStackedSkillsLayout() && TOP_ICON_RIGHT_BRIDGE_SKILLS.has(skill.name)) {
     return buildNodeDetailLayout(
       skill,
       radarEl,
@@ -569,7 +590,6 @@ const buildRadarDetailLayout = (
   const stageTop = toClusterY(stageRect.top)
   const stageBottom = toClusterY(stageRect.bottom)
   const slotTop = toClusterY(slotRect.top)
-  const slotHeight = slotRect.height
   const stagePad = 10
   const stageSpan = stageBottom - stageTop - stagePad * 2
 
@@ -687,15 +707,21 @@ const buildRadarDetailLayout = (
     const gap = jointX - cardRightX
 
     if (gap >= 12) {
-      const elbowX = Math.max(
-        cardRightX + 8,
-        jointX - Math.max(12, gap * 0.22),
-      )
-
-      if (elbowX < jointX - 2 && elbowX > cardRightX + 2) {
+      if (isStackedSkillsLayout() && skill.name === 'Figma') {
         endX = cardRightX
-        d = `M ${jointX} ${iconCenterY} H ${elbowX} V ${cardEntryY} H ${endX}`
+        d = `M ${jointX} ${iconCenterY} H ${endX}`
         start = { x: jointX, y: iconCenterY }
+      } else {
+        const elbowX = Math.max(
+          cardRightX + 8,
+          jointX - Math.max(12, gap * 0.22),
+        )
+
+        if (elbowX < jointX - 2 && elbowX > cardRightX + 2) {
+          endX = cardRightX
+          d = `M ${jointX} ${iconCenterY} H ${elbowX} V ${cardEntryY} H ${endX}`
+          start = { x: jointX, y: iconCenterY }
+        }
       }
     }
   }
@@ -804,7 +830,7 @@ const buildRadarDetailLayout = (
     }
   }
 
-  if (ICON_ANCHORED_RIGHT_BRIDGE_SKILLS.has(skill.name) && placement === 'right') {
+  if (usesIconAnchoredRightBridge(skill.name) && placement === 'right') {
     const { iconCenterY, iconRightX } = nodeLayout
     const cardEntryY = detailTop + cardHeight * BRIDGE_ENTRY_RATIO
     const cardLeftX = toClusterX(slotRect.right) - cardWidth + cardOffset.x
@@ -813,14 +839,23 @@ const buildRadarDetailLayout = (
     const gap = cardLeftX - jointX
 
     if (gap >= 12) {
-      const elbowX = Math.min(
-        cardLeftX - 8,
-        jointX + Math.max(12, gap * 0.22),
-      )
+      if (isStackedSkillsLayout() && TOP_ICON_RIGHT_BRIDGE_SKILLS.has(skill.name)) {
+        const halvedGap = gap * STACKED_TOP_ICON_BRIDGE_GAP_RATIO
+        const adjustedCardLeftX = cardLeftX - halvedGap
 
-      if (elbowX > jointX + 2) {
-        d = `M ${cardLeftX} ${cardEntryY} H ${elbowX} V ${iconCenterY} H ${jointX}`
+        detailOffsetRight += halvedGap
+        d = `M ${jointX} ${iconCenterY} H ${adjustedCardLeftX}`
         start = { x: jointX, y: iconCenterY }
+      } else {
+        const elbowX = Math.min(
+          cardLeftX - 8,
+          jointX + Math.max(12, gap * 0.22),
+        )
+
+        if (elbowX > jointX + 2) {
+          d = `M ${jointX} ${iconCenterY} H ${elbowX} V ${cardEntryY} H ${cardLeftX}`
+          start = { x: jointX, y: iconCenterY }
+        }
       }
     }
   }
@@ -839,14 +874,7 @@ const buildRadarDetailLayout = (
   }
 }
 
-const useRadarDetailLayout = (
-  skill,
-  radarRef,
-  leftSlotRef,
-  rightSlotRef,
-  cardRef,
-  introAnchorRef,
-) => {
+const useRadarDetailLayout = (skill, radarRef, leftSlotRef, rightSlotRef, cardRef) => {
   const [layout, setLayout] = useState(null)
 
   const updateLayout = useCallback(() => {
@@ -856,10 +884,9 @@ const useRadarDetailLayout = (
       leftSlotRef.current,
       rightSlotRef.current,
       cardRef.current,
-      introAnchorRef.current,
     )
-    setLayout(next)
-  }, [skill, radarRef, leftSlotRef, rightSlotRef, cardRef, introAnchorRef])
+    setLayout(normalizeRadarDetailLayout(next))
+  }, [skill, radarRef, leftSlotRef, rightSlotRef, cardRef])
 
   useLayoutEffect(() => {
     updateLayout()
@@ -875,7 +902,6 @@ const useRadarDetailLayout = (
     if (leftSlotRef.current) observer.observe(leftSlotRef.current)
     if (rightSlotRef.current) observer.observe(rightSlotRef.current)
     if (cardRef.current) observer.observe(cardRef.current)
-    if (introAnchorRef.current) observer.observe(introAnchorRef.current)
 
     window.addEventListener('resize', updateLayout)
 
@@ -883,39 +909,193 @@ const useRadarDetailLayout = (
       observer.disconnect()
       window.removeEventListener('resize', updateLayout)
     }
-  }, [updateLayout, radarRef, leftSlotRef, rightSlotRef, cardRef, introAnchorRef, skill])
+  }, [updateLayout, radarRef, leftSlotRef, rightSlotRef, cardRef, skill])
 
   return layout
 }
 
-const RadarDetailBridge = ({ geometry }) => {
+const BRIDGE_DRAW_MS = 720
+
+const stabilizeBridgePathD = (d) =>
+  d.replace(/-?\d*\.?\d+(?:e[+-]?\d+)?/gi, (match) => {
+    const value = Number.parseFloat(match)
+    return Number.isFinite(value) ? String(Math.round(value * 2) / 2) : match
+  })
+
+const normalizeRadarDetailLayout = (layout) => {
+  if (!layout?.bridge?.d) return layout
+
+  return {
+    ...layout,
+    bridge: {
+      ...layout.bridge,
+      d: stabilizeBridgePathD(layout.bridge.d),
+    },
+  }
+}
+
+const clearBridgePathInlineStyles = (linePath, glowPath) => {
+  for (const path of [linePath, glowPath]) {
+    if (!path) continue
+    path.style.removeProperty('stroke-dasharray')
+    path.style.removeProperty('stroke-dashoffset')
+    path.style.removeProperty('animation')
+  }
+}
+
+const RadarDetailBridge = ({ geometry, drawKey }) => {
+  const lineRef = useRef(null)
+  const glowRef = useRef(null)
+  const lastDrawKeyRef = useRef(null)
+  const animPhaseRef = useRef('idle')
+  const [strokeLength, setStrokeLength] = useState(0)
+  const [animPhase, setAnimPhase] = useState('idle')
+
+  const setPhase = (next) => {
+    animPhaseRef.current = next
+    setAnimPhase(next)
+  }
+
+  useLayoutEffect(() => {
+    if (!geometry?.d) {
+      setStrokeLength(0)
+      setPhase('idle')
+      return undefined
+    }
+
+    const skillChanged = lastDrawKeyRef.current !== drawKey
+    if (skillChanged) {
+      lastDrawKeyRef.current = drawKey
+      setStrokeLength(0)
+      setPhase('pending')
+    }
+
+    let cancelled = false
+    let attempts = 0
+
+    const tryMeasure = () => {
+      if (cancelled) return
+
+      const path = lineRef.current
+      if (!path) {
+        if (attempts < 8) {
+          attempts += 1
+          window.requestAnimationFrame(tryMeasure)
+        }
+        return
+      }
+
+      const length = path.getTotalLength()
+      if (length <= 0) {
+        if (attempts < 8) {
+          attempts += 1
+          window.requestAnimationFrame(tryMeasure)
+        }
+        return
+      }
+
+      if (animPhaseRef.current === 'drawing' && !skillChanged) {
+        return
+      }
+
+      clearBridgePathInlineStyles(path, glowRef.current)
+      setStrokeLength(length)
+
+      if (skillChanged || animPhaseRef.current === 'pending') {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          setPhase('done')
+        } else {
+          setPhase('drawing')
+        }
+        return
+      }
+
+      if (animPhaseRef.current === 'done') {
+        setPhase('done')
+      }
+    }
+
+    const scheduleMeasure = () => {
+      if (skillChanged || animPhaseRef.current === 'pending') {
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(tryMeasure)
+        })
+      } else {
+        tryMeasure()
+      }
+    }
+
+    scheduleMeasure()
+
+    return () => {
+      cancelled = true
+    }
+  }, [drawKey, geometry?.d])
+
+  useEffect(() => {
+    if (animPhase !== 'drawing') return undefined
+
+    const timeoutId = window.setTimeout(() => {
+      if (animPhaseRef.current === 'drawing') {
+        setPhase('done')
+      }
+    }, BRIDGE_DRAW_MS + 120)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [drawKey, animPhase])
+
   if (!geometry) return null
 
   const dot = geometry.joint ?? geometry.start
+  const isVisible = strokeLength > 0
+  const isDrawing = isVisible && animPhase === 'drawing'
+  const bridgeSvgStyle = {
+    '--bridge-length': strokeLength,
+    '--bridge-draw-duration': `${BRIDGE_DRAW_MS}ms`,
+  }
+
+  const handleDrawComplete = () => {
+    if (animPhaseRef.current !== 'drawing') return
+    setPhase('done')
+  }
 
   return (
     <div className="skills-radar-bridge-overlay" aria-hidden="true">
       <svg
-        className="skills-radar-bridge"
+        className={`skills-radar-bridge skills-radar-bridge--progress${
+          isVisible ? ' skills-radar-bridge--visible' : ''
+        }${isDrawing ? ' skills-radar-bridge--drawing' : ''}`}
+        style={bridgeSvgStyle}
         viewBox={`0 0 ${geometry.width} ${geometry.height}`}
         preserveAspectRatio="none"
         focusable="false"
       >
-        <path className="skills-radar-bridge__glow" d={geometry.d} />
-        <path className="skills-radar-bridge__line" d={geometry.d} />
+        <path
+          key={`${drawKey}-glow`}
+          ref={glowRef}
+          className="skills-radar-bridge__glow"
+          d={geometry.d}
+        />
+        <path
+          key={`${drawKey}-line`}
+          ref={lineRef}
+          className="skills-radar-bridge__line"
+          d={geometry.d}
+          onAnimationEnd={handleDrawComplete}
+        />
         <g className="skills-radar-bridge__joint">
           <circle
             className="skills-radar-bridge__joint-glow"
             cx={dot.x}
             cy={dot.y}
-            r="3.25"
+            r={BRIDGE_JOINT_GLOW_PX}
             fill={SPOKE_HUB_COLOR}
           />
           <circle
             className="skills-radar-bridge__joint-core"
             cx={dot.x}
             cy={dot.y}
-            r="1.1"
+            r={BRIDGE_JOINT_CORE_PX}
             fill={SPOKE_HUB_COLOR}
           />
         </g>
@@ -931,7 +1111,6 @@ const Skills = () => {
   const radarDetailLeftSlotRef = useRef(null)
   const radarDetailRightSlotRef = useRef(null)
   const radarCardRef = useRef(null)
-  const skillsEyebrowRef = useRef(null)
   const wasInViewRef = useRef(false)
   const introDoneRef = useRef(false)
   const [radarActive, setRadarActive] = useState(false)
@@ -958,7 +1137,6 @@ const Skills = () => {
     radarDetailLeftSlotRef,
     radarDetailRightSlotRef,
     radarCardRef,
-    skillsEyebrowRef,
   )
 
   const activeProcessStep = PROCESS_STEPS[activeProcessIndex] ?? PROCESS_STEPS[0]
@@ -1038,7 +1216,6 @@ const Skills = () => {
         <div className="skills-showcase">
           <ScrollRevealItem tier="head" className="skills-showcase__header">
             <p
-              ref={skillsEyebrowRef}
               id="skills"
               className="section-scroll-anchor text-sm font-semibold uppercase tracking-[0.3em] text-sky-400"
             >
@@ -1128,11 +1305,14 @@ const Skills = () => {
               }
             >
               {activeSkill ? (
-                <SkillDetailCard key={activeSkill.id} skill={activeSkill} layout="vertical" />
+                <SkillDetailCard key={activeSkill.id} skill={activeSkill} />
               ) : null}
             </div>
 
-            <RadarDetailBridge geometry={radarDetailLayout?.bridge} />
+            <RadarDetailBridge
+              geometry={radarDetailLayout?.bridge}
+              drawKey={activeSkill?.id ?? 'none'}
+            />
           </ScrollRevealItem>
 
           <ScrollRevealItem tier="content" className="skills-process-zone skills-process">

@@ -9,12 +9,6 @@ export const SKILL_CATEGORY_TABS = [
   { id: 'tools', label: 'Strumenti' },
 ]
 
-export const SKILL_CATEGORIES = {
-  frontend: 'Frontend',
-  backend: 'Backend',
-  tools: 'Strumenti',
-}
-
 export const getRadarSkillsByCategory = (categoryId) => {
   const category = TECH_RADAR_CATEGORIES.find((item) => item.id === categoryId)
   if (!category) return []
@@ -30,39 +24,6 @@ export const getRadarSkillsByCategory = (categoryId) => {
     spokeLengthAdjustPx:
       skill.spokeLengthAdjustPx ?? SPOKE_LENGTH_ADJUST_PX_BY_NAME[skill.name] ?? 0,
   }))
-}
-
-export const getDailyStackSkillDetail = (item) => {
-  if (!item?.category) return null
-
-  const radarName = item.radarName ?? item.name
-  const skill = getRadarSkillsByCategory(item.category).find(
-    (entry) => entry.name === radarName,
-  )
-
-  if (skill) {
-    return {
-      ...skill,
-      name: item.name,
-      icon: item.icon ?? skill.icon,
-      image: item.image ?? skill.image,
-      glow: item.glow ?? skill.glow,
-    }
-  }
-
-  if (item.description) {
-    return {
-      id: `stack-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-      name: item.name,
-      category: item.category,
-      description: item.description,
-      icon: item.icon,
-      image: item.image,
-      glow: item.glow,
-    }
-  }
-
-  return null
 }
 
 export const DAILY_STACK = [
@@ -153,7 +114,7 @@ export const DAILY_STACK = [
 const resolveStackTools = (names) =>
   names.map((name) => DAILY_STACK.find((tool) => tool.name === name)).filter(Boolean)
 
-export const getProcessStepStack = (step) => {
+const getProcessStepStack = (step) => {
   if (step.stackGroups) {
     return step.stackGroups.flatMap((group) => resolveStackTools(group.tools))
   }
