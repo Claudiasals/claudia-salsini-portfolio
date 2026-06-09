@@ -2521,7 +2521,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
   .about-section {
     padding-top: 1rem;
-    overflow-x: clip;
+    overflow: visible;
   }
 
   .about-lead {
@@ -2532,15 +2532,29 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
   .about-visual {
     order: -1;
+    width: 100%;
+    align-items: center;
     margin-top: 0;
     margin-bottom: 1.75rem;
+    overflow: visible;
   }
 
   .about-visual__wrap {
-    max-width: min(100%, 28rem);
+    width: 100%;
+    max-width: 100%;
     margin-inline: auto;
-    margin-top: -30px;
+    margin-top: 0;
     margin-bottom: 0.25rem;
+    align-items: center;
+    overflow: visible;
+  }
+
+  .about-visual__img-shell,
+  .about-visual__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
   }
 
   .about-intro {
@@ -2550,7 +2564,11 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   }
 
   .about-visual__img {
-    max-height: min(37rem, 76vh);
+    width: 100%;
+    max-width: 100%;
+    max-height: min(43rem, 86vh);
+    margin-inline: auto;
+    object-position: center center;
   }
 
   .about-highlights {
@@ -3533,6 +3551,15 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   }
 }
 
+/* Smartphone: tech stack lungo su due colonne per ridurre l’altezza verticale */
+@media (width < 640px) {
+  .project-case-tech-list:has(li:nth-child(6)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 0.5rem;
+    row-gap: 0.5rem;
+  }
+}
+
 .project-case-feature-screens__shots {
   display: grid;
   gap: 2rem;
@@ -3690,6 +3717,12 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   padding: 1.25rem;
   background: rgba(var(--site-bg-rgb), 0.92);
   backdrop-filter: blur(6px);
+  overscroll-behavior: none;
+}
+
+body.project-screenshot-lightbox-open {
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .project-screenshot-lightbox__close.nav-btn {
@@ -3801,16 +3834,57 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 @media (width < 640px) {
   .project-screenshot-lightbox {
     padding: 0.75rem;
+    touch-action: none;
   }
 
   .project-screenshot-lightbox__nav.nav-btn {
-    width: 2.35rem;
-    min-width: 2.35rem;
-    height: 2.35rem;
+    display: none;
+  }
+
+  .project-screenshot-lightbox__inner {
+    width: min(100vw - 1.5rem, 80rem);
   }
 
   .project-screenshot-lightbox__img {
     max-height: min(58vh, 680px);
+  }
+
+  .project-screenshot-lightbox__dots.projects-carousel-dots {
+    gap: 0.025rem;
+    max-width: 100%;
+    padding-inline: 0;
+  }
+
+  .project-screenshot-lightbox__dots .projects-carousel-dot-cell {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .project-screenshot-lightbox__dots .projects-carousel-dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-width: 1.5px;
+  }
+
+  .project-screenshot-lightbox__dots .projects-carousel-dot[data-wave-distance='0'] {
+    transform: scale(1);
+    border-width: 2px;
+  }
+
+  .project-screenshot-lightbox__dots .projects-carousel-dot[data-wave-distance='1'] {
+    transform: scale(0.82);
+  }
+
+  .project-screenshot-lightbox__dots .projects-carousel-dot[data-wave-distance='2'] {
+    transform: scale(0.72);
+  }
+
+  .project-screenshot-lightbox__dots .projects-carousel-dot[data-wave-distance='3'] {
+    transform: scale(0.62);
+  }
+
+  .project-screenshot-lightbox__dots .projects-carousel-dot[data-wave-distance='4'] {
+    transform: scale(0.54);
   }
 }
 

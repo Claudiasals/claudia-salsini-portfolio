@@ -210,7 +210,7 @@ const FrancescaGandelliProject = () => (
             Come ho realizzato il portfolio
           </h2>
           <p className="project-case-body">
-            Ho sviluppato il portfolio da sola, in parallelo alla formazione: prima ho allineato
+            Ho sviluppato il portfolio in parallelo alla formazione: prima ho allineato
             l’interfaccia alle richieste estetiche della cliente, poi ho progettato l’architettura
             client/server con React, API Express, MongoDB Atlas e Cloudinary, con autenticazione
             admin e deploy su Netlify e Render.

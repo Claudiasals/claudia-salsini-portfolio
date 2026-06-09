@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FiChevronLeft, FiChevronRight, FiMaximize2, FiX } from 'react-icons/fi'
 import { getCarouselDotWaveDistance } from '../utils/carouselDotWave'
+
+const LIGHTBOX_SWIPE_THRESHOLD_PX = 48
 
 function getFeatureScreens(feature) {
   if (feature.screens?.length) return feature.screens
@@ -30,6 +32,7 @@ export function ProjectFeatureScreens({ features }) {
 
   const activeSlide = activeIndex == null ? null : gallery[activeIndex]
   const hasMultipleSlides = gallery.length > 1
+  const isLightboxOpen = activeIndex != null
 
   const close = useCallback(() => setActiveIndex(null), [])
 
@@ -42,17 +45,60 @@ export function ProjectFeatureScreens({ features }) {
   )
 
   const goPrevious = useCallback(() => {
-    if (activeIndex == null || activeIndex <= 0) return
-    setActiveIndex(activeIndex - 1)
-  }, [activeIndex])
+    setActiveIndex((current) => {
+      if (current == null || current <= 0) return current
+      return current - 1
+    })
+  }, [])
 
   const goNext = useCallback(() => {
-    if (activeIndex == null || activeIndex >= gallery.length - 1) return
-    setActiveIndex(activeIndex + 1)
-  }, [activeIndex, gallery.length])
+    setActiveIndex((current) => {
+      if (current == null || current >= gallery.length - 1) return current
+      return current + 1
+    })
+  }, [gallery.length])
+
+  const lightboxRef = useRef(null)
+  const swipeStartRef = useRef(null)
+
+  const handleLightboxTouchStart = useCallback((event) => {
+    const touch = event.touches[0]
+    if (!touch) return
+
+    swipeStartRef.current = { x: touch.clientX, y: touch.clientY }
+  }, [])
+
+  const handleLightboxTouchEnd = useCallback(
+    (event) => {
+      const start = swipeStartRef.current
+      swipeStartRef.current = null
+
+      if (!start || !hasMultipleSlides) return
+
+      const touch = event.changedTouches[0]
+      if (!touch) return
+
+      const deltaX = touch.clientX - start.x
+      const deltaY = touch.clientY - start.y
+
+      if (Math.abs(deltaX) < LIGHTBOX_SWIPE_THRESHOLD_PX) return
+      if (Math.abs(deltaY) > Math.abs(deltaX) * 0.85) return
+
+      if (deltaX < 0) {
+        goNext()
+      } else {
+        goPrevious()
+      }
+    },
+    [hasMultipleSlides, goNext, goPrevious],
+  )
+
+  const clearLightboxSwipe = useCallback(() => {
+    swipeStartRef.current = null
+  }, [])
 
   useEffect(() => {
-    if (activeIndex == null) return undefined
+    if (!isLightboxOpen) return undefined
 
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -72,15 +118,52 @@ export function ProjectFeatureScreens({ features }) {
       }
     }
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const scrollY = window.scrollY
+    const { body, documentElement } = document
+    const bodyStyle = body.style
+    const htmlStyle = documentElement.style
+    const previousBody = {
+      position: bodyStyle.position,
+      top: bodyStyle.top,
+      left: bodyStyle.left,
+      right: bodyStyle.right,
+      width: bodyStyle.width,
+      overflow: bodyStyle.overflow,
+    }
+    const previousHtmlOverflow = htmlStyle.overflow
+
+    bodyStyle.position = 'fixed'
+    bodyStyle.top = `-${scrollY}px`
+    bodyStyle.left = '0'
+    bodyStyle.right = '0'
+    bodyStyle.width = '100%'
+    bodyStyle.overflow = 'hidden'
+    htmlStyle.overflow = 'hidden'
+    body.classList.add('project-screenshot-lightbox-open')
+
+    const lightbox = lightboxRef.current
+    const onTouchMove = (event) => {
+      event.preventDefault()
+    }
+
+    lightbox?.addEventListener('touchmove', onTouchMove, { passive: false })
     window.addEventListener('keydown', onKeyDown)
 
     return () => {
-      document.body.style.overflow = previousOverflow
+      lightbox?.removeEventListener('touchmove', onTouchMove)
       window.removeEventListener('keydown', onKeyDown)
+
+      body.classList.remove('project-screenshot-lightbox-open')
+      bodyStyle.position = previousBody.position
+      bodyStyle.top = previousBody.top
+      bodyStyle.left = previousBody.left
+      bodyStyle.right = previousBody.right
+      bodyStyle.width = previousBody.width
+      bodyStyle.overflow = previousBody.overflow
+      htmlStyle.overflow = previousHtmlOverflow
+      window.scrollTo(0, scrollY)
     }
-  }, [activeIndex, close, goNext, goPrevious])
+  }, [isLightboxOpen, close, goNext, goPrevious])
 
   let galleryCursor = 0
 
@@ -174,11 +257,15 @@ export function ProjectFeatureScreens({ features }) {
 
       {activeSlide ? (
         <div
+          ref={lightboxRef}
           className="project-screenshot-lightbox"
           role="dialog"
           aria-modal="true"
           aria-label={activeSlide.featureTitle}
           onClick={close}
+          onTouchStart={handleLightboxTouchStart}
+          onTouchEnd={handleLightboxTouchEnd}
+          onTouchCancel={clearLightboxSwipe}
         >
           <button
             type="button"

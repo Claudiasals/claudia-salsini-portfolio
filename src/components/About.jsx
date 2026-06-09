@@ -92,12 +92,12 @@ const About = () => {
                     </defs>
                   </svg>
                   <img
-                    src="/images/about-portrait.png?v=5"
+                    src="/images/about-portrait.png?v=6"
                     alt="Claudia Salsini - dalla psicologia allo sviluppo web"
                     className="about-visual__img"
                     loading="lazy"
                     decoding="async"
-                    width={854}
+                    width={684}
                     height={1024}
                   />
                 </div>
