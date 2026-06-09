@@ -34,6 +34,21 @@ export const projects = [
   },
 ]
 
+/** Prossimi N progetti nell’ordine del carousel (con wrap circolare). */
+export const getNextProjects = (currentSlug, count = 2) => {
+  if (projects.length <= 1) return []
+
+  const currentIndex = projects.findIndex((project) => project.slug === currentSlug)
+  if (currentIndex === -1) return []
+
+  const take = Math.min(count, projects.length - 1)
+
+  return Array.from({ length: take }, (_, offset) => {
+    const index = (currentIndex + offset + 1) % projects.length
+    return projects[index]
+  })
+}
+
 export const getProjectExternalLinkLabel = (externalUrl) => {
   if (!externalUrl) return null
   if (/github\.com/i.test(externalUrl)) return 'Repository GitHub'

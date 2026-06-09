@@ -1,21 +1,36 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { isCoarsePointer, smoothScrollToY } from '../utils/scrollToSection'
 
-const SHOW_AFTER_PX = 360
+const FALLBACK_SHOW_AFTER_PX = 280
+
+const resolveScrollAnchor = () =>
+  document.getElementById('hero') ?? document.querySelector('.project-case-header')
+
+const isPastScrollAnchor = () => {
+  const anchor = resolveScrollAnchor()
+  if (!anchor) return window.scrollY > FALLBACK_SHOW_AFTER_PX
+  return anchor.getBoundingClientRect().bottom <= 0
+}
 
 const ScrollToTopArrow = () => {
   const [visible, setVisible] = useState(false)
+  const { pathname } = useLocation()
 
   useEffect(() => {
-    const onScroll = () => {
-      setVisible(window.scrollY > SHOW_AFTER_PX)
+    const updateVisibility = () => {
+      setVisible(isPastScrollAnchor())
     }
 
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
+    updateVisibility()
+    window.addEventListener('scroll', updateVisibility, { passive: true })
+    window.addEventListener('resize', updateVisibility, { passive: true })
 
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    return () => {
+      window.removeEventListener('scroll', updateVisibility)
+      window.removeEventListener('resize', updateVisibility)
+    }
+  }, [pathname])
 
   const scrollToTop = () => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

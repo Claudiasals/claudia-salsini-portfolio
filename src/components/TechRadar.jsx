@@ -1,10 +1,16 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import { COMPACT_RADAR_MEDIA_QUERY } from '../constants/breakpoints'
+import {
+  COMPACT_RADAR_MEDIA_QUERY,
+  NON_DESKTOP_RADAR_MEDIA_QUERY,
+  SMARTPHONE_MEDIA_QUERY,
+} from '../constants/breakpoints'
 import { SPOKE_LENGTH_ADJUST_PX_BY_NAME } from '../data/techRadarSkills.js'
 
 export const SPOKE_ICON_GAP = 7.5
 export const ICON_RADIAL_OFFSET = 3
 export const COMPACT_RADAR_ICON_OUTWARD_PX = 10
+/** Su smartphone i raggi (e le icone) sono compressi radialmente dal centro. */
+export const SMARTPHONE_RADIAL_SCALE = 0.5
 
 /** Extra spostamento verso l'esterno in visualizzazione intermedia, per skill. */
 const COMPACT_RADAR_SKILL_EXTRA_OUTWARD_PX = {
@@ -58,10 +64,18 @@ const moveSpokeEndPx = (start, end, adjustPx, stageWidthPx) => {
   }
 }
 
-export const getSpokeGeometry = (skill, stageWidthPx = RADAR_VIEWBOX_SPAN_PX) => {
+export const scaleRadiusFromHub = (radius, scale) =>
+  HUB_RADIUS + (radius - HUB_RADIUS) * scale
+
+export const getSpokeGeometry = (
+  skill,
+  stageWidthPx = RADAR_VIEWBOX_SPAN_PX,
+  radialScale = 1,
+) => {
   const start = polarToPercent(HUB_RADIUS, skill.angle)
-  const scoreEnd = polarToPercent(skill.scoreRadius, skill.angle)
-  const adjustPx = getSpokeLengthAdjustPx(skill)
+  const effectiveScoreRadius = scaleRadiusFromHub(skill.scoreRadius, radialScale)
+  const scoreEnd = polarToPercent(effectiveScoreRadius, skill.angle)
+  const adjustPx = getSpokeLengthAdjustPx(skill) * radialScale
   const score =
     adjustPx === 0 ? scoreEnd : moveSpokeEndPx(start, scoreEnd, adjustPx, stageWidthPx)
 
@@ -231,6 +245,8 @@ const TechRadar = ({
   const stageRef = useRef(null)
   const [stageWidthPx, setStageWidthPx] = useState(RADAR_VIEWBOX_SPAN_PX)
   const [compactIconOutwardPx, setCompactIconOutwardPx] = useState(0)
+  const [smartphoneRadialScale, setSmartphoneRadialScale] = useState(1)
+  const [spokeEndsAtMid, setSpokeEndsAtMid] = useState(false)
   const activeId = activeSkillId ?? skills[0]?.id
   const isDense = skills.length >= 8
   const hubPath = buildClosedPolygonPath(
@@ -263,6 +279,28 @@ const TechRadar = ({
     return () => media.removeEventListener('change', syncOutwardOffset)
   }, [])
 
+  useLayoutEffect(() => {
+    const media = window.matchMedia(SMARTPHONE_MEDIA_QUERY)
+    const syncRadialScale = () => {
+      setSmartphoneRadialScale(media.matches ? SMARTPHONE_RADIAL_SCALE : 1)
+    }
+
+    syncRadialScale()
+    media.addEventListener('change', syncRadialScale)
+    return () => media.removeEventListener('change', syncRadialScale)
+  }, [])
+
+  useLayoutEffect(() => {
+    const media = window.matchMedia(NON_DESKTOP_RADAR_MEDIA_QUERY)
+    const syncSpokeLength = () => {
+      setSpokeEndsAtMid(media.matches)
+    }
+
+    syncSpokeLength()
+    media.addEventListener('change', syncSpokeLength)
+    return () => media.removeEventListener('change', syncSpokeLength)
+  }, [])
+
   return (
     <div
       className={`tech-radar${active ? ' tech-radar--active' : ''}${
@@ -292,6 +330,30 @@ const TechRadar = ({
               <stop offset="50%" stopColor="#38bdf8" />
               <stop offset="100%" stopColor="#6ee7b7" />
             </linearGradient>
+            <radialGradient
+              id="skill-radar-hub-edge-glow"
+              cx="50%"
+              cy="50%"
+              r="50%"
+              gradientUnits="objectBoundingBox"
+            >
+              <stop offset="0%" stopColor="#00d4ff" stopOpacity="0" />
+              <stop offset="58%" stopColor="#00d4ff" stopOpacity="0" />
+              <stop offset="82%" stopColor="#00d4ff" stopOpacity="0.09" />
+              <stop offset="100%" stopColor="#00d4ff" stopOpacity="0.2" />
+            </radialGradient>
+            <radialGradient
+              id="skill-radar-hub-fill"
+              cx="50%"
+              cy="50%"
+              r="50%"
+              gradientUnits="objectBoundingBox"
+            >
+              <stop offset="0%" stopColor="#020617" />
+              <stop offset="52%" stopColor="#020617" />
+              <stop offset="78%" stopColor="#03111f" />
+              <stop offset="100%" stopColor="#062636" />
+            </radialGradient>
           </defs>
 
           <circle className="tech-radar__field" cx="50" cy="50" r={FIELD_RADIUS} fill="none" />
@@ -349,13 +411,17 @@ const TechRadar = ({
 
         <ul className="tech-radar__nodes" role="list">
           {skills.map((skill, index) => {
-            const point = polarToPercent(skill.radius + ICON_RADIAL_OFFSET, skill.angle)
+            const effectiveRadius = scaleRadiusFromHub(
+              skill.radius + ICON_RADIAL_OFFSET,
+              smartphoneRadialScale,
+            )
+            const point = polarToPercent(effectiveRadius, skill.angle)
             const compactSkillExtraPx = compactIconOutwardPx
               ? (COMPACT_RADAR_SKILL_EXTRA_OUTWARD_PX[skill.name] ?? 0)
               : 0
             const radialOffset = getNodeRadialOffsetPx(
               skill,
-              compactIconOutwardPx + compactSkillExtraPx,
+              (compactIconOutwardPx + compactSkillExtraPx) * smartphoneRadialScale,
             )
             const activeOffsets = getActiveNodeOffsets(skill, isDense)
             const isActive = activeId === skill.id
@@ -400,9 +466,14 @@ const TechRadar = ({
           focusable="false"
         >
           {skills.map((skill) => {
-            const { start, score, mid } = getSpokeGeometry(skill, stageWidthPx)
+            const { start, score, mid } = getSpokeGeometry(
+              skill,
+              stageWidthPx,
+              smartphoneRadialScale,
+            )
             const isActive = activeId === skill.id
-            const spokePath = `M ${start.x} ${start.y} L ${score.x} ${score.y}`
+            const spokeEnd = spokeEndsAtMid ? mid : score
+            const spokePath = `M ${start.x} ${start.y} L ${spokeEnd.x} ${spokeEnd.y}`
 
             return (
               <g
@@ -414,8 +485,14 @@ const TechRadar = ({
                 <path className="skills-radar-bridge__glow tech-radar__spoke-glow" d={spokePath} />
                 <path className="skills-radar-bridge__line tech-radar__spoke-line" d={spokePath} />
                 <JointDot x={start.x} y={start.y} size="hub" />
-                <JointDot x={mid.x} y={mid.y} />
-                <JointDot x={score.x} y={score.y} size="terminal" />
+                {spokeEndsAtMid ? (
+                  <JointDot x={mid.x} y={mid.y} size="mid" />
+                ) : (
+                  <>
+                    <JointDot x={mid.x} y={mid.y} />
+                    <JointDot x={score.x} y={score.y} size="terminal" />
+                  </>
+                )}
               </g>
             )
           })}

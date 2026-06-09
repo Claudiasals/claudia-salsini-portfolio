@@ -2,45 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { projects } from '../data/projects'
 import ProjectCarouselCard from './ProjectCarouselCard'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
+import { getCarouselDotWaveDistance } from '../utils/carouselDotWave'
 import {
   getActiveProjectIndex,
   initProjectCarouselLoop,
-  scrollProjectCarouselBy,
   scrollProjectCarouselToProjectIndex,
 } from '../utils/projectCarousel'
 
 const LOOP_SET_COUNT = 3
-
-const ChevronIcon = ({ direction }) => (
-  <svg
-    className="projects-carousel-nav__icon"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-  >
-    <defs>
-      <linearGradient
-        id={`projects-chevron-${direction}`}
-        x1="0%"
-        y1="0%"
-        x2="100%"
-        y2="100%"
-      >
-        <stop offset="0%" stopColor="#9333ea" />
-        <stop offset="50%" stopColor="#38bdf8" />
-        <stop offset="100%" stopColor="#6ee7b7" />
-      </linearGradient>
-    </defs>
-    <path
-      d={direction === 'left' ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6'}
-      stroke={`url(#projects-chevron-${direction})`}
-      strokeWidth="2.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-)
 
 /** Tre sequenze 1-2-3: scorrimento lineare, loop senza card “clone” singole. */
 const buildCarouselSlides = (items) => {
@@ -90,12 +59,6 @@ const Projects = () => {
     }
   }, [slidesKey])
 
-  const scrollProjects = (direction) => {
-    const track = trackRef.current
-    if (!track) return
-    scrollProjectCarouselBy(track, direction)
-  }
-
   const goToProject = (projectIndex) => {
     const track = trackRef.current
     if (!track) return
@@ -133,61 +96,46 @@ const Projects = () => {
         </ScrollRevealItem>
 
         <div className="projects-carousel mt-10">
-          <div
-            ref={trackRef}
-            className="projects-carousel-track"
-            data-carousel-loop={loopEnabled ? 'true' : undefined}
-            data-carousel-set-size={projects.length}
-          >
-            {slides.map(({ key, project, carouselSlide }) => (
-              <ProjectCarouselCard
-                key={key}
-                project={project}
-                trackRef={trackRef}
-                carouselSlide={carouselSlide}
-              />
-            ))}
+          <div className="projects-carousel-stage">
+            <div
+              ref={trackRef}
+              className="projects-carousel-track"
+              data-carousel-loop={loopEnabled ? 'true' : undefined}
+              data-carousel-set-size={projects.length}
+            >
+              {slides.map(({ key, project, carouselSlide }) => (
+                <ProjectCarouselCard
+                  key={key}
+                  project={project}
+                  trackRef={trackRef}
+                  carouselSlide={carouselSlide}
+                />
+              ))}
+            </div>
           </div>
 
           {loopEnabled ? (
-            <div className="projects-carousel-controls" aria-label="Navigazione progetti">
-              <button
-                type="button"
-                className="projects-carousel-nav"
-                onClick={() => scrollProjects(-1)}
-                aria-label="Progetto precedente"
-              >
-                <span className="projects-carousel-nav-inner">
-                  <ChevronIcon direction="left" />
-                </span>
-              </button>
+            <div className="projects-carousel-dots" role="tablist" aria-label="Progetti">
+              {projects.map((project, index) => {
+                const waveDistance = getCarouselDotWaveDistance(index, activeProjectIndex)
+                const isActive = activeProjectIndex === index
 
-              <div className="projects-carousel-dots" role="tablist" aria-label="Progetti">
-                {projects.map((project, index) => (
-                  <button
-                    key={project.slug}
-                    type="button"
-                    role="tab"
-                    className={`projects-carousel-dot${
-                      activeProjectIndex === index ? ' projects-carousel-dot--active' : ''
-                    }`}
-                    aria-selected={activeProjectIndex === index}
-                    aria-label={`Vai a ${project.title}`}
-                    onClick={() => goToProject(index)}
-                  />
-                ))}
-              </div>
-
-              <button
-                type="button"
-                className="projects-carousel-nav"
-                onClick={() => scrollProjects(1)}
-                aria-label="Progetto successivo"
-              >
-                <span className="projects-carousel-nav-inner">
-                  <ChevronIcon direction="right" />
-                </span>
-              </button>
+                return (
+                  <span key={project.slug} className="projects-carousel-dot-cell">
+                    <button
+                      type="button"
+                      role="tab"
+                      className={`projects-carousel-dot${
+                        isActive ? ' projects-carousel-dot--active' : ''
+                      }`}
+                      data-wave-distance={waveDistance}
+                      aria-selected={isActive}
+                      aria-label={`Vai a ${project.title}`}
+                      onClick={() => goToProject(index)}
+                    />
+                  </span>
+                )
+              })}
             </div>
           ) : null}
         </div>

@@ -51,6 +51,15 @@ const ProjectCarouselCard = ({ project, trackRef, carouselSlide = 'real' }) => {
       aria-hidden={isLoopDuplicate ? true : undefined}
     >
       <div className="skills-category-inner skills-category-inner--project">
+        {!isLoopDuplicate ? (
+          <Link
+            to={`/progetti/${project.slug}`}
+            className="project-carousel-card__hit-area"
+            aria-label={`Apri ${project.title}`}
+            tabIndex={0}
+          />
+        ) : null}
+
         <div className="project-carousel-card__body">
           <p className="project-carousel-card__category project-card-category">
             <TypingTerminalLabel
@@ -80,7 +89,7 @@ const ProjectCarouselCard = ({ project, trackRef, carouselSlide = 'real' }) => {
           </p>
 
           <div className="project-card-actions project-carousel-card__actions">
-            <Link to={`/progetti/${project.slug}`} className="btn-primary">
+            <Link to={`/progetti/${project.slug}`} className="btn-primary project-carousel-card__cta">
               <span className="btn-primary-inner">
                 <span className="btn-primary-text">Vai al progetto</span>
               </span>

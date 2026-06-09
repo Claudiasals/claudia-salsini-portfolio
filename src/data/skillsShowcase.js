@@ -73,12 +73,6 @@ export const DAILY_STACK = [
     glow: '#007acc',
   },
   {
-    name: 'Git',
-    category: 'tools',
-    icon: 'devicon-git-plain colored',
-    glow: '#f05032',
-  },
-  {
     name: 'JavaScript',
     category: 'frontend',
     icon: 'devicon-javascript-plain colored',
@@ -95,14 +89,6 @@ export const DAILY_STACK = [
     category: 'frontend',
     icon: 'devicon-react-original colored',
     glow: '#61dafb',
-  },
-  {
-    name: 'React Router',
-    category: 'frontend',
-    description:
-      'Routing e navigazione tra pagine, incluse route protette per aree riservate.',
-    icon: 'devicon-reactrouter-plain colored',
-    glow: '#ca4245',
   },
   {
     name: 'Redux Toolkit',
@@ -143,15 +129,63 @@ export const DAILY_STACK = [
     icon: 'devicon-mongodb-plain colored',
     glow: '#47a248',
   },
+  {
+    name: 'Netlify',
+    category: 'tools',
+    icon: 'devicon-netlify-plain colored',
+    glow: '#00c7b7',
+  },
+  {
+    name: 'Render',
+    category: 'tools',
+    image: 'https://cdn.simpleicons.org/render/FFFFFF',
+    glow: '#94a3b8',
+  },
+  {
+    name: 'Figma',
+    category: 'tools',
+    image:
+      'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg',
+    glow: '#a259ff',
+  },
 ]
+
+const resolveStackTools = (names) =>
+  names.map((name) => DAILY_STACK.find((tool) => tool.name === name)).filter(Boolean)
+
+export const getProcessStepStack = (step) => {
+  if (step.stackGroups) {
+    return step.stackGroups.flatMap((group) => resolveStackTools(group.tools))
+  }
+
+  return resolveStackTools(step.stack ?? [])
+}
+
+export const getProcessStepStackGroups = (step) => {
+  if (step.stackGroups) {
+    return step.stackGroups
+      .map((group) => ({
+        id: group.id,
+        label: group.label,
+        tools: resolveStackTools(group.tools),
+      }))
+      .filter((group) => group.tools.length > 0)
+  }
+
+  const tools = getProcessStepStack(step)
+  if (tools.length === 0) return []
+
+  return [{ id: 'default', tools }]
+}
 
 export const PROCESS_STEPS = [
   {
     number: '01',
     label: 'Idea',
-    text: 'Analisi dei requisiti e pianificazione della soluzione.',
+    text: 'Analisi dei requisiti, definizione dei flussi utente, wireframe, mockup, studio dell’interfaccia e pianificazione della soluzione.',
     tone: '#a855f7',
     icon: 'idea',
+    stack: ['Figma'],
   },
   {
     number: '02',
@@ -159,26 +193,49 @@ export const PROCESS_STEPS = [
     text: 'Scrittura di codice pulito, modulare e scalabile.',
     tone: '#3b82f6',
     icon: 'code',
+    stackGroups: [
+      {
+        id: 'frontend',
+        label: 'Frontend',
+        tools: [
+          'VS Code',
+          'JavaScript',
+          'CSS',
+          'React',
+          'Redux Toolkit',
+          'Tailwind',
+          'Vite',
+        ],
+      },
+      {
+        id: 'backend',
+        label: 'Backend',
+        tools: ['Node.js', 'Express', 'MongoDB'],
+      },
+    ],
   },
   {
     number: '03',
     label: 'Test',
-    text: 'Test e debugging per garantire qualita e stabilita.',
+    text: 'Verifica del comportamento, debugging e controllo delle funzionalità prima del rilascio.',
     tone: '#22d3ee',
     icon: 'test',
+    stack: [],
   },
   {
     number: '04',
     label: 'Deploy',
-    text: 'Pubblicazione online con performance e sicurezza.',
+    text: 'Pubblicazione online.',
     tone: '#fb923c',
     icon: 'deploy',
+    stack: ['Netlify', 'Render'],
   },
   {
     number: '05',
     label: 'Evoluzione',
-    text: 'Monitoraggio, feedback e iterazione.',
+    text: 'Monitoraggio, raccolta del feedback degli utenti e iterazione continua sul prodotto, per individuare opportunità di miglioramento e ottimizzare costantemente l\'esperienza offerta.',
     tone: '#a855f7',
     icon: 'evolution',
+    stack: [],
   },
 ]

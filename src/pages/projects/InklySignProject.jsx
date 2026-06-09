@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { ProjectSuggestions } from '../../components/ProjectSuggestions'
 import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
 import { ProjectDemoLink } from '../../components/ProjectDemoLink'
 import { ProjectDemoVideo } from '../../components/ProjectDemoVideo'
@@ -46,31 +47,31 @@ const FEATURES = [
   {
     title: 'Dashboard gestionale',
     text:
-      'Dopo il login si apre l’applicazione completa: nella schermata compare il menu laterale (dashboard, contratti, clienti, template, impostazioni) e, al centro, il riepilogo operativo. Il grafico mostra l’andamento dei contratti firmati nel tempo: serve a leggere subito se il volume di firme cresce, cala o resta stabile, a individuare picchi o cali e a capire se conviene intervenire (follow-up commerciali, verifica invii, effetto di promozioni o periodi più intensi). Accanto, l’elenco delle attività recenti riassume gli ultimi movimenti (contratti creati, inviati, firmati) senza aprire ogni sezione. Da questa vista si passa con un click alle altre aree del gestionale, restando nello stesso ambiente di lavoro.',
-    tags: 'React · Laravel · MySQL · Dashboard',
+      'Dopo il login la dashboard riassume i dati operativi e lo storico dei clienti: andamento delle firme, attività recenti e stato delle pratiche in un’unica vista. La sidebar laterale permette di spostarsi tra contratti, clienti, template e impostazioni senza uscire dall’applicazione.',
+    tags: 'KPI contratti · Storico attività',
     src: '/images/projects/inklysign/dashboard.png',
     alt: 'Dashboard InklySign con menu laterale, grafico contratti firmati e attività recenti',
   },
   {
     title: 'Creazione contratto',
     text:
-      'Da qui avvii un nuovo invio in due modi. Con il template già creato in piattaforma: dal menu a tendina «Template contratto» scegli uno dei modelli che hai definito (intestazione, testo, termini); il sistema applica quel modello e ti chiede solo i dati del cliente da associare, senza riscrivere il contratto da zero. In alternativa, con «Carica contratto custom» carichi un PDF già pronto (ad esempio un accordo redatto altrove) e lo mandi in firma così com’è. In sintesi: puoi far firmare sia i contratti costruiti su InklySign, riutilizzando i template dal menu a tendina, sia documenti esterni già in PDF.',
-    tags: 'React · Laravel · Form · Template · PDF',
+      'La piattaforma permette di avviare l’invio di un contratto in due modi: selezionando un template già configurato, da completare con i dati del cliente, oppure caricando un PDF esterno già pronto. In questo modo InklySign gestisce sia contratti creati direttamente in piattaforma sia documenti personalizzati da inviare in firma.',
+    tags: 'Template · PDF custom · Dati cliente',
     src: '/images/projects/inklysign/new-contract.png',
     alt: 'Creazione contratto con menu template contratto, dati cliente e opzione carica contratto custom in PDF',
   },
   {
     title: 'Firma digitale con OTP',
     text:
-      'La firma funziona in due modalità. In presenza: il cliente firma a mano sul pad, accetta i termini e, per una verifica aggiuntiva, conferma l’operazione con il codice OTP ricevuto via email. Da remoto: il cliente riceve il link e le istruzioni per e-mail, accede con il proprio codice fiscale, legge il contratto e gli allegati se presenti, allega il documento d’identità, firma il contratto, inserisce l’OTP di verifica ricevuto per e-mail, infine conferma e il contratto viene mandato firmato all’azienda, che riceve una notifica sia per e-mail sia in piattaforma nella sezione notifiche. In entrambi i casi l’OTP collega la firma all’indirizzo email del firmatario.',
-    tags: 'OTP · PDF · Firma digitale · Laravel',
+      'La firma può avvenire in presenza, tramite pad e conferma OTP via email, oppure da remoto, tramite link ricevuto dal cliente. In entrambi i casi il sistema guida l’utente nella lettura, verifica e firma del contratto, notificando poi l’azienda a operazione conclusa.',
+    tags: 'Firma in presenza · Firma remota · Verifica OTP',
     src: '/images/projects/inklysign/signature-otp.png',
     alt: 'Firma digitale InklySign con pad firma, accettazione termini e verifica OTP via email',
   },
   {
     title: 'Gestione template',
     text: 'Personalizzazione di intestazione, contenuti legali, privacy policy e termini associati ai documenti, con variabili riutilizzabili su più contratti.',
-    tags: 'Laravel · PDF · Template · Privacy',
+    tags: 'Variabili dinamiche · Termini · Privacy policy',
     screens: [
       {
         src: '/images/projects/inklysign/contract-templates.png',
@@ -88,7 +89,7 @@ const FEATURES = [
     title: 'Area super-admin',
     text:
       'Pannello riservato al Super Admin, separato dall’esperienza delle singole aziende: da qui si governano impostazioni globali, notifiche, anagrafica aziende e regole comuni a tutta la piattaforma. Nelle Impostazioni puoi gestire le FAQ mostrate nel chatbox della pagina di login (creazione, modifica, eliminazione e scelta di quali domande fissare in evidenza nel widget). Nella stessa area configuri i codici sconto: nome interno, codice promozionale, percentuale, intervallo di validità e stato attivo, con azioni rapide per modifica, invio e disattivazione.',
-    tags: 'Laravel · Ruoli · Multi-tenant · API',
+    tags: 'Gestione FAQ e codici sconto',
     screens: [
       {
         src: '/images/projects/inklysign/super-admin-faq.png',
@@ -116,9 +117,16 @@ const STACK_HIGHLIGHTS = [
     tags: 'PHP · Laravel',
   },
   {
-    title: 'Dati e produzione',
-    text: 'MySQL e l’architettura full stack hanno consentito di gestire dati persistenti, relazioni tra entità e rilascio reale dell’applicazione.',
+    title: 'Dati e persistenza',
+    text:
+      'MySQL per organizzare in modo relazionale aziende, utenti, clienti, contratti, template, abbonamenti e storico delle azioni.',
     tags: 'MySQL',
+  },
+  {
+    title: 'Deploy',
+    text:
+      'Messa online dell’applicazione su server gestito tramite Plesk: configurazione dominio, ambiente PHP/Laravel e database in produzione.',
+    tags: 'VPS · Plesk',
   },
 ]
 
@@ -274,30 +282,19 @@ const InklySignProject = () => {
 
             <div className="project-case-stack-narrative">
               <p>
-                Per questo progetto ho utilizzato uno stack full stack basato su React, Vite,
-                Tailwind CSS, PHP, Laravel e MySQL, scelto per costruire una piattaforma web
-                strutturata, scalabile e adatta alla gestione di dati, documenti e flussi applicativi
-                complessi.
+                Per questo progetto ho utilizzato uno stack full stack con React, Vite, Tailwind CSS,
+                PHP, Laravel e MySQL, scelto per sviluppare una piattaforma web strutturata e scalabile.
               </p>
               <p>
-                React, Vite e Tailwind CSS hanno permesso di sviluppare un&apos;interfaccia modulare,
-                con componenti riutilizzabili per dashboard, form, tabelle, flussi guidati e aree
-                riservate. Vite ha reso più rapido il processo di sviluppo e build.
+                React, Vite e Tailwind CSS sono stati usati per costruire un&apos;interfaccia modulare e
+                riutilizzabile, mentre Laravel ha gestito autenticazione, ruoli, API, upload dei
+                documenti, generazione dei PDF e flussi di firma. MySQL ha permesso di organizzare i
+                dati relativi ad aziende, utenti, clienti, contratti, template e abbonamenti.
               </p>
               <p>
-                PHP e Laravel hanno fornito una struttura solida per gestire autenticazione, ruoli,
-                API, logiche server, validazioni, upload dei documenti, generazione dei PDF e flussi
-                legati alla firma.
-              </p>
-              <p>
-                MySQL ha supportato la persistenza dei dati, consentendo di organizzare in modo
-                relazionale aziende, utenti, clienti, contratti, template, abbonamenti e storico
-                delle azioni.
-              </p>
-              <p>
-                Questo stack mi ha permesso di lavorare su un percorso completo: dalla progettazione
-                dell&apos;interfaccia alla gestione del database, dalle logiche applicative lato server
-                fino al rilascio dell&apos;applicazione in ambiente di produzione.
+                Questo stack mi ha permesso di seguire l&apos;intero sviluppo del progetto,
+                dall&apos;interfaccia al database, fino al rilascio in produzione su server gestito con
+                Plesk.
               </p>
             </div>
           </section>
@@ -314,6 +311,8 @@ const InklySignProject = () => {
               </span>
             </a>
           </ProjectCaseHeroActions>
+
+          <ProjectSuggestions currentSlug="inklysign" />
         </article>
       </div>
     </main>

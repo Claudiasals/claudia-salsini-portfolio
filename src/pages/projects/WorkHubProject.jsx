@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { ProjectSuggestions } from '../../components/ProjectSuggestions'
 import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
 import { ProjectDemoLink } from '../../components/ProjectDemoLink'
 import { ProjectDemoVideo } from '../../components/ProjectDemoVideo'
@@ -374,34 +375,25 @@ const WorkHubProject = () => (
 
           <div className="project-case-stack-narrative">
             <p>
-              Per questo progetto abbiamo utilizzato uno stack full stack basato su React, Vite,
-              Tailwind CSS, Redux Toolkit, Node.js, Express e MongoDB, scelto per costruire un
-              gestionale interno strutturato, modulare e adatto alla gestione di personale, turni,
-              clienti, magazzino, ordini, ticket e flussi operativi aziendali.
+              Per questo progetto abbiamo utilizzato uno stack full stack con React, Vite, Tailwind
+              CSS, Redux Toolkit, Node.js, Express e MongoDB, scelto per sviluppare un gestionale
+              interno modulare e strutturato.
             </p>
             <p>
-              React, Vite e Tailwind CSS hanno permesso di sviluppare un&apos;interfaccia modulare,
-              con componenti riutilizzabili per dashboard, tabelle, drawer, form e aree riservate
-              con viste role-based per admin e dipendenti. Vite ha reso più rapido il processo di
-              sviluppo e build; Redux Toolkit e React Router hanno gestito stato globale, routing
-              protetto e integrazione tra i moduli dell&apos;applicazione.
+              React, Vite e Tailwind CSS sono stati usati per costruire interfacce riutilizzabili per
+              dashboard, tabelle, form e aree riservate con viste differenziate per admin e
+              dipendenti. Redux Toolkit e React Router hanno gestito stato globale, routing protetto e
+              collegamento tra i moduli.
             </p>
             <p>
-              Node.js ed Express hanno fornito una struttura solida per gestire autenticazione JWT,
-              2FA opzionale, ruoli, API REST, logiche server, validazioni Joi, middleware di
-              sicurezza e i flussi legati a ordini, inventario, ticketing ed eventi aziendali.
+              Node.js ed Express hanno permesso di sviluppare API REST, autenticazione JWT, ruoli,
+              validazioni, middleware di sicurezza e logiche legate a ordini, inventario, ticket ed
+              eventi aziendali. MongoDB ha supportato la gestione flessibile dei dati relativi a
+              utenti, turni, clienti, prodotti, ordini e ticket.
             </p>
             <p>
-              MongoDB ha supportato la persistenza dei dati, consentendo di organizzare utenti,
-              turni, ferie, clienti, prodotti, giacenze, ordini, punti vendita, ticket ed eventi
-              della bacheca in un&apos;architettura flessibile, con separazione netta tra client e
-              server.
-            </p>
-            <p>
-              Questo stack ci ha permesso di lavorare su un percorso completo in team: dalla
-              progettazione dell&apos;interfaccia e della shell condivisa alla definizione dei modelli
-              e delle query MongoDB, dalle logiche applicative lato server fino all&apos;integrazione
-              end-to-end di ogni modulo nelle API REST condivise.
+              Questo stack ci ha permesso di lavorare in team su un percorso completo,
+              dall&apos;interfaccia alle logiche server, fino all&apos;integrazione end-to-end dei moduli.
             </p>
           </div>
         </section>
@@ -418,6 +410,8 @@ const WorkHubProject = () => (
             </span>
           </ProjectDemoLink>
         </ProjectCaseHeroActions>
+
+        <ProjectSuggestions currentSlug="workhub" />
       </article>
     </div>
   </main>

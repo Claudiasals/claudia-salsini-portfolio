@@ -7,6 +7,7 @@ import {
   elementIntersectsViewport,
 } from '../utils/sectionReveal'
 import ContactDetailLink from './ContactDetailLink'
+import SectionCircuitBackground from './SectionCircuitBackground'
 
 const TYPING_MS = 70
 const TYPING_GAP_MS = 280
@@ -115,6 +116,8 @@ const Contact = () => {
       ref={sectionRef}
       className="contact-section section-page section-page--contact relative text-white"
     >
+      <SectionCircuitBackground />
+
       <ScrollReveal className="relative z-10 mx-auto max-w-6xl">
         <ScrollRevealItem tier="head">
           <p

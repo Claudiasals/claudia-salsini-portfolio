@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
-import { FiMaximize2, FiX } from 'react-icons/fi'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { FiChevronLeft, FiChevronRight, FiMaximize2, FiX } from 'react-icons/fi'
+import { getCarouselDotWaveDistance } from '../utils/carouselDotWave'
 
 function getFeatureScreens(feature) {
   if (feature.screens?.length) return feature.screens
@@ -9,19 +10,66 @@ function getFeatureScreens(feature) {
   return []
 }
 
+function buildScreenshotGallery(features) {
+  return features.flatMap((feature) =>
+    getFeatureScreens(feature).map((screen) => ({
+      featureTitle: feature.title,
+      src: screen.src,
+      alt: screen.alt,
+      screenLabel: screen.label ?? null,
+    })),
+  )
+}
+
 /**
  * Card per funzionalità: titolo, testo, tag tecnici, screenshot (anche multipli). Click → lightbox.
  */
 export function ProjectFeatureScreens({ features }) {
-  const [active, setActive] = useState(null)
+  const gallery = useMemo(() => buildScreenshotGallery(features), [features])
+  const [activeIndex, setActiveIndex] = useState(null)
 
-  const close = useCallback(() => setActive(null), [])
+  const activeSlide = activeIndex == null ? null : gallery[activeIndex]
+  const hasMultipleSlides = gallery.length > 1
+
+  const close = useCallback(() => setActiveIndex(null), [])
+
+  const goToSlide = useCallback(
+    (index) => {
+      if (index < 0 || index >= gallery.length) return
+      setActiveIndex(index)
+    },
+    [gallery.length],
+  )
+
+  const goPrevious = useCallback(() => {
+    if (activeIndex == null || activeIndex <= 0) return
+    setActiveIndex(activeIndex - 1)
+  }, [activeIndex])
+
+  const goNext = useCallback(() => {
+    if (activeIndex == null || activeIndex >= gallery.length - 1) return
+    setActiveIndex(activeIndex + 1)
+  }, [activeIndex, gallery.length])
 
   useEffect(() => {
-    if (!active) return undefined
+    if (activeIndex == null) return undefined
 
     const onKeyDown = (event) => {
-      if (event.key === 'Escape') close()
+      if (event.key === 'Escape') {
+        close()
+        return
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault()
+        goNext()
+        return
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault()
+        goPrevious()
+      }
     }
 
     const previousOverflow = document.body.style.overflow
@@ -32,16 +80,9 @@ export function ProjectFeatureScreens({ features }) {
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', onKeyDown)
     }
-  }, [active, close])
+  }, [activeIndex, close, goNext, goPrevious])
 
-  const openLightbox = (feature, screen) => {
-    setActive({
-      title: feature.title,
-      src: screen.src,
-      alt: screen.alt,
-      screenLabel: screen.label,
-    })
-  }
+  let galleryCursor = 0
 
   return (
     <>
@@ -64,11 +105,11 @@ export function ProjectFeatureScreens({ features }) {
             >
               <div className="project-case-feature-screens__copy">
                 <h3 className="project-case-feature-screens__title">{feature.title}</h3>
-              <p className="project-case-card__text">{feature.text}</p>
+                <p className="project-case-card__text">{feature.text}</p>
 
-              {feature.tags ? (
-                <p className="project-case-feature-screens__tags">{feature.tags}</p>
-              ) : null}
+                {feature.tags ? (
+                  <p className="project-case-feature-screens__tags">{feature.tags}</p>
+                ) : null}
 
                 {screens.length === 0 && feature.fallback ? (
                   <p className="project-case-feature-screens__fallback">{feature.fallback}</p>
@@ -85,7 +126,9 @@ export function ProjectFeatureScreens({ features }) {
                     }
                   >
                     {screens.map((screen) => {
-                      const openScreen = () => openLightbox(feature, screen)
+                      const slideIndex = galleryCursor
+                      galleryCursor += 1
+                      const openScreen = () => setActiveIndex(slideIndex)
 
                       return (
                         <div key={screen.src} className="project-case-feature-screens__shot">
@@ -129,12 +172,12 @@ export function ProjectFeatureScreens({ features }) {
         })}
       </ul>
 
-      {active?.src ? (
+      {activeSlide ? (
         <div
           className="project-screenshot-lightbox"
           role="dialog"
           aria-modal="true"
-          aria-label={active.title}
+          aria-label={activeSlide.featureTitle}
           onClick={close}
         >
           <button
@@ -147,19 +190,84 @@ export function ProjectFeatureScreens({ features }) {
               <FiX className="project-screenshot-lightbox__close-icon" aria-hidden />
             </span>
           </button>
+
+          {hasMultipleSlides ? (
+            <button
+              type="button"
+              className="nav-btn project-screenshot-lightbox__nav project-screenshot-lightbox__nav--prev"
+              onClick={(event) => {
+                event.stopPropagation()
+                goPrevious()
+              }}
+              disabled={activeIndex <= 0}
+              aria-label="Screenshot precedente"
+            >
+              <span className="nav-btn-inner project-screenshot-lightbox__nav-inner">
+                <FiChevronLeft className="project-screenshot-lightbox__nav-icon" aria-hidden />
+              </span>
+            </button>
+          ) : null}
+
+          {hasMultipleSlides ? (
+            <button
+              type="button"
+              className="nav-btn project-screenshot-lightbox__nav project-screenshot-lightbox__nav--next"
+              onClick={(event) => {
+                event.stopPropagation()
+                goNext()
+              }}
+              disabled={activeIndex >= gallery.length - 1}
+              aria-label="Screenshot successivo"
+            >
+              <span className="nav-btn-inner project-screenshot-lightbox__nav-inner">
+                <FiChevronRight className="project-screenshot-lightbox__nav-icon" aria-hidden />
+              </span>
+            </button>
+          ) : null}
+
           <div
             className="project-screenshot-lightbox__inner"
             onClick={(event) => event.stopPropagation()}
           >
+            <p className="project-screenshot-lightbox__section-title">{activeSlide.featureTitle}</p>
+
             <img
-              src={active.src}
-              alt={active.alt}
+              src={activeSlide.src}
+              alt={activeSlide.alt}
               className="project-screenshot-lightbox__img"
             />
-            <p className="project-screenshot-lightbox__caption">
-              {active.title}
-              {active.screenLabel ? ` — ${active.screenLabel}` : ''}
-            </p>
+
+            {activeSlide.screenLabel ? (
+              <p className="project-screenshot-lightbox__caption">{activeSlide.screenLabel}</p>
+            ) : null}
+
+            {hasMultipleSlides ? (
+              <div
+                className="project-screenshot-lightbox__dots projects-carousel-dots"
+                role="tablist"
+                aria-label="Screenshot del progetto"
+              >
+                {gallery.map((slide, index) => {
+                  const waveDistance = getCarouselDotWaveDistance(index, activeIndex)
+
+                  return (
+                    <span key={`${slide.src}-${index}`} className="projects-carousel-dot-cell">
+                      <button
+                        type="button"
+                        role="tab"
+                        className={`projects-carousel-dot${
+                          activeIndex === index ? ' projects-carousel-dot--active' : ''
+                        }`}
+                        data-wave-distance={waveDistance}
+                        aria-selected={activeIndex === index}
+                        aria-label={`${slide.featureTitle}${slide.screenLabel ? ` — ${slide.screenLabel}` : ''}`}
+                        onClick={() => goToSlide(index)}
+                      />
+                    </span>
+                  )
+                })}
+              </div>
+            ) : null}
           </div>
         </div>
       ) : null}

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { ProjectSuggestions } from '../../components/ProjectSuggestions'
 import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
 import { ProjectDemoLink } from '../../components/ProjectDemoLink'
 import { ProjectDemoVideo } from '../../components/ProjectDemoVideo'
@@ -54,15 +55,15 @@ const FEATURES = [
     title: 'Accesso area riservata',
     text:
       'Login con username e password per entrare nel pannello admin; dal link «Password dimenticata» si avvia il flusso di recupero credenziali.',
-    tags: 'JWT · Admin',
+    tags: 'Login admin',
     src: '/images/projects/francesca-gandelli/admin-login.png',
     alt: 'Pagina di login admin con username, password e link Password dimenticata',
   },
   {
     title: 'Recupero password con OTP',
     text:
-      'Flusso guidato in tre step: inserimento email collegata all’account, verifica del codice OTP ricevuto per posta e scelta di una nuova password.',
-    tags: 'Nodemailer · OTP · Sicurezza',
+      'Flusso guidato in tre step: inserimento dell’email collegata all’account; verifica del codice OTP, ricevuto per e-mail; scelta di una nuova password.',
+    tags: 'Verifica OTP',
     screens: [
       {
         src: '/images/projects/francesca-gandelli/admin-password-recovery.png',
@@ -85,15 +86,14 @@ const FEATURES = [
     title: 'Gestione categorie',
     text:
       'Dalla sezione Photography la cliente può creare nuove categorie, riordinarle ed eliminarle con i pulsanti dedicati, senza interventi tecnici.',
-    tags: 'MongoDB · Express · Categorie',
+    tags: 'CRUD · Reorder',
     src: '/images/projects/francesca-gandelli/admin-photography.png',
     alt: 'Pannello admin Photography con pulsanti aggiungi categoria, riordina ed elimina categoria',
   },
   {
-    title: 'Conferma eliminazioni',
+    title: 'Error Prevention',
     text:
       'Prima di cancellare categorie o foto compare un modale di conferma, per evitare eliminazioni accidentali e rendere le operazioni più sicure.',
-    tags: 'UX · Admin · Sicurezza',
     src: '/images/projects/francesca-gandelli/admin-categories.png',
     alt: 'Modale di conferma eliminazione categoria nel pannello admin',
   },
@@ -101,7 +101,7 @@ const FEATURES = [
     title: 'Gestione foto in galleria',
     text:
       'All’interno di ogni galleria sono presenti pulsanti per aggiungere foto, riordinarle ed eliminarle. Multer gestisce l’upload dal pannello admin; Cloudinary archivia e serve le immagini con ottimizzazione automatica e CDN. Servizio scelto per non appesantire il backend e rendere le gallerie più veloci da caricare.',
-    tags: 'Cloudinary · Multer · Gallerie',
+    tags: 'Multer · Cloudinary · Reorder',
     src: '/images/projects/francesca-gandelli/admin-gallery.png',
     alt: 'Pannello admin galleria con pulsanti aggiungi foto, riordina ed elimina foto',
   },
@@ -109,7 +109,7 @@ const FEATURES = [
     title: 'Testi modificabili',
     text:
       'In tutte le sezioni del sito con contenuto testuale modificabile compare l’indicazione «clicca sul testo per modificarlo»: la cliente può personalizzare i contenuti direttamente dall’admin.',
-    tags: 'MongoDB · Express · Contenuti',
+    tags: 'Inline Editing',
     src: '/images/projects/francesca-gandelli/admin-contacts.png',
     alt: 'Pagina Contatti admin con invito a cliccare sul testo per modificarlo e form messaggi',
   },
@@ -313,6 +313,8 @@ const FrancescaGandelliProject = () => (
             </span>
           </a>
         </ProjectCaseHeroActions>
+
+        <ProjectSuggestions currentSlug="francesca-gandelli" />
       </article>
     </div>
   </main>

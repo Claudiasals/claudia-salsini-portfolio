@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import {
   FiCheckSquare,
   FiCode,
@@ -7,13 +7,12 @@ import {
 import { LuLightbulb } from 'react-icons/lu'
 import { RxRocket } from 'react-icons/rx'
 import {
-  DAILY_STACK,
-  getDailyStackSkillDetail,
+  getProcessStepStackGroups,
   getRadarSkillsByCategory,
   PROCESS_STEPS,
   SKILL_CATEGORY_TABS,
 } from '../data/skillsShowcase'
-import { COMPACT_RADAR_MEDIA_QUERY, SMARTPHONE_MEDIA_QUERY } from '../constants/breakpoints'
+import { SMARTPHONE_MEDIA_QUERY } from '../constants/breakpoints'
 import { SECTION_REVEAL_EVENT, elementIntersectsViewport } from '../utils/sectionReveal'
 import '../skills.css'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
@@ -99,6 +98,7 @@ const NODE_BRIDGE_HORIZONTAL_RIGHT_PX = 40
 const NODE_BRIDGE_SHIFT_UP_PX = 30
 const NODE_JS_BRIDGE_EXTRA_SHIFT_UP_PX = 24
 const GIT_BRIDGE_EXTRA_SHIFT_UP_PX = 15
+const GIT_BRIDGE_SHIFT_DOWN_PX = 10
 const HTML_BRIDGE_EXTRA_SHIFT_UP_PX = 15
 const NODE_CARD_SHIFT_UP_PX = 70
 const JAVASCRIPT_BRIDGE_ICON_GAP_PX = 18
@@ -379,8 +379,9 @@ const buildNodeDetailLayout = (
   const baseElbowY = baseJointY - NODE_BRIDGE_VERTICAL_UP_PX
   const extraBridgeShiftUp = getNodeBridgeExtraShiftUpPx(skill.name)
   const bridgeShiftUp = NODE_BRIDGE_SHIFT_UP_PX + extraBridgeShiftUp
-  const jointY = baseJointY - bridgeShiftUp
-  const elbowY = baseElbowY - bridgeShiftUp
+  const bridgeShiftDown = skill.name === 'Git' ? GIT_BRIDGE_SHIFT_DOWN_PX : 0
+  const jointY = baseJointY - bridgeShiftUp + bridgeShiftDown
+  const elbowY = baseElbowY - bridgeShiftUp + bridgeShiftDown
   const elbowX = jointX + NODE_BRIDGE_HORIZONTAL_RIGHT_PX
   const cardLeftX = elbowX + cardOffset.x
   const detailTop =
@@ -474,9 +475,6 @@ const buildPhpDetailLayout = (
 const isMobileRadarLayout = () =>
   typeof window !== 'undefined' && window.matchMedia(SMARTPHONE_MEDIA_QUERY).matches
 
-const isCompactRadarLayout = () =>
-  typeof window !== 'undefined' && window.matchMedia(COMPACT_RADAR_MEDIA_QUERY).matches
-
 const buildMobileRadarDetailLayout = (_skill, radarEl, clusterEl, cardEl) => {
   const stage = radarEl.querySelector('.tech-radar__stage')
   if (!stage || !cardEl) return null
@@ -490,27 +488,6 @@ const buildMobileRadarDetailLayout = (_skill, radarEl, clusterEl, cardEl) => {
 
   return {
     placement: 'mobile',
-    detailTop: null,
-    detailOffsetLeft: null,
-    detailOffsetRight: null,
-    bridge: null,
-  }
-}
-
-const buildCompactRadarDetailLayout = (skill, radarEl, cardEl) => {
-  const clusterEl = radarEl.closest('.skills-radar-cluster')
-  const stage = radarEl.querySelector('.tech-radar__stage')
-  if (!clusterEl || !stage || !cardEl) return null
-
-  const clusterRect = clusterEl.getBoundingClientRect()
-  const cardRect = cardEl.getBoundingClientRect()
-
-  if (clusterRect.width < 1 || clusterRect.height < 1 || cardRect.height < 1) {
-    return null
-  }
-
-  return {
-    placement: 'compact',
     detailTop: null,
     detailOffsetLeft: null,
     detailOffsetRight: null,
@@ -534,10 +511,6 @@ const buildRadarDetailLayout = (
 
   if (isMobileRadarLayout()) {
     return buildMobileRadarDetailLayout(skill, radarEl, clusterEl, cardEl)
-  }
-
-  if (isCompactRadarLayout()) {
-    return buildCompactRadarDetailLayout(skill, radarEl, cardEl)
   }
 
   if (!leftSlotEl) return null
@@ -951,52 +924,7 @@ const RadarDetailBridge = ({ geometry }) => {
   )
 }
 
-const ProcessArrow = ({ from, to, index, curveUp }) => {
-  const gradId = `skills-process-arrow-grad-${index}`
-  const markerId = `skills-process-arrowhead-${index}`
-  const path = curveUp ? 'M 2 14 Q 24 4, 46 14' : 'M 2 14 Q 24 24, 46 14'
-
-  return (
-    <svg
-      className="skills-process-arrow"
-      viewBox="0 0 48 28"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <defs>
-        <linearGradient
-          id={gradId}
-          x1="2"
-          y1="14"
-          x2="46"
-          y2="14"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop offset="0%" stopColor={from} />
-          <stop offset="100%" stopColor={to} />
-        </linearGradient>
-        <marker
-          id={markerId}
-          viewBox="0 0 8 8"
-          refX="7"
-          refY="4"
-          markerWidth="6"
-          markerHeight="6"
-          orient="auto"
-          markerUnits="userSpaceOnUse"
-        >
-          <path d="M0,0 L8,4 L0,8 Z" fill={to} />
-        </marker>
-      </defs>
-      <path
-        className="skills-process-arrow__path"
-        d={path}
-        stroke={`url(#${gradId})`}
-        markerEnd={`url(#${markerId})`}
-      />
-    </svg>
-  )
-}
+const DEFAULT_PROCESS_INDEX = 1
 
 const Skills = () => {
   const radarRef = useRef(null)
@@ -1011,7 +939,7 @@ const Skills = () => {
   const [activeSkillId, setActiveSkillId] = useState(
     () => getRadarSkillsByCategory(DEFAULT_CATEGORY)[0]?.id ?? null,
   )
-  const [activeStackName, setActiveStackName] = useState(null)
+  const [activeProcessIndex, setActiveProcessIndex] = useState(DEFAULT_PROCESS_INDEX)
 
   const categorySkills = useMemo(
     () => getRadarSkillsByCategory(activeCategory),
@@ -1033,10 +961,14 @@ const Skills = () => {
     skillsEyebrowRef,
   )
 
-  const activeStackSkill = useMemo(() => {
-    const item = DAILY_STACK.find((tool) => tool.name === activeStackName)
-    return item ? getDailyStackSkillDetail(item) : null
-  }, [activeStackName])
+  const activeProcessStep = PROCESS_STEPS[activeProcessIndex] ?? PROCESS_STEPS[0]
+  const activeProcessStackGroups = useMemo(
+    () => getProcessStepStackGroups(activeProcessStep),
+    [activeProcessStep],
+  )
+  const selectProcessStep = useCallback((index) => {
+    setActiveProcessIndex(index)
+  }, [])
 
   const selectCategory = useCallback((categoryId) => {
     const skills = getRadarSkillsByCategory(categoryId)
@@ -1118,14 +1050,9 @@ const Skills = () => {
             </h2>
           </ScrollRevealItem>
 
-          <ScrollRevealItem tier="head" className="skills-intro">
-            <p className="skills-copy section-lead">
-              Tecnologie, strumenti e competenze che utilizzo per trasformare idee
-              in prodotti digitali.
-            </p>
-
+          <ScrollRevealItem tier="head" className="skills-showcase__sidebar">
             <div
-              className="skills-category-tabs skills-intro__tabs"
+              className="skills-category-tabs skills-showcase__tabs"
               role="tablist"
               aria-label="Categorie competenze"
             >
@@ -1145,7 +1072,7 @@ const Skills = () => {
                     }`}
                   >
                     {tab.label}
-              </span>
+                  </span>
                 </button>
               ))}
             </div>
@@ -1180,15 +1107,11 @@ const Skills = () => {
                   ? ' skills-radar-cluster__detail--left'
                   : radarDetailLayout?.placement === 'mobile'
                     ? ' skills-radar-cluster__detail--mobile'
-                    : radarDetailLayout?.placement === 'compact'
-                      ? ' skills-radar-cluster__detail--compact'
-                      : ' skills-radar-cluster__detail--right'
+                    : ' skills-radar-cluster__detail--right'
               }`}
               ref={radarCardRef}
               style={
-                radarDetailLayout &&
-                radarDetailLayout.placement !== 'mobile' &&
-                radarDetailLayout.placement !== 'compact'
+                radarDetailLayout && radarDetailLayout.placement !== 'mobile'
                   ? {
                       top: `${radarDetailLayout.detailTop}px`,
                       ...(radarDetailLayout.placement === 'left'
@@ -1212,93 +1135,95 @@ const Skills = () => {
             <RadarDetailBridge geometry={radarDetailLayout?.bridge} />
           </ScrollRevealItem>
 
-          <ScrollRevealItem tier="content" className="skills-process">
+          <ScrollRevealItem tier="content" className="skills-process-zone skills-process">
             <h3 className="skills-subsection-title project-case-feature-screens__title">
-              Dal codice al prodotto
+              stack quotidiano: dall&apos;idea alla produzione
             </h3>
+            <p className="skills-process__lede">
+              Tecnologie, strumenti e competenze che utilizzo quotidianamente per trasformare
+              idee in prodotti digitali.
+            </p>
 
-            <div className="skills-process-track">
-              <div className="skills-process-list" role="list">
+            <div
+              className="skills-pipeline"
+              style={{ '--active-index': activeProcessIndex }}
+            >
+              <div className="skills-pipeline__track" role="tablist" aria-label="Fasi del workflow">
+                <div className="skills-pipeline__rail" aria-hidden="true">
+                  <span className="skills-pipeline__rail-glow" />
+            </div>
+
                 {PROCESS_STEPS.map((step, index) => {
-                const Icon = processIcons[step.icon]
-                  const nextStep = PROCESS_STEPS[index + 1]
+                  const Icon = processIcons[step.icon]
+                  const isActive = activeProcessIndex === index
 
                 return (
-                    <Fragment key={step.number}>
-                      <article
-                        role="listitem"
-                        className="skills-process-card about-highlight-card"
-                    style={{ '--skill-color': step.tone }}
-                  >
-                        <div className="about-highlight-card__inner skills-process-card__inner">
-                          <span
-                            className="about-highlight-card__number skills-process-card__step"
-                            aria-hidden="true"
-                          >
-                            {step.number}
-                          </span>
-                          <div className="skills-process-card__content">
-                    <span className="skills-process-card__icon" aria-hidden="true">
-                      <Icon />
-                    </span>
-                    <strong>{step.label}</strong>
-                    <p>{step.text}</p>
-                          </div>
-                        </div>
-                      </article>
-
-                      {nextStep ? (
-                        <div className="skills-process-arrow-slot" aria-hidden="true">
-                          <ProcessArrow
-                            from={step.tone}
-                            to={nextStep.tone}
-                            index={index}
-                            curveUp={index % 2 === 0}
-                          />
-                        </div>
-                      ) : null}
-                    </Fragment>
-                  )
-                })}
-              </div>
-            </div>
-          </ScrollRevealItem>
-
-          <ScrollRevealItem tier="content" className="skills-stack">
-            <h3 className="skills-subsection-title project-case-feature-screens__title">
-              Il mio stack quotidiano
-            </h3>
-
-            <div className="skills-stack-layout">
-              {activeStackSkill ? (
-                <div className="skills-stack-detail">
-                  <SkillDetailCard key={activeStackSkill.id} skill={activeStackSkill} />
-                </div>
-              ) : null}
-
-              <div className="skills-stack-panel">
-                {DAILY_STACK.map((tool) => (
                   <button
-                    key={tool.name}
+                      key={step.number}
                     type="button"
-                    className={`skills-stack-item${
-                      activeStackName === tool.name ? ' skills-stack-item--active' : ''
-                    }`}
-                    style={{ '--skill-color': tool.glow }}
-                    aria-pressed={activeStackName === tool.name}
-                    aria-label={tool.name}
-                    onClick={() =>
-                      setActiveStackName((current) =>
-                        current === tool.name ? null : tool.name,
-                      )
-                    }
-                  >
-                    <span className="skills-stack-item__icon" aria-hidden="true">
-                      <SkillIcon skill={tool} />
+                      role="tab"
+                      id={`skills-pipeline-tab-${step.number}`}
+                      aria-selected={isActive}
+                      aria-controls="skills-pipeline-panel"
+                      className={`skills-pipeline__node${
+                        isActive ? ' skills-pipeline__node--active' : ''
+                      }`}
+                      style={{ '--phase-color': step.tone }}
+                      onClick={() => selectProcessStep(index)}
+                    >
+                      <span className="skills-pipeline__node-ring" aria-hidden="true">
+                        <span className="skills-pipeline__node-number">{step.number}</span>
+                        <span className="skills-pipeline__node-icon">
+                          <Icon />
                     </span>
-                    <span className="skills-stack-item__name">{tool.name}</span>
+                    </span>
+                      <span className="skills-pipeline__node-label">{step.label}</span>
                   </button>
-                ))}
+                )
+              })}
+            </div>
+
+              <div
+                id="skills-pipeline-panel"
+                role="tabpanel"
+                aria-labelledby={`skills-pipeline-tab-${activeProcessStep.number}`}
+                className="skills-pipeline__stage"
+                style={{ '--phase-color': activeProcessStep.tone }}
+              >
+                <div className="skills-pipeline__stage-glow" aria-hidden="true" />
+
+                <div className="skills-pipeline__stage-main">
+                  <div className="skills-pipeline__stage-header">
+                    <span className="skills-pipeline__stage-number">
+                      {activeProcessStep.number}
+                    </span>
+                    <h4 className="skills-pipeline__stage-title">{activeProcessStep.label}</h4>
+                    <p className="skills-pipeline__stage-text">{activeProcessStep.text}</p>
+            </div>
+
+                  {activeProcessStackGroups.length > 0 ? (
+                    <div className="skills-pipeline__constellation-groups">
+                      {activeProcessStackGroups.map((group) => (
+                        <div key={group.id} className="skills-pipeline__constellation">
+                          <div className="skills-pipeline__tools">
+                            {group.tools.map((tool) => (
+                              <span
+                  key={tool.name}
+                                className="skills-pipeline__tool"
+                  style={{ '--skill-color': tool.glow }}
+                >
+                                <span className="skills-pipeline__tool-icon" aria-hidden="true">
+                    <SkillIcon skill={tool} />
+                  </span>
+                                <span className="skills-pipeline__tool-name">{tool.name}</span>
+                              </span>
+                            ))}
+                          </div>
+                </div>
+              ))}
+            </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           </ScrollRevealItem>
