@@ -11,9 +11,9 @@ import {
   getDailyStackSkillDetail,
   getRadarSkillsByCategory,
   PROCESS_STEPS,
-  SKILL_CATEGORIES,
   SKILL_CATEGORY_TABS,
 } from '../data/skillsShowcase'
+import { COMPACT_RADAR_MEDIA_QUERY, SMARTPHONE_MEDIA_QUERY } from '../constants/breakpoints'
 import { SECTION_REVEAL_EVENT, elementIntersectsViewport } from '../utils/sectionReveal'
 import '../skills.css'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
@@ -40,9 +40,6 @@ const SkillDetailCard = ({ skill, layout = 'horizontal' }) => (
     style={{ '--skill-color': skill.glow }}
     aria-live="polite"
   >
-    <p className="skills-detail-card__category terminal-gradient-label">
-      {SKILL_CATEGORIES[skill.category] ?? skill.category}
-    </p>
     <h3 className="skills-detail-card__name">{skill.name}</h3>
     <p className="skills-detail-card__desc">{skill.description}</p>
   </article>
@@ -54,6 +51,8 @@ const SKILL_CARD_EXTRA_DOWN_PX = 15
 const SKILL_CARD_EXTRA_DOWN = new Set(['React', 'PHP'])
 
 /** Spostamento simbolico della card lungo l’arco del radar (rispetto a JavaScript) */
+const GIT_CARD_DESC_SHORTEN_SHIFT_PX = 36
+
 const SKILL_CARD_OFFSET = {
   CSS: { x: -5, y: -15 },
   JavaScript: { x: 0, y: 0 },
@@ -63,6 +62,9 @@ const SKILL_CARD_OFFSET = {
   React: { x: -20, y: 0 },
   Redux: { x: 30, y: 0 },
   Figma: { x: 30, y: 0 },
+  HTML: { x: 0, y: 25 },
+  'Node.js': { x: 0, y: 40 },
+  Git: { x: 0, y: 32 + GIT_CARD_DESC_SHORTEN_SHIFT_PX },
   PHP: { x: 0, y: 0 },
   Postman: { x: -20, y: 0 },
 }
@@ -95,22 +97,61 @@ const NODE_BRIDGE_ICON_GAP_PX = 10
 const NODE_BRIDGE_VERTICAL_UP_PX = 15
 const NODE_BRIDGE_HORIZONTAL_RIGHT_PX = 40
 const NODE_BRIDGE_SHIFT_UP_PX = 30
+const NODE_JS_BRIDGE_EXTRA_SHIFT_UP_PX = 24
+const GIT_BRIDGE_EXTRA_SHIFT_UP_PX = 15
+const HTML_BRIDGE_EXTRA_SHIFT_UP_PX = 15
 const NODE_CARD_SHIFT_UP_PX = 70
-const JAVASCRIPT_BRIDGE_ICON_GAP_PX = 10
-const TYPESCRIPT_BRIDGE_ICON_GAP_PX = 10
-const REDUX_BRIDGE_ICON_GAP_PX = 15
+const JAVASCRIPT_BRIDGE_ICON_GAP_PX = 18
+const TYPESCRIPT_BRIDGE_ICON_GAP_PX = 25
+const VITE_BRIDGE_ICON_GAP_PX = 24
+const REDUX_BRIDGE_ICON_GAP_PX = 24
+const RENDER_BRIDGE_ICON_GAP_PX = 26
+const FIGMA_BRIDGE_ICON_GAP_PX = 15
+const GITHUB_BRIDGE_ICON_GAP_PX = 26
+const POSTMAN_BRIDGE_ICON_GAP_PX = 26
 const ICON_ANCHORED_LEFT_BRIDGE_SKILLS = new Set(['Redux', 'Figma', 'Render'])
 const ICON_ANCHORED_RIGHT_BRIDGE_SKILLS = new Set(['Postman', 'GitHub'])
 const NETLIFY_CARD_SHIFT_UP_PX = 20
 const NETLIFY_BRIDGE_JOINT_SHIFT_DOWN_PX = 30
-const CSS_BRIDGE_ICON_GAP_PX = 15
+const CSS_BRIDGE_ICON_GAP_PX = 23
+const TAILWIND_BRIDGE_ICON_GAP_PX = 12
+const TAILWIND_BRIDGE_EXTRA_CLEARANCE_PX = 40
+const TAILWIND_BRIDGE_EXTRA_DOWN_PX = 15
 
 const usesLeftDetailSlot = (skill) => isLeftSideSkill(skill)
+
+const getNodeBridgeExtraShiftUpPx = (skillName) => {
+  if (skillName === 'Node.js') return NODE_JS_BRIDGE_EXTRA_SHIFT_UP_PX
+  if (skillName === 'Git') return GIT_BRIDGE_EXTRA_SHIFT_UP_PX
+  if (skillName === 'HTML') return HTML_BRIDGE_EXTRA_SHIFT_UP_PX
+  return 0
+}
+
+/** Compensa detailTop così il collegamento sale senza spostare la card */
+const getNodeBridgeCardCompensationPx = (skillName) =>
+  skillName === 'Git' || skillName === 'HTML'
+    ? getNodeBridgeExtraShiftUpPx(skillName)
+    : 0
+
+const getLeftBridgeIconGapPx = (skillName) => {
+  if (skillName === 'Render') return RENDER_BRIDGE_ICON_GAP_PX
+  if (skillName === 'Redux') return REDUX_BRIDGE_ICON_GAP_PX
+  if (skillName === 'Figma') return FIGMA_BRIDGE_ICON_GAP_PX
+  return REDUX_BRIDGE_ICON_GAP_PX
+}
+
+const getRightBridgeIconGapPx = (skillName) => {
+  if (skillName === 'Postman') return POSTMAN_BRIDGE_ICON_GAP_PX
+  if (skillName === 'GitHub') return GITHUB_BRIDGE_ICON_GAP_PX
+  return REDUX_BRIDGE_ICON_GAP_PX
+}
 
 /** Spostamento verticale del collegamento (card invariata) */
 const SKILL_BRIDGE_SHIFT_DOWN = {
   MySQL: 20,
   Express: 30,
+  Vite: 5,
+  'Tailwind CSS': -10,
 }
 
 /** Offset extra sul bordo destro del radar, per skill basse */
@@ -336,12 +377,18 @@ const buildNodeDetailLayout = (
   const jointX = iconCenterX
   const baseJointY = iconCenterY - NODE_BRIDGE_ICON_GAP_PX
   const baseElbowY = baseJointY - NODE_BRIDGE_VERTICAL_UP_PX
-  const jointY = baseJointY - NODE_BRIDGE_SHIFT_UP_PX
-  const elbowY = baseElbowY - NODE_BRIDGE_SHIFT_UP_PX
+  const extraBridgeShiftUp = getNodeBridgeExtraShiftUpPx(skill.name)
+  const bridgeShiftUp = NODE_BRIDGE_SHIFT_UP_PX + extraBridgeShiftUp
+  const jointY = baseJointY - bridgeShiftUp
+  const elbowY = baseElbowY - bridgeShiftUp
   const elbowX = jointX + NODE_BRIDGE_HORIZONTAL_RIGHT_PX
   const cardLeftX = elbowX + cardOffset.x
   const detailTop =
-    elbowY - cardHeight * BRIDGE_ENTRY_RATIO - NODE_CARD_SHIFT_UP_PX + cardOffset.y
+    elbowY -
+    cardHeight * BRIDGE_ENTRY_RATIO -
+    NODE_CARD_SHIFT_UP_PX +
+    cardOffset.y +
+    getNodeBridgeCardCompensationPx(skill.name)
 
   return {
     detailTop,
@@ -424,6 +471,53 @@ const buildPhpDetailLayout = (
   }
 }
 
+const isMobileRadarLayout = () =>
+  typeof window !== 'undefined' && window.matchMedia(SMARTPHONE_MEDIA_QUERY).matches
+
+const isCompactRadarLayout = () =>
+  typeof window !== 'undefined' && window.matchMedia(COMPACT_RADAR_MEDIA_QUERY).matches
+
+const buildMobileRadarDetailLayout = (_skill, radarEl, clusterEl, cardEl) => {
+  const stage = radarEl.querySelector('.tech-radar__stage')
+  if (!stage || !cardEl) return null
+
+  const clusterRect = clusterEl.getBoundingClientRect()
+  const cardRect = cardEl.getBoundingClientRect()
+
+  if (clusterRect.width < 1 || clusterRect.height < 1 || cardRect.height < 1) {
+    return null
+  }
+
+  return {
+    placement: 'mobile',
+    detailTop: null,
+    detailOffsetLeft: null,
+    detailOffsetRight: null,
+    bridge: null,
+  }
+}
+
+const buildCompactRadarDetailLayout = (skill, radarEl, cardEl) => {
+  const clusterEl = radarEl.closest('.skills-radar-cluster')
+  const stage = radarEl.querySelector('.tech-radar__stage')
+  if (!clusterEl || !stage || !cardEl) return null
+
+  const clusterRect = clusterEl.getBoundingClientRect()
+  const cardRect = cardEl.getBoundingClientRect()
+
+  if (clusterRect.width < 1 || clusterRect.height < 1 || cardRect.height < 1) {
+    return null
+  }
+
+  return {
+    placement: 'compact',
+    detailTop: null,
+    detailOffsetLeft: null,
+    detailOffsetRight: null,
+    bridge: null,
+  }
+}
+
 const buildRadarDetailLayout = (
   skill,
   radarEl,
@@ -432,11 +526,21 @@ const buildRadarDetailLayout = (
   cardEl,
   introAnchorEl,
 ) => {
-  if (!skill || !radarEl || !leftSlotEl || !rightSlotEl || !cardEl) return null
+  if (!skill || !radarEl || !rightSlotEl || !cardEl) return null
 
   const clusterEl = radarEl.closest('.skills-radar-cluster')
   const stage = radarEl.querySelector('.tech-radar__stage')
   if (!clusterEl || !stage) return null
+
+  if (isMobileRadarLayout()) {
+    return buildMobileRadarDetailLayout(skill, radarEl, clusterEl, cardEl)
+  }
+
+  if (isCompactRadarLayout()) {
+    return buildCompactRadarDetailLayout(skill, radarEl, cardEl)
+  }
+
+  if (!leftSlotEl) return null
 
   let placement = usesLeftDetailSlot(skill) ? 'left' : 'right'
   const slotEl = placement === 'left' ? leftSlotEl : rightSlotEl
@@ -606,7 +710,7 @@ const buildRadarDetailLayout = (
     const { iconCenterY, iconLeftX } = nodeLayout
     const cardEntryY = detailTop + cardHeight * BRIDGE_ENTRY_RATIO
     const cardRightX = toClusterX(slotRect.left) + cardOffset.x + cardWidth
-    const jointX = iconLeftX - REDUX_BRIDGE_ICON_GAP_PX
+    const jointX = iconLeftX - getLeftBridgeIconGapPx(skill.name)
     const gap = jointX - cardRightX
 
     if (gap >= 12) {
@@ -643,6 +747,29 @@ const buildRadarDetailLayout = (
         endX = netlifyEndX
         d = `M ${startX} ${jointY} H ${elbowX} V ${cardEntryY} H ${endX}`
         start = { x: startX, y: jointY }
+      }
+    }
+  }
+
+  if (skill.name === 'Vite' && placement === 'left') {
+    const { iconCenterY, iconLeftX } = nodeLayout
+    const bridgeVerticalShift = SKILL_BRIDGE_SHIFT_DOWN[skill.name] ?? 0
+    const jointY = iconCenterY + bridgeVerticalShift
+    const cardEntryY = detailTop + cardHeight * BRIDGE_ENTRY_RATIO
+    const cardRightX = toClusterX(slotRect.left) + cardOffset.x + cardWidth
+    const jointX = iconLeftX - VITE_BRIDGE_ICON_GAP_PX
+    const gap = jointX - cardRightX
+
+    if (gap >= 12) {
+      const elbowX = Math.max(
+        cardRightX + 8,
+        jointX - Math.max(12, gap * 0.22),
+      )
+
+      if (elbowX < jointX - 2 && elbowX > cardRightX + 2) {
+        endX = cardRightX
+        d = `M ${jointX} ${jointY} H ${elbowX} V ${cardEntryY} H ${endX}`
+        start = { x: jointX, y: jointY }
       }
     }
   }
@@ -689,11 +816,27 @@ const buildRadarDetailLayout = (
     }
   }
 
+  if (skill.name === 'Tailwind CSS' && placement === 'right') {
+    const { iconCenterY, iconRightX } = nodeLayout
+    const cardLeftX = toClusterX(slotRect.right) - cardWidth + cardOffset.x
+    const bridgeY =
+      iconCenterY + (SKILL_BRIDGE_SHIFT_DOWN[skill.name] ?? 0) + TAILWIND_BRIDGE_EXTRA_DOWN_PX
+    const startX =
+      iconRightX + TAILWIND_BRIDGE_ICON_GAP_PX + TAILWIND_BRIDGE_EXTRA_CLEARANCE_PX
+
+    if (cardLeftX - startX >= 12) {
+      endX = cardLeftX
+      d = `M ${startX} ${bridgeY} H ${endX}`
+      start = { x: startX, y: bridgeY }
+    }
+  }
+
   if (ICON_ANCHORED_RIGHT_BRIDGE_SKILLS.has(skill.name) && placement === 'right') {
     const { iconCenterY, iconRightX } = nodeLayout
     const cardEntryY = detailTop + cardHeight * BRIDGE_ENTRY_RATIO
     const cardLeftX = toClusterX(slotRect.right) - cardWidth + cardOffset.x
-    const jointX = iconRightX + REDUX_BRIDGE_ICON_GAP_PX
+    const iconGap = getRightBridgeIconGapPx(skill.name)
+    const jointX = iconRightX + iconGap
     const gap = cardLeftX - jointX
 
     if (gap >= 12) {
@@ -775,6 +918,8 @@ const useRadarDetailLayout = (
 const RadarDetailBridge = ({ geometry }) => {
   if (!geometry) return null
 
+  const dot = geometry.joint ?? geometry.start
+
   return (
     <div className="skills-radar-bridge-overlay" aria-hidden="true">
       <svg
@@ -785,21 +930,18 @@ const RadarDetailBridge = ({ geometry }) => {
       >
         <path className="skills-radar-bridge__glow" d={geometry.d} />
         <path className="skills-radar-bridge__line" d={geometry.d} />
-        <g
-          className="tech-radar__joint tech-radar__joint--terminal tech-radar__joint--active"
-          style={{ '--joint-color': SPOKE_HUB_COLOR }}
-        >
+        <g className="skills-radar-bridge__joint">
           <circle
             className="skills-radar-bridge__joint-glow"
-            cx={geometry.start.x}
-            cy={geometry.start.y}
+            cx={dot.x}
+            cy={dot.y}
             r="3.25"
             fill={SPOKE_HUB_COLOR}
           />
           <circle
             className="skills-radar-bridge__joint-core"
-            cx={geometry.start.x}
-            cy={geometry.start.y}
+            cx={dot.x}
+            cy={dot.y}
             r="1.1"
             fill={SPOKE_HUB_COLOR}
           />
@@ -962,7 +1104,7 @@ const Skills = () => {
     <section className="skills-section section-page section-page--default">
       <ScrollReveal className="relative z-10 mx-auto max-w-6xl">
         <div className="skills-showcase">
-          <ScrollRevealItem tier="head" className="skills-intro">
+          <ScrollRevealItem tier="head" className="skills-showcase__header">
             <p
               ref={skillsEyebrowRef}
               id="skills"
@@ -974,8 +1116,10 @@ const Skills = () => {
             <h2 className="skills-title section-heading mt-3 text-3xl font-bold text-white md:text-4xl">
               Il mio arsenale tecnologico
             </h2>
+          </ScrollRevealItem>
 
-            <p className="skills-copy section-lead mt-5">
+          <ScrollRevealItem tier="head" className="skills-intro">
+            <p className="skills-copy section-lead">
               Tecnologie, strumenti e competenze che utilizzo per trasformare idee
               in prodotti digitali.
             </p>
@@ -1001,7 +1145,7 @@ const Skills = () => {
                     }`}
                   >
                     {tab.label}
-                  </span>
+              </span>
                 </button>
               ))}
             </div>
@@ -1034,11 +1178,17 @@ const Skills = () => {
               className={`skills-radar-cluster__detail${
                 radarDetailLayout?.placement === 'left'
                   ? ' skills-radar-cluster__detail--left'
-                  : ' skills-radar-cluster__detail--right'
+                  : radarDetailLayout?.placement === 'mobile'
+                    ? ' skills-radar-cluster__detail--mobile'
+                    : radarDetailLayout?.placement === 'compact'
+                      ? ' skills-radar-cluster__detail--compact'
+                      : ' skills-radar-cluster__detail--right'
               }`}
               ref={radarCardRef}
               style={
-                radarDetailLayout
+                radarDetailLayout &&
+                radarDetailLayout.placement !== 'mobile' &&
+                radarDetailLayout.placement !== 'compact'
                   ? {
                       top: `${radarDetailLayout.detailTop}px`,
                       ...(radarDetailLayout.placement === 'left'
@@ -1070,23 +1220,29 @@ const Skills = () => {
             <div className="skills-process-track">
               <div className="skills-process-list" role="list">
                 {PROCESS_STEPS.map((step, index) => {
-                  const Icon = processIcons[step.icon]
+                const Icon = processIcons[step.icon]
                   const nextStep = PROCESS_STEPS[index + 1]
 
-                  return (
+                return (
                     <Fragment key={step.number}>
                       <article
                         role="listitem"
                         className="skills-process-card about-highlight-card"
-                        style={{ '--skill-color': step.tone }}
-                      >
+                    style={{ '--skill-color': step.tone }}
+                  >
                         <div className="about-highlight-card__inner skills-process-card__inner">
+                          <span
+                            className="about-highlight-card__number skills-process-card__step"
+                            aria-hidden="true"
+                          >
+                            {step.number}
+                          </span>
                           <div className="skills-process-card__content">
-                            <span className="skills-process-card__icon" aria-hidden="true">
-                              <Icon />
-                            </span>
-                            <strong>{step.label}</strong>
-                            <p>{step.text}</p>
+                    <span className="skills-process-card__icon" aria-hidden="true">
+                      <Icon />
+                    </span>
+                    <strong>{step.label}</strong>
+                    <p>{step.text}</p>
                           </div>
                         </div>
                       </article>
@@ -1113,35 +1269,37 @@ const Skills = () => {
               Il mio stack quotidiano
             </h3>
 
-            {activeStackSkill ? (
-              <div className="skills-stack-detail">
-                <SkillDetailCard key={activeStackSkill.id} skill={activeStackSkill} />
-              </div>
-            ) : null}
+            <div className="skills-stack-layout">
+              {activeStackSkill ? (
+                <div className="skills-stack-detail">
+                  <SkillDetailCard key={activeStackSkill.id} skill={activeStackSkill} />
+                </div>
+              ) : null}
 
-            <div className="skills-stack-panel">
-              {DAILY_STACK.map((tool) => (
-                <button
-                  key={tool.name}
-                  type="button"
-                  className={`skills-stack-item${
-                    activeStackName === tool.name ? ' skills-stack-item--active' : ''
-                  }`}
-                  style={{ '--skill-color': tool.glow }}
-                  aria-pressed={activeStackName === tool.name}
-                  aria-label={tool.name}
-                  onClick={() =>
-                    setActiveStackName((current) =>
-                      current === tool.name ? null : tool.name,
-                    )
-                  }
-                >
-                  <span className="skills-stack-item__icon" aria-hidden="true">
-                    <SkillIcon skill={tool} />
-                  </span>
-                  <span className="skills-stack-item__name">{tool.name}</span>
-                </button>
-              ))}
+              <div className="skills-stack-panel">
+                {DAILY_STACK.map((tool) => (
+                  <button
+                    key={tool.name}
+                    type="button"
+                    className={`skills-stack-item${
+                      activeStackName === tool.name ? ' skills-stack-item--active' : ''
+                    }`}
+                    style={{ '--skill-color': tool.glow }}
+                    aria-pressed={activeStackName === tool.name}
+                    aria-label={tool.name}
+                    onClick={() =>
+                      setActiveStackName((current) =>
+                        current === tool.name ? null : tool.name,
+                      )
+                    }
+                  >
+                    <span className="skills-stack-item__icon" aria-hidden="true">
+                      <SkillIcon skill={tool} />
+                    </span>
+                    <span className="skills-stack-item__name">{tool.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </ScrollRevealItem>
         </div>

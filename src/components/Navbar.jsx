@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { RiHomeFill } from 'react-icons/ri'
 import { navigateToHomeSection, smoothScrollToY, isCoarsePointer, getSectionIdFromHref } from '../utils/scrollToSection'
-import { useHomeActiveSection, HOME_NAV_SECTION_IDS } from '../utils/useHomeActiveSection'
+import { useHomeActiveSection } from '../utils/useHomeActiveSection'
 
 const MOBILE_NAV_MEDIA = '(width < 768px)'
 const MENU_CLOSE_ON_SCROLL_PX = 8
@@ -18,58 +18,9 @@ const Navbar = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [clickedSection, setClickedSection] = useState(null)
-  const [navScrolling, setNavScrolling] = useState(false)
   const activeSection = useHomeActiveSection()
 
   const closeMenu = () => setMenuOpen(false)
-
-  useEffect(() => {
-    if (!clickedSection) return
-
-    const clickedIdx = HOME_NAV_SECTION_IDS.indexOf(clickedSection)
-    const activeIdx = HOME_NAV_SECTION_IDS.indexOf(activeSection)
-
-    if (clickedSection === activeSection) {
-      setClickedSection(null)
-      setNavScrolling(false)
-      return
-    }
-
-    if (activeIdx === -1 || clickedIdx === -1) return
-
-    if (activeIdx > clickedIdx) {
-      setClickedSection(null)
-      setNavScrolling(false)
-      return
-    }
-
-    if (activeIdx < clickedIdx && !navScrolling) {
-      setClickedSection(null)
-    }
-  }, [activeSection, clickedSection, navScrolling])
-
-  useEffect(() => {
-    if (!clickedSection) return undefined
-
-    const cancelNavOverride = () => {
-      setNavScrolling(false)
-      setClickedSection(null)
-    }
-
-    window.addEventListener('wheel', cancelNavOverride, { passive: true })
-    window.addEventListener('touchmove', cancelNavOverride, { passive: true })
-
-    return () => {
-      window.removeEventListener('wheel', cancelNavOverride)
-      window.removeEventListener('touchmove', cancelNavOverride)
-    }
-  }, [clickedSection])
-
-  useEffect(() => {
-    setClickedSection(null)
-    setNavScrolling(false)
-  }, [location.pathname])
 
   useEffect(() => {
     closeMenu()
@@ -131,8 +82,7 @@ const Navbar = () => {
 
     event.preventDefault()
     closeMenu()
-    setClickedSection(null)
-    setNavScrolling(false)
+    event.currentTarget.blur()
 
     const scrollHome = () => {
       if (isCoarsePointer()) {
@@ -156,8 +106,7 @@ const Navbar = () => {
   const handleSectionClick = (event, href) => {
     event.preventDefault()
     closeMenu()
-    setClickedSection(getSectionIdFromHref(href))
-    setNavScrolling(true)
+    event.currentTarget.blur()
     navigateToHomeSection(href, location, navigate, 'smooth')
   }
 
@@ -178,8 +127,7 @@ const Navbar = () => {
 
   const sectionItems = navLinks.map((link) => {
     const sectionId = getSectionIdFromHref(link.href)
-    const highlightedSection = clickedSection ?? activeSection
-    const isCurrent = location.pathname === '/' && highlightedSection === sectionId
+    const isCurrent = location.pathname === '/' && activeSection === sectionId
 
     return (
       <li key={link.href}>

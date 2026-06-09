@@ -6,6 +6,22 @@ const distributeAngles = (count) =>
 
 const REGULAR_POLYGON_RADIUS = 30
 
+/** Negativo = raggio più corto. Positivo = raggio più lungo. Valore in px sul radar. */
+export const SPOKE_LENGTH_ADJUST_PX_BY_NAME = {
+  Render: -3,
+  Figma: -3,
+  Postman: -3,
+  GitHub: -3,
+  Laravel: -3,
+  Express: -3,
+  MySQL: -3,
+  TypeScript: -3,
+  React: -3,
+  'Tailwind CSS': 2,
+  Vite: 2,
+  Netlify: 2,
+}
+
 /** Vertici equidistanti sullo stesso raggio → poligono regolare (esagono, ottagono, …). */
 const withRegularPolygon = (skills, radius = REGULAR_POLYGON_RADIUS) =>
   distributeAngles(skills.length).map((angle, index) => ({
@@ -13,6 +29,7 @@ const withRegularPolygon = (skills, radius = REGULAR_POLYGON_RADIUS) =>
     radius,
     angle,
     scoreRadius: radius * 0.82,
+    spokeLengthAdjustPx: SPOKE_LENGTH_ADJUST_PX_BY_NAME[skills[index].name] ?? 0,
   }))
 
 export const TECH_RADAR_CATEGORIES = [
@@ -26,7 +43,7 @@ export const TECH_RADAR_CATEGORIES = [
         {
           name: 'HTML',
           description:
-            'Markup semantico per strutturare contenuti accessibili e ordinati.',
+            'Markup semantico per strutturare contenuti.',
           icon: 'devicon-html5-plain colored',
           glow: '#e44d26',
         },
@@ -53,7 +70,7 @@ export const TECH_RADAR_CATEGORIES = [
         {
           name: 'React',
           description:
-            'Libreria JavaScript per costruire interfacce dinamiche, component-based e riutilizzabili.',
+            'Libreria JavaScript per costruire interfacce component-based e riutilizzabili.',
           icon: 'devicon-react-original colored',
           glow: '#61dafb',
         },
@@ -92,7 +109,7 @@ export const TECH_RADAR_CATEGORIES = [
         {
           name: 'Node.js',
           description:
-            'Runtime JavaScript utilizzato per API, logica server-side e servizi backend.',
+            'Runtime JavaScript per lo sviluppo di API, logiche server-side e servizi backend.',
           icon: 'devicon-nodejs-plain colored',
           glow: '#3c873a',
         },
@@ -141,8 +158,7 @@ export const TECH_RADAR_CATEGORIES = [
       [
         {
           name: 'Git',
-          description:
-            'Versionamento del codice e gestione ordinata delle modifiche nel tempo.',
+          description: 'Versionamento del codice.',
           icon: 'devicon-git-plain colored',
           glow: '#f05032',
         },

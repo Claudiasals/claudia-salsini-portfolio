@@ -29,11 +29,42 @@
   display: grid;
   grid-template-columns: minmax(0, 0.76fr) minmax(0, 2.24fr);
   grid-template-areas:
+    "header header"
     "intro cluster"
     "process process"
     "stack stack";
-  align-items: center;
+  align-items: start;
   gap: clamp(1.6rem, 3vw, 3.1rem);
+}
+
+.skills-showcase__header {
+  grid-area: header;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  text-align: left;
+}
+
+.skills-showcase__header .section-scroll-anchor,
+.skills-showcase__header .skills-title {
+  align-self: stretch;
+  width: 100%;
+  max-width: none;
+  text-align: left;
+  margin-inline: 0;
+}
+
+.skills-showcase__header .skills-title {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+@media (width >= 768px) {
+  .skills-showcase__header .skills-title {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
 }
 
 .skills-intro {
@@ -42,7 +73,15 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
+  text-align: left;
   min-width: 0;
+}
+
+.skills-intro .skills-copy {
+  align-self: flex-start;
+  text-align: left;
+  margin-inline: 0;
 }
 
 .skills-intro__tabs {
@@ -57,7 +96,7 @@
 }
 
 .skills-title {
-  max-width: 22ch;
+  max-width: none;
 }
 
 .skills-copy {
@@ -167,11 +206,123 @@
 }
 
 .skills-radar-bridge__joint-glow {
-  opacity: 0.72;
-  filter: drop-shadow(0 0 4px rgba(0, 212, 255, 0.75));
+  opacity: 0.88;
+  filter:
+    drop-shadow(0 0 5px rgba(0, 212, 255, 0.96))
+    drop-shadow(0 0 12px rgba(0, 212, 255, 0.68))
+    drop-shadow(0 0 22px rgba(0, 212, 255, 0.32));
 }
 
 .skills-radar-bridge__joint-core {
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 3px rgba(0, 212, 255, 1))
+    drop-shadow(0 0 9px rgba(0, 212, 255, 0.62))
+    drop-shadow(0 0 16px rgba(0, 212, 255, 0.28));
+}
+
+.tech-radar__spoke-joint-halo {
+  opacity: 0.34;
+  filter: blur(2.2px);
+}
+
+.tech-radar__spoke-joint-halo--hub {
+  opacity: 0.4;
+  filter: blur(2.4px);
+}
+
+.tech-radar__spoke-joint-glow--hub {
+  opacity: 0.78;
+  filter:
+    drop-shadow(0 0 4px rgba(0, 212, 255, 0.62))
+    drop-shadow(0 0 10px rgba(0, 212, 255, 0.28));
+}
+
+.tech-radar__spoke-joint-core--hub {
+  filter: drop-shadow(0 0 3px rgba(0, 212, 255, 0.55));
+}
+
+.tech-radar__spoke-joint-halo--mid {
+  opacity: 0.28;
+  filter: blur(2px);
+}
+
+.tech-radar__spoke-joint-glow--mid {
+  opacity: 0.76;
+  filter:
+    drop-shadow(0 0 4px rgba(56, 189, 248, 0.62))
+    drop-shadow(0 0 10px rgba(0, 212, 255, 0.24));
+}
+
+.tech-radar__spoke-joint-core--mid {
+  filter: drop-shadow(0 0 3px rgba(0, 212, 255, 0.52));
+}
+
+.tech-radar__spoke-joint-glow--terminal {
+  opacity: 0.88;
+  filter:
+    drop-shadow(0 0 5px rgba(0, 212, 255, 0.98))
+    drop-shadow(0 0 12px rgba(0, 212, 255, 0.82))
+    drop-shadow(0 0 24px rgba(0, 212, 255, 0.58))
+    drop-shadow(0 0 38px rgba(0, 212, 255, 0.34));
+}
+
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-halo--terminal {
+  opacity: 0.24;
+  filter: blur(1.6px);
+}
+
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-glow--terminal {
+  opacity: 0.34;
+  filter: drop-shadow(0 0 3px rgba(0, 212, 255, 0.35));
+}
+
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-core--terminal {
+  opacity: 0.55;
+  filter: none;
+}
+
+.tech-radar__spoke-group--active .tech-radar__spoke-joint-halo--terminal {
+  opacity: 0.82;
+  filter: blur(7px);
+}
+
+.tech-radar__spoke-group--active .tech-radar__spoke-joint-glow--terminal {
+  opacity: 0.96;
+  filter:
+    drop-shadow(0 0 3px rgba(0, 212, 255, 0.95))
+    drop-shadow(0 0 9px rgba(0, 212, 255, 0.88))
+    drop-shadow(0 0 18px rgba(0, 212, 255, 0.68))
+    drop-shadow(0 0 32px rgba(0, 212, 255, 0.44))
+    drop-shadow(0 0 46px rgba(0, 212, 255, 0.24));
+}
+
+.tech-radar__spoke-group--active .tech-radar__spoke-joint-core--terminal {
+  opacity: 0.96;
+  filter:
+    drop-shadow(0 0 5px rgba(0, 212, 255, 0.82))
+    drop-shadow(0 0 14px rgba(0, 212, 255, 0.58))
+    drop-shadow(0 0 26px rgba(0, 212, 255, 0.32));
+}
+
+.tech-radar__spoke-joint-halo--terminal {
+  opacity: 0.68;
+  filter: blur(5px);
+}
+
+.tech-radar__spoke-joint-core--terminal {
+  opacity: 0.42;
+  filter:
+    drop-shadow(0 0 4px rgba(0, 212, 255, 0.9))
+    drop-shadow(0 0 12px rgba(0, 212, 255, 0.62))
+    drop-shadow(0 0 22px rgba(0, 212, 255, 0.36));
+}
+
+.tech-radar__svg--overlay .skills-radar-bridge__joint-glow {
+  opacity: 0.82;
+}
+
+.tech-radar__svg--overlay .skills-radar-bridge__joint-core {
   opacity: 0.96;
 }
 
@@ -183,6 +334,8 @@
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
+  text-align: center;
+  justify-content: center;
 }
 
 @media (width >= 768px) {
@@ -227,14 +380,8 @@
   text-transform: uppercase;
 }
 
-.tech-radar__node-icon {
-  filter:
-    drop-shadow(0 0 8px color-mix(in srgb, var(--skill-color, #38bdf8) 72%, transparent))
-    drop-shadow(0 0 16px color-mix(in srgb, var(--skill-color, #38bdf8) 22%, transparent));
-}
-
 .skills-detail-card__name {
-  margin: 0.75rem 0 0;
+  margin: 0;
   font-size: 1.0625rem;
   font-weight: 600;
   line-height: 1.35;
@@ -265,7 +412,7 @@
 }
 
 .skills-detail-card--vertical .skills-detail-card__name {
-  margin: 0.45rem 0 0;
+  margin: 0;
   font-size: 0.9375rem;
   text-align: left;
 }
@@ -292,6 +439,12 @@
   margin-top: clamp(1.1rem, 2.4vw, 2.5rem);
 }
 
+.skills-stack-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
 .skills-stack-detail {
   max-width: 28rem;
   margin: 0 auto 1.25rem;
@@ -303,15 +456,12 @@
   justify-content: center;
   gap: clamp(1rem, 2.5vw, 1.75rem);
   padding: 1.25rem 1.1rem;
-  border: 1px solid rgba(59, 130, 246, 0.22);
-  border-radius: 0.5rem;
+  border: 2px solid transparent;
+  border-radius: 1rem;
   background:
-    linear-gradient(180deg, rgba(8, 13, 31, 0.82), rgba(3, 7, 18, 0.76)) padding-box,
-    radial-gradient(circle at 0 0, rgba(124, 58, 237, 0.2), transparent 32%) border-box;
-  box-shadow:
-    inset 0 0 32px rgba(37, 99, 235, 0.045),
-    0 0 42px rgba(15, 23, 42, 0.3);
-  backdrop-filter: blur(8px);
+    linear-gradient(rgba(var(--site-bg-rgb), 0.94), rgba(var(--site-bg-rgb), 0.94)) padding-box,
+    linear-gradient(135deg, rgba(147, 51, 234, 0.85), rgba(56, 189, 248, 0.85), rgba(110, 231, 183, 0.75))
+      border-box;
 }
 
 .skills-stack-item {
@@ -468,6 +618,10 @@
   line-height: 1.55;
 }
 
+.skills-process-card__step {
+  display: none;
+}
+
 .skill-glyph__icon {
   display: block;
   font-size: inherit;
@@ -529,23 +683,56 @@
   stroke: rgba(99, 102, 241, 0.18);
 }
 
-.tech-radar__ring--outer {
-  stroke: rgba(14, 165, 233, 0.28);
-  stroke-dasharray: 0.75 1.18;
-  stroke-linecap: round;
-  stroke-width: 0.12;
+/* 2 anelli dopo l’esagono: stesso bordo card, sfumatura ben visibile */
+.tech-radar__ring.tech-radar__ring--card-border {
+  stroke: url(#skill-radar-ring-accent);
+  stroke-width: 1.05;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.1;
 }
 
-.tech-radar__mesh-line {
-  fill: none;
-  stroke: url(#skill-radar-polygon);
-  stroke-width: 0.35;
+.tech-radar__ring.tech-radar__ring--card-border-mid {
+  stroke-width: 1.25;
+  opacity: 0.2;
 }
 
+.tech-radar__ring.tech-radar__ring--faint {
+  stroke: rgba(14, 165, 233, 0.17);
+  stroke-width: 0.11;
+  opacity: 1;
+}
+
+.tech-radar__ring.tech-radar__ring--faint-mid {
+  stroke: rgba(99, 102, 241, 0.14);
+}
+
+.tech-radar__ring.tech-radar__ring--faint-soft {
+  stroke: rgba(14, 165, 233, 0.09);
+  opacity: 0.82;
+}
+
+.tech-radar__hub-polygon-glow,
+.tech-radar__hub-polygon,
 .tech-radar__hub-hex {
-  fill: rgba(19, 16, 45, 0.82);
-  stroke: url(#skill-radar-hub);
-  stroke-width: 0.42;
+  vector-effect: non-scaling-stroke;
+}
+
+.tech-radar__hub-polygon-glow {
+  fill: none;
+  stroke: #00d4ff;
+  stroke-width: 3;
+  opacity: 0.28;
+  filter: blur(0.8px);
+}
+
+.tech-radar__hub-polygon,
+.tech-radar__hub-hex {
+  fill: var(--site-bg, #020617);
+  stroke: #00d4ff;
+  stroke-width: 1.35;
+  filter:
+    drop-shadow(0 0 1.5px rgba(0, 212, 255, 0.88))
+    drop-shadow(0 0 5px rgba(0, 212, 255, 0.42));
 }
 
 .tech-radar__center {
@@ -557,19 +744,24 @@
   place-items: center;
   width: 5rem;
   height: 5rem;
-  color: #c084fc;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
-.tech-radar__center-code {
-  font-family: "JetBrains Mono", "Inter", system-ui, sans-serif;
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: 0;
-  text-shadow:
-    0 0 10px rgba(168, 85, 247, 0.82),
-    0 0 24px rgba(99, 102, 241, 0.46);
+.tech-radar__center-glyph {
+  display: block;
+  width: 3.1rem;
+  height: auto;
+  overflow: visible;
+}
+
+.tech-radar__center-glyph-stroke {
+  fill: none;
+  stroke: url(#tech-radar-center-glyph-accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
 }
 
 .tech-radar__nodes {
@@ -583,10 +775,21 @@
 
 .tech-radar__node-wrap {
   position: absolute;
+  z-index: 1;
   opacity: 0;
   transform: translate(
     calc(-50% + var(--node-radial-offset-x, 0px)),
     calc(-50% + var(--node-radial-offset-y, 0px))
+  );
+  transition: transform 0.32s ease;
+}
+
+.tech-radar__node-wrap:has(.tech-radar__node--active),
+.tech-radar__node-wrap:has(.tech-radar__node:focus-visible) {
+  z-index: 5;
+  transform: translate(
+    calc(-50% + var(--node-radial-offset-x, 0px) + var(--node-expand-x, 0px)),
+    calc(-50% + var(--node-radial-offset-y, 0px) + var(--node-expand-y, 0px))
   );
 }
 
@@ -602,23 +805,29 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
+  gap: 0.35rem;
   padding: 0;
   border: 0;
   background: transparent;
   color: #f8fafc;
   cursor: pointer;
+  transition: gap 0.32s ease;
 }
 
 .tech-radar__node-icon {
+  position: relative;
   display: grid;
   place-items: center;
   color: var(--skill-color, #38bdf8);
   font-size: 3rem;
   line-height: 1;
-  transition:
-    transform 0.22s ease,
-    filter 0.22s ease;
+  transform-origin: center center;
+  transition: transform 0.32s ease;
+}
+
+.tech-radar__node-icon > * {
+  position: relative;
+  display: block;
 }
 
 .tech-radar__node-label {
@@ -630,15 +839,46 @@
   text-align: center;
 }
 
+.tech-radar__node--active,
+.tech-radar__node:focus-visible {
+  gap: 0.7rem;
+}
+
 .tech-radar__node--active .tech-radar__node-icon,
 .tech-radar__node:focus-visible .tech-radar__node-icon {
-  transform: translateY(-1px) scale(1.08);
+  transform: scale(1.3);
+}
+
+.tech-radar--dense .tech-radar__node--active .tech-radar__node-icon,
+.tech-radar--dense .tech-radar__node:focus-visible .tech-radar__node-icon {
+  transform: scale(1.36);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tech-radar__node-wrap:has(.tech-radar__node:hover) {
+    z-index: 5;
+    transform: translate(
+      calc(-50% + var(--node-radial-offset-x, 0px) + var(--node-expand-x, 0px)),
+      calc(-50% + var(--node-radial-offset-y, 0px) + var(--node-expand-y, 0px))
+    );
+  }
+
+  .tech-radar__node:hover {
+    gap: 0.7rem;
+  }
+
+  .tech-radar__node:hover .tech-radar__node-icon {
+    transform: scale(1.3);
+  }
+
+  .tech-radar--dense .tech-radar__node:hover .tech-radar__node-icon {
+    transform: scale(1.36);
+  }
 }
 
 .tech-radar--dense .tech-radar__node {
   width: 6.1rem;
   min-height: 4.9rem;
-  gap: 0.35rem;
 }
 
 .tech-radar--dense .tech-radar__node-icon {
@@ -649,118 +889,78 @@
   outline: none;
 }
 
+.tech-radar__svg--overlay .skills-radar-bridge__glow,
+.tech-radar__svg--overlay .skills-radar-bridge__line {
+  stroke: #00d4ff;
+}
+
 .tech-radar__spoke-group {
-  opacity: 0.68;
+  opacity: 0.24;
   transition: opacity 0.22s ease;
+}
+
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .skills-radar-bridge__glow {
+  opacity: 0.12;
+  filter: blur(0.6px);
+}
+
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .skills-radar-bridge__line {
+  opacity: 0.42;
+  filter: none;
+}
+
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-halo--hub,
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-halo--mid {
+  opacity: 0.16;
+}
+
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-glow--hub,
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-glow--mid {
+  opacity: 0.32;
+  filter: drop-shadow(0 0 2px rgba(0, 212, 255, 0.28));
+}
+
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-core--hub,
+.tech-radar__spoke-group:not(.tech-radar__spoke-group--active) .tech-radar__spoke-joint-core--mid {
+  opacity: 0.45;
+  filter: none;
 }
 
 .tech-radar__spoke-group--active {
   opacity: 1;
 }
 
-.tech-radar__spoke-glow,
-.tech-radar__spoke {
-  fill: none;
-  stroke-linecap: round;
-  transition:
-    opacity 0.22s ease,
-    stroke-width 0.22s ease,
-    filter 0.22s ease;
-}
-
-.tech-radar__spoke-glow {
-  stroke-width: 0.34;
-  opacity: 0.26;
-  filter: blur(0.45px);
-}
-
-.tech-radar__spoke {
-  stroke-width: 0.14;
-  filter: drop-shadow(0 0 1.2px rgba(0, 212, 255, 0.58));
-}
-
-.tech-radar__spoke--active {
-  stroke-width: 0.17;
-  filter:
-    drop-shadow(0 0 1.5px rgba(0, 212, 255, 0.82))
-    drop-shadow(0 0 4px color-mix(in srgb, var(--skill-color, #38bdf8) 52%, #00d4ff));
-}
-
-.tech-radar__spoke-group--active .tech-radar__spoke-glow {
-  opacity: 0.38;
-}
-
-.tech-radar__joint {
-  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--joint-color, #38bdf8) 72%, transparent));
-}
-
-.tech-radar__joint-glow {
-  fill: var(--joint-color, #38bdf8);
-  opacity: 0.46;
-}
-
-.tech-radar__joint-core {
-  fill: color-mix(in srgb, var(--joint-color, #38bdf8) 78%, #ffffff);
-  opacity: 0.94;
-}
-
-.tech-radar__joint--active .tech-radar__joint-glow,
-.tech-radar__joint--terminal .tech-radar__joint-glow {
-  opacity: 0.82;
-}
-
-.tech-radar__spoke-group--active .tech-radar__joint {
-  filter: drop-shadow(0 0 2.5px color-mix(in srgb, var(--joint-color, #38bdf8) 82%, transparent))
-    drop-shadow(0 0 5px color-mix(in srgb, var(--joint-color, #38bdf8) 38%, transparent));
-}
-
 @keyframes tech-radar-node-in {
   from {
     opacity: 0;
-    transform: translate(
-        calc(-50% + var(--node-radial-offset-x, 0px)),
-        calc(-50% + var(--node-radial-offset-y, 0px))
-      )
-      scale(0.84);
   }
 
   to {
     opacity: 1;
-    transform: translate(
-        calc(-50% + var(--node-radial-offset-x, 0px)),
-        calc(-50% + var(--node-radial-offset-y, 0px))
-      )
-      scale(1);
   }
 }
 
-@media (width < 1280px) {
+@media (640px <= width < 1280px) {
   .skills-showcase {
-    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    grid-template-columns: minmax(8.75rem, 0.3fr) minmax(0, 1.7fr);
     grid-template-areas:
+      "header header"
       "intro cluster"
-      "process process"
       "stack stack";
+    align-items: center;
+    gap: clamp(1rem, 2.2vw, 2rem);
+    row-gap: clamp(2rem, 4.5vw, 3.25rem);
+  }
+
+  .skills-showcase__header {
+    margin-bottom: clamp(0.5rem, 1.5vw, 1rem);
   }
 
   .skills-intro {
-    justify-content: start;
-  }
-
-  .skills-radar-cluster {
-    grid-template-columns: minmax(0, 0.74fr) minmax(0, 1.52fr) minmax(0, 0.74fr);
-    gap: clamp(0.5rem, 1.1vw, 0.9rem);
-  }
-}
-
-@media (width < 900px) {
-  .skills-showcase {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "intro"
-      "cluster"
-      "process"
-      "stack";
+    justify-content: center;
+    align-self: center;
+    width: 100%;
+    padding-bottom: 0;
   }
 
   .skills-title {
@@ -768,58 +968,283 @@
   }
 
   .skills-copy {
-    max-width: 42rem;
+    max-width: none;
+    font-size: clamp(0.875rem, 1.45vw, 1rem);
+    line-height: 1.65;
+  }
+
+  .skills-intro__tabs {
+    margin-top: 1.25rem;
+    margin-bottom: 0;
+    width: 100%;
   }
 
   .skills-radar-cluster {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      'radar'
-      'detail-right';
-    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) minmax(8.75rem, 0.38fr);
+    grid-template-areas: 'radar detail-right';
+    gap: clamp(0.45rem, 1vw, 0.85rem);
+    width: 100%;
+    max-width: none;
+    margin: clamp(1rem, 2.5vw, 2rem) 0 0;
+    padding: clamp(1rem, 2.5vw, 2rem) 0;
+    align-items: center;
+    align-self: center;
+    min-height: clamp(16rem, 38vw, 24rem);
   }
 
-  .skills-radar-cluster__detail-slot--left {
+  .skills-radar-cluster__detail-slot--left,
+  .skills-radar-cluster__detail-slot--right {
     display: none;
+  }
+
+  .skills-radar-cluster__radar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    width: 100%;
+    padding: clamp(0.5rem, 1.5vw, 1.25rem) 0;
+  }
+
+  .skills-radar-cluster__radar .tech-radar__stage {
+    width: min(100%, clamp(14.5rem, 34vw, 26rem));
+    margin-inline: auto;
+  }
+
+  .skills-radar-cluster__detail {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    grid-area: detail-right;
+    align-self: center;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  .skills-radar-cluster__detail--compact {
+    z-index: 2;
+  }
+
+  .skills-radar-cluster__detail .skills-detail-card--vertical {
+    width: 100%;
+    max-width: none;
+    padding: 0.75rem 0.8rem 0.85rem;
+  }
+
+  .skills-detail-card--vertical .skills-detail-card__name {
+    font-size: 0.9375rem;
+  }
+
+  .skills-detail-card--vertical .skills-detail-card__desc {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    max-width: none;
   }
 
   .skills-radar-bridge-overlay {
     display: none;
   }
 
-  .skills-radar-cluster__detail-slot {
-    min-height: auto;
-    padding-bottom: 0;
+  .tech-radar__node-wrap:has(.tech-radar__node--active),
+  .tech-radar__node-wrap:has(.tech-radar__node:focus-visible) {
+    transform: translate(
+      calc(-50% + var(--node-radial-offset-x, 0px) + var(--node-expand-x, 0px) * 0.42),
+      calc(-50% + var(--node-radial-offset-y, 0px) + var(--node-expand-y, 0px) * 0.42)
+    );
   }
 
-  .skills-radar-cluster__detail {
-    position: static;
-    max-width: 100%;
+  .tech-radar__node--active,
+  .tech-radar__node:focus-visible {
+    gap: 0.5rem;
   }
 
-  .skills-radar-cluster__detail .skills-detail-card--vertical {
-    width: 100%;
-    max-width: 18rem;
+  .tech-radar__node--active .tech-radar__node-icon,
+  .tech-radar__node:focus-visible .tech-radar__node-icon {
+    transform: scale(1.14);
   }
 
-  .skills-process-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(1rem, 3vw, 2.9rem);
+  .tech-radar--dense .tech-radar__node--active .tech-radar__node-icon,
+  .tech-radar--dense .tech-radar__node:focus-visible .tech-radar__node-icon {
+    transform: scale(1.16);
+  }
+}
+
+@media (640px <= width < 1280px) and (hover: hover) and (pointer: fine) {
+  .tech-radar__node-wrap:has(.tech-radar__node:hover) {
+    transform: translate(
+      calc(-50% + var(--node-radial-offset-x, 0px) + var(--node-expand-x, 0px) * 0.42),
+      calc(-50% + var(--node-radial-offset-y, 0px) + var(--node-expand-y, 0px) * 0.42)
+    );
   }
 
-  .skills-process-arrow-slot {
+  .tech-radar__node:hover {
+    gap: 0.5rem;
+  }
+
+  .tech-radar__node:hover .tech-radar__node-icon {
+    transform: scale(1.14);
+  }
+
+  .tech-radar--dense .tech-radar__node:hover .tech-radar__node-icon {
+    transform: scale(1.16);
+  }
+}
+
+@media (640px <= width < 900px) {
+  .skills-showcase {
+    grid-template-columns: minmax(8.25rem, 0.32fr) minmax(0, 1.68fr);
+  }
+
+  .skills-radar-cluster {
+    grid-template-columns: minmax(0, 1fr) minmax(8rem, 0.4fr);
+  }
+
+  .skills-radar-cluster__radar .tech-radar__stage {
+    width: min(100%, clamp(12.5rem, 31vw, 21rem));
+  }
+
+  .tech-radar__node {
+    width: 4.85rem;
+    min-height: 4rem;
+  }
+
+  .tech-radar__node-icon {
+    font-size: 1.85rem;
+  }
+
+  .tech-radar__node-label {
+    font-size: 0.62rem;
+  }
+
+  .tech-radar__center {
+    width: 4.1rem;
+    height: 4.1rem;
+  }
+
+  .tech-radar__center-glyph {
+    width: 2.35rem;
+  }
+}
+
+@media (width < 1280px) {
+  .skills-process {
     display: none;
-  }
-
-  .skills-process-card {
-    flex: unset;
   }
 }
 
 @media (width < 640px) {
+  .skills-showcase {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "header"
+      "intro"
+      "cluster"
+      "stack";
+    row-gap: clamp(2.5rem, 8vw, 4rem);
+    column-gap: clamp(1.25rem, 4vw, 2rem);
+  }
+
+  .skills-showcase__header {
+    width: 100%;
+  }
+
+  .skills-intro {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .skills-title {
+    max-width: none;
+  }
+
+  .skills-copy {
+    max-width: none;
+  }
+
+  .skills-intro__tabs {
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+    width: 100%;
+  }
+
+  .skills-category-tabs {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: center;
+    width: 100%;
+    gap: 0.4rem;
+  }
+
+  .skills-category-tab.nav-btn {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    height: 2.35rem;
+  }
+
+  .skills-category-tab__inner {
+    width: 100%;
+    padding-inline: 0.2rem;
+    font-size: clamp(0.52rem, 2.75vw, 0.68rem);
+    letter-spacing: 0.05em;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .skills-radar-cluster {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-template-columns: unset;
+    grid-template-areas: unset;
+    gap: 0;
+    width: 100%;
+  }
+
+  .skills-radar-cluster__detail-slot--left,
+  .skills-radar-cluster__detail-slot--right {
+    display: none;
+  }
+
+  .skills-radar-cluster__radar {
+    justify-content: center;
+    width: 100%;
+    padding-left: 0;
+  }
+
+  .skills-radar-bridge-overlay {
+    display: none;
+  }
+
+  .skills-radar-cluster__detail {
+    position: relative;
+    width: min(100%, 18rem);
+    max-width: 18rem;
+    margin-top: calc(0.85rem + 10px);
+    margin-inline: auto;
+  }
+
+  .tech-radar__svg--overlay {
+    display: none;
+  }
+
+  .skills-radar-cluster__detail--mobile {
+    z-index: 2;
+  }
+
+  .skills-radar-cluster__detail .skills-detail-card,
+  .skills-radar-cluster__detail .skills-detail-card--vertical {
+    width: 100%;
+    max-width: 18rem;
+    margin-inline: auto;
+  }
+
   .tech-radar__stage {
     width: min(100%, 23rem);
+    margin-inline: auto;
   }
 
   .tech-radar__node {
@@ -840,12 +1265,77 @@
     height: 3.7rem;
   }
 
-  .tech-radar__center-code {
-    font-size: 1.45rem;
+  .tech-radar__center-glyph {
+    width: 2.2rem;
   }
 
-  .skills-process-list {
-    grid-template-columns: minmax(0, 1fr);
+  .skills-stack {
+    margin-top: 1.25rem;
+  }
+
+  .skills-stack-layout {
+    gap: 0.6rem;
+  }
+
+  .skills-stack-panel {
+    order: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.4rem;
+    padding: 0.5rem 0.4rem;
+    border-radius: 0.75rem;
+    border-width: 1.5px;
+  }
+
+  .skills-stack-detail {
+    order: 2;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .skills-stack-detail .skills-detail-card {
+    padding: 0.6rem 0.7rem;
+    border-radius: 0.75rem;
+    border-width: 1.5px;
+  }
+
+  .skills-stack-detail .skills-detail-card__category {
+    font-size: 0.625rem;
+    line-height: 1.3;
+  }
+
+  .skills-stack-detail .skills-detail-card__name {
+    margin-top: 0.2rem;
+    font-size: 0.8125rem;
+    line-height: 1.25;
+  }
+
+  .skills-stack-detail .skills-detail-card__desc {
+    margin-top: 0.25rem;
+    font-size: 0.6875rem;
+    line-height: 1.45;
+  }
+
+  .skills-stack-item {
+    gap: 0;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .skills-stack-item--active {
+    transform: none;
+    border-radius: 0.45rem;
+    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.55);
+  }
+
+  .skills-stack-item__icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1.35rem;
+  }
+
+  .skills-stack-item__name {
+    display: none;
   }
 }
 

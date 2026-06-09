@@ -173,8 +173,8 @@ html.is-scrolling .hero-bg__circuit-spotlight--auto {
   transform: translateY(-2px);
 }
 
-/* Freccia torna su: solo smartphone (< 640px), azzurro come i titoletti sezione */
-@media (width < 640px) {
+/* Freccia torna su: smartphone e tablet (< 1280px), azzurro come i titoletti sezione */
+@media (width < 1280px) {
   .scroll-to-top {
     right: 1rem;
     bottom: 1rem;
@@ -195,7 +195,7 @@ html.is-scrolling .hero-bg__circuit-spotlight--auto {
   }
 }
 
-@media (width >= 640px) {
+@media (width >= 1280px) {
   .scroll-to-top {
     display: none;
   }
@@ -245,6 +245,7 @@ html.custom-cursor-active * {
   display: block;
   overflow: visible;
   background: transparent;
+  filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.82));
 }
 
 .custom-cursor__shape {
@@ -374,8 +375,8 @@ html.custom-cursor-active * {
   text-underline-offset: 0.35em;
 }
 
-.site-nav .nav-btn:focus .nav-btn-inner--section,
-.site-nav .nav-btn:focus-visible .nav-btn-inner--section {
+.site-nav .nav-btn:focus-visible .nav-btn-inner--section:not(.nav-btn-inner--current),
+.site-nav .nav-btn:focus .nav-btn-inner--section:not(.nav-btn-inner--current) {
   color: #38bdf8;
   text-decoration: underline;
   text-decoration-color: #38bdf8;

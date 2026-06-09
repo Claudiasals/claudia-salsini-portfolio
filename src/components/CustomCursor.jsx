@@ -4,31 +4,15 @@ import { SMARTPHONE_MEDIA_QUERY } from '../constants/breakpoints'
 const ARROW_PATH =
   'M4 2.5V18.5L8.2 14.3L10.8 20.8L13.2 19.6L10.6 13.1H16.2L4 2.5Z'
 
-/** Alone solo fuori dal bordo (feComposite out), interno della freccia vuoto. */
 const CURSOR_SVG = `
   <svg class="custom-cursor__arrow" width="30" height="36" viewBox="0 0 22 28" fill="none" overflow="visible" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <filter id="custom-cursor-outer-glow" x="-120%" y="-120%" width="340%" height="340%" color-interpolation-filters="sRGB">
-        <feMorphology operator="dilate" radius="1.15" in="SourceAlpha" result="dilate" />
-        <feGaussianBlur in="dilate" stdDeviation="3.2" result="blurWide" />
-        <feFlood flood-color="#38bdf8" flood-opacity="0.92" result="glowColor" />
-        <feComposite in="glowColor" in2="blurWide" operator="in" result="coloredGlow" />
-        <feGaussianBlur in="coloredGlow" stdDeviation="1.4" result="softGlow" />
-        <feMerge>
-          <feMergeNode in="softGlow" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-    </defs>
-    <g filter="url(#custom-cursor-outer-glow)">
-      <path
-        class="custom-cursor__shape"
-        d="${ARROW_PATH}"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      ></path>
-    </g>
+    <path
+      class="custom-cursor__shape"
+      d="${ARROW_PATH}"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    ></path>
   </svg>
 `
 
@@ -51,18 +35,31 @@ const CustomCursor = () => {
     document.documentElement.classList.add('custom-cursor-active')
 
     let isVisible = false
+    let rafId = 0
+    let pendingX = -100
+    let pendingY = -100
+    let isRunning = true
 
     const hideCursor = () => {
       isVisible = false
       cursor.style.visibility = 'hidden'
     }
 
+    const paintCursor = () => {
+      if (!isRunning) return
+      if (isVisible) {
+        cursor.style.transform = `translate3d(${pendingX}px, ${pendingY}px, 0)`
+      }
+      rafId = window.requestAnimationFrame(paintCursor)
+    }
+
     const handlePointerMove = (event) => {
+      pendingX = event.clientX
+      pendingY = event.clientY
       if (!isVisible) {
         isVisible = true
         cursor.style.visibility = 'visible'
       }
-      cursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`
     }
 
     const handlePointerLeave = (event) => {
@@ -83,7 +80,11 @@ const CustomCursor = () => {
     window.addEventListener('blur', handleWindowBlur)
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
+    rafId = window.requestAnimationFrame(paintCursor)
+
     return () => {
+      isRunning = false
+      if (rafId) window.cancelAnimationFrame(rafId)
       cursor.remove()
       document.documentElement.classList.remove('custom-cursor-active')
       document.removeEventListener('pointermove', handlePointerMove)

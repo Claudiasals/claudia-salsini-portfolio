@@ -1,11 +1,11 @@
-import { TECH_RADAR_CATEGORIES } from './techRadarSkills'
+import { TECH_RADAR_CATEGORIES, SPOKE_LENGTH_ADJUST_PX_BY_NAME } from './techRadarSkills'
 
 const makeSkillId = (categoryId, name) =>
   `${categoryId}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
 
 export const SKILL_CATEGORY_TABS = [
-  { id: 'frontend', label: 'Front-end' },
-  { id: 'backend', label: 'Back-end' },
+  { id: 'frontend', label: 'Frontend' },
+  { id: 'backend', label: 'Backend' },
   { id: 'tools', label: 'Strumenti' },
 ]
 
@@ -27,6 +27,8 @@ export const getRadarSkillsByCategory = (categoryId) => {
     category: categoryId,
     radius: skill.radius * scale,
     scoreRadius: skill.scoreRadius * scale,
+    spokeLengthAdjustPx:
+      skill.spokeLengthAdjustPx ?? SPOKE_LENGTH_ADJUST_PX_BY_NAME[skill.name] ?? 0,
   }))
 }
 

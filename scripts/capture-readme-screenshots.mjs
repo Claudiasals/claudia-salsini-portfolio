@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.resolve(__dirname, '..')
 const outputDir = path.join(rootDir, 'docs', 'screenshots')
-const baseUrl = process.env.SCREENSHOT_BASE_URL ?? 'http://localhost:5176'
+const baseUrl = process.env.SCREENSHOT_BASE_URL ?? 'http://localhost:5173'
 
 const shots = [
   { name: 'home-hero.png', path: '/', fullPage: false, height: 900 },

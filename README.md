@@ -32,7 +32,7 @@ Il portfolio presenta il percorso professionale di Claudia — dalla formazione 
 | **Hero** | Presentazione e value proposition |
 | **About Me** | Background, approccio UX, formazione |
 | **Projects** | Carousel dei progetti principali con link a demo e repository |
-| **Skills** | Competenze tecniche organizzate per area (Frontend, Backend, Tools) |
+| **Skills** | Tech Radar interattivo con tab per categoria (Frontend / Backend / Strumenti), card dettaglio al focus e workflow «Dal codice al prodotto» su desktop; layout verticale su mobile, a tre colonne su tablet (intro · radar · card fissa) |
 | **Contact** | Form mailto, email, telefono, GitHub, LinkedIn, WhatsApp |
 
 Sono incluse anche pagine di **Privacy**, **Cookie** e **Termini**, oltre a **case study** dettagliati per i singoli progetti.
@@ -70,12 +70,13 @@ Sono incluse anche pagine di **Privacy**, **Cookie** e **Termini**, oltre a **ca
 ## Funzionalità
 
 - **Routing SPA** con React Router (home, case study, pagine legali)
-- **Scroll animato** verso le sezioni con offset per navbar fissa
+- **Scroll animato** verso le sezioni con offset per navbar fissa e **scroll spy** sulla navigazione
 - **Reveal on scroll** a cascata sulle sezioni principali
 - **Effetto griglia con spotlight** al passaggio del mouse (Skills + Contact)
 - **Cursore personalizzato** su elementi interattivi
 - **Carousel progetti** orizzontale con navigazione
-- **Card competenze** con bordi gradiente e mini-card per ogni tecnologia
+- **Tech Radar competenze** con tab Frontend / Backend / Strumenti, card dettaglio al passaggio del mouse o tap e layout responsive a tre livelli: mobile verticale (radar e card in colonna), tablet 640–1280px con titolo a tutta larghezza, intro a sinistra, radar al centro e card fissa a destra, desktop ≥1280px con card laterali e collegamenti visivi al radar
+- **Workflow «Dal codice al prodotto»** visibile solo su desktop (≥1280px), con card numerate e frecce animate tra gli step
 - **Form di contatto** via `mailto:` con precompilazione del messaggio
 - **Etichette con effetto digitazione** (JetBrains Mono + gradiente)
 - **Design responsive** per desktop, tablet e mobile
@@ -126,7 +127,7 @@ claudia-salsini-portfolio/
 │   └── capture-readme-screenshots.mjs
 ├── src/
 │   ├── components/           # UI riutilizzabili (Hero, About, Projects, Skills, Contact…)
-│   ├── data/                 # Progetti e categorie skill
+│   ├── data/                 # Progetti, tech radar e showcase skill
 │   ├── hooks/                # Scroll spotlight, typing label
 │   ├── pages/                # Home, legal, case study progetti
 │   ├── utils/
