@@ -2,15 +2,27 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { isCoarsePointer, smoothScrollToY } from '../utils/scrollToSection'
 
-const FALLBACK_SHOW_AFTER_PX = 280
+/** Comparsa solo dopo scroll profondo (pagine progetto lunghe). */
+const SHOW_AFTER_SCROLL_PX = 950
+const BASE_BOTTOM_PX = 36
+const FOOTER_CLEARANCE_PX = 20
 
-const resolveScrollAnchor = () =>
-  document.getElementById('hero') ?? document.querySelector('.project-case-header')
+const isScrollDeepEnough = () => window.scrollY > SHOW_AFTER_SCROLL_PX
 
-const isPastScrollAnchor = () => {
-  const anchor = resolveScrollAnchor()
-  if (!anchor) return window.scrollY > FALLBACK_SHOW_AFTER_PX
-  return anchor.getBoundingClientRect().bottom <= 0
+const syncScrollToTopBottom = () => {
+  const footer = document.querySelector('.site-footer')
+  let bottom = BASE_BOTTOM_PX
+
+  if (footer) {
+    const footerTop = footer.getBoundingClientRect().top
+    const viewportHeight = window.innerHeight
+
+    if (footerTop < viewportHeight) {
+      bottom = Math.max(bottom, viewportHeight - footerTop + FOOTER_CLEARANCE_PX)
+    }
+  }
+
+  document.documentElement.style.setProperty('--scroll-to-top-bottom', `${bottom}px`)
 }
 
 const ScrollToTopArrow = () => {
@@ -18,17 +30,19 @@ const ScrollToTopArrow = () => {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    const updateVisibility = () => {
-      setVisible(isPastScrollAnchor())
+    const update = () => {
+      setVisible(isScrollDeepEnough())
+      syncScrollToTopBottom()
     }
 
-    updateVisibility()
-    window.addEventListener('scroll', updateVisibility, { passive: true })
-    window.addEventListener('resize', updateVisibility, { passive: true })
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update, { passive: true })
 
     return () => {
-      window.removeEventListener('scroll', updateVisibility)
-      window.removeEventListener('resize', updateVisibility)
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+      document.documentElement.style.removeProperty('--scroll-to-top-bottom')
     }
   }, [pathname])
 

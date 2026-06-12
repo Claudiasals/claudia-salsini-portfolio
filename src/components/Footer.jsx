@@ -12,7 +12,7 @@ const Footer = () => {
   return (
     <footer className="site-footer">
       <div className="site-footer__inner mx-auto max-w-6xl px-4 py-6">
-        <p className="site-footer__brand">claudiasalsini.dev</p>
+        <p className="site-footer__brand">ClaudiaSalsini.dev</p>
 
         <span className="site-footer__sep" aria-hidden="true">
           ·

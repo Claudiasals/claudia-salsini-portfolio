@@ -52,7 +52,7 @@ export const getSectionScrollOffset = (element = null) => {
 const getElementDocumentTop = (element) =>
   element.getBoundingClientRect().top + window.scrollY
 
-export const getSectionScrollTop = (id) => {
+const getSectionScrollTop = (id) => {
   const element = document.getElementById(id)
   if (!element) return null
 
@@ -100,7 +100,7 @@ export const smoothScrollToY = (targetY, duration = 720) => {
   activeScrollAnimation = requestAnimationFrame(step)
 }
 
-export const scrollToSectionById = (id, behavior = 'auto') => {
+const scrollToSectionById = (id, behavior = 'auto') => {
   const top = getSectionScrollTop(id)
   if (top == null) return false
 

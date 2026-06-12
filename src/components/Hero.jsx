@@ -11,6 +11,12 @@ const Hero = () => {
     event.preventDefault()
     navigateToHomeSection('/#projects', location, navigate, 'smooth')
   }
+
+  const handleContactClick = (event) => {
+    event.preventDefault()
+    navigateToHomeSection('/#contact', location, navigate, 'smooth')
+  }
+
   return (
     <section
       id="hero"
@@ -51,19 +57,30 @@ const Hero = () => {
             Creo applicazioni web moderne, responsive e orientate all&apos;esperienza utente, <br />
             con attenzione a interfacce chiare, flussi semplici e soluzioni digitali <br /> pensate
             per esigenze reali.
+            <br />
+            Aperta a nuove opportunità professionali e collaborazioni su progetti web.
           </p>
         </ScrollRevealItem>
 
         <ScrollRevealItem tier="hero-5">
-          <a
-            href="/#projects"
-            className="btn-primary hero-cta mt-8 md:mt-10"
-            onClick={handleProjectsClick}
-          >
-            <span className="btn-primary-inner">
-              <span className="btn-primary-text">Guarda i miei progetti</span>
-            </span>
-          </a>
+          <div className="hero-actions mt-8 md:mt-10">
+            <a
+              href="/#projects"
+              className="btn-primary hero-cta"
+              onClick={handleProjectsClick}
+            >
+              <span className="btn-primary-inner">
+                <span className="btn-primary-text">Guarda i miei progetti</span>
+              </span>
+            </a>
+            <a
+              href="/#contact"
+              className="btn-secondary hero-cta"
+              onClick={handleContactClick}
+            >
+              <span className="btn-secondary-inner">Contattami</span>
+            </a>
+          </div>
         </ScrollRevealItem>
       </ScrollReveal>
     </section>

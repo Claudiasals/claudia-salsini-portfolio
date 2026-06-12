@@ -14,9 +14,9 @@ const SiteLayout = () => {
       <div className="top-focus-fade" aria-hidden="true" />
       <Navbar />
       <Outlet />
+      {!isHome ? <ScrollToTopArrow /> : null}
       {!isHome ? <Footer /> : null}
       <CookieConsent />
-      <ScrollToTopArrow />
     </>
   )
 }

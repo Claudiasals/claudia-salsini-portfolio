@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getSectionScrollOffset } from './scrollToSection'
 
-export const HOME_NAV_SECTION_IDS = ['about', 'projects', 'skills', 'contact']
+const HOME_NAV_SECTION_IDS = ['about', 'projects', 'skills', 'contact']
 
-export const getSectionRoot = (id) => {
+const getSectionRoot = (id) => {
   const anchor = document.getElementById(id)
   if (!anchor) return null
   return anchor.closest('section') ?? anchor
@@ -19,7 +19,7 @@ const getObserverRootMargin = () => {
 }
 
 /** Fallback quando nessuna sezione interseca la zona attiva. */
-export const detectActiveSection = () => {
+const detectActiveSection = () => {
   const marker = window.scrollY + getSectionScrollOffset() + window.innerHeight * 0.22
   let active = ''
 

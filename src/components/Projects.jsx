@@ -1,69 +1,165 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { projects } from '../data/projects'
 import ProjectCarouselCard from './ProjectCarouselCard'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
-import { getCarouselDotWaveDistance } from '../utils/carouselDotWave'
 import {
-  getActiveProjectIndex,
-  initProjectCarouselLoop,
-  scrollProjectCarouselToProjectIndex,
-} from '../utils/projectCarousel'
+  getNextProjectIndex,
+  getPrevProjectIndex,
+  getProjectCarouselSlot,
+  getRelativeProjectOffset,
+} from '../utils/projectsCarousel3d'
 
-const LOOP_SET_COUNT = 3
+const SWIPE_THRESHOLD_PX = 48
+const CAROUSEL_MOTION_MS = 880
 
-/** Tre sequenze 1-2-3: scorrimento lineare, loop senza card “clone” singole. */
-const buildCarouselSlides = (items) => {
-  if (items.length <= 1) {
-    return items.map((project) => ({
-      key: project.slug,
-      project,
-      carouselSlide: 'real',
-    }))
-  }
+function CarouselChevron({ direction }) {
+  const path = direction === 'left' ? 'M15 18l-6-6 6-6' : 'M9 18l6-6-6-6'
 
-  return Array.from({ length: LOOP_SET_COUNT }, (_, setIndex) =>
-    items.map((project) => ({
-      key: `${project.slug}-loop-${setIndex}`,
-      project,
-      carouselSlide: setIndex === 1 ? 'real' : 'loop-duplicate',
-    })),
-  ).flat()
+  return (
+    <svg
+      className="projects-carousel-3d__nav-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d={path}
+        stroke="currentColor"
+        strokeWidth="2.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
 }
 
 const Projects = () => {
-  const trackRef = useRef(null)
-  const slides = useMemo(() => buildCarouselSlides(projects), [])
-  const slidesKey = slides.map((slide) => slide.key).join('|')
-  const loopEnabled = projects.length > 1
-  const [activeProjectIndex, setActiveProjectIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const stageRef = useRef(null)
+  const centerCardRef = useRef(null)
+  const swipeStartRef = useRef(null)
+  const motionTimerRef = useRef(null)
+
+  const projectCount = projects.length
+  const loopEnabled = projectCount > 1
+
+  const goToProject = useCallback(
+    (index) => {
+      if (projectCount <= 0) return
+      const normalized = ((index % projectCount) + projectCount) % projectCount
+      setCurrentIndex(normalized)
+    },
+    [projectCount],
+  )
+
+  const nextProject = useCallback(() => {
+    setCurrentIndex((current) => getNextProjectIndex(current, projectCount))
+  }, [projectCount])
+
+  const prevProject = useCallback(() => {
+    setCurrentIndex((current) => getPrevProjectIndex(current, projectCount))
+  }, [projectCount])
 
   useEffect(() => {
-    const track = trackRef.current
-    if (!track) return undefined
+    if (!loopEnabled) return undefined
 
-    const syncActiveProject = () => {
-      const nextIndex = getActiveProjectIndex(track)
-      setActiveProjectIndex((current) => (current === nextIndex ? current : nextIndex))
+    const onKeyDown = (event) => {
+      const anchor = document.getElementById('projects')
+      if (!anchor) return
+
+      const rect = anchor.getBoundingClientRect()
+      const inView = rect.top < window.innerHeight * 0.92 && rect.bottom > window.innerHeight * 0.08
+      if (!inView) return
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault()
+        nextProject()
+        return
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault()
+        prevProject()
+      }
     }
 
-    const cleanup = initProjectCarouselLoop(track)
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [loopEnabled, nextProject, prevProject])
 
-    syncActiveProject()
-    track.addEventListener('scroll', syncActiveProject, { passive: true })
-    track.addEventListener('scrollend', syncActiveProject, { passive: true })
+  useEffect(() => {
+    setIsAnimating(true)
+
+    if (motionTimerRef.current != null) {
+      window.clearTimeout(motionTimerRef.current)
+    }
+
+    motionTimerRef.current = window.setTimeout(() => {
+      setIsAnimating(false)
+      motionTimerRef.current = null
+    }, CAROUSEL_MOTION_MS)
 
     return () => {
-      track.removeEventListener('scroll', syncActiveProject)
-      track.removeEventListener('scrollend', syncActiveProject)
-      cleanup?.()
+      if (motionTimerRef.current != null) {
+        window.clearTimeout(motionTimerRef.current)
+        motionTimerRef.current = null
+      }
     }
-  }, [slidesKey])
+  }, [currentIndex])
 
-  const goToProject = (projectIndex) => {
-    const track = trackRef.current
-    if (!track) return
-    scrollProjectCarouselToProjectIndex(track, projectIndex)
-  }
+  useEffect(() => {
+    const stage = stageRef.current
+    const centerCard = centerCardRef.current
+    if (!stage || !centerCard) return undefined
+
+    const syncStageHeight = () => {
+      stage.style.height = `${centerCard.offsetHeight}px`
+    }
+
+    syncStageHeight()
+
+    const observer = new ResizeObserver(syncStageHeight)
+    observer.observe(centerCard)
+
+    return () => observer.disconnect()
+  }, [currentIndex])
+
+  const handleTouchStart = useCallback((event) => {
+    const touch = event.touches[0]
+    if (!touch) return
+    swipeStartRef.current = { x: touch.clientX, y: touch.clientY }
+  }, [])
+
+  const handleTouchEnd = useCallback(
+    (event) => {
+      const start = swipeStartRef.current
+      swipeStartRef.current = null
+
+      if (!start || !loopEnabled) return
+
+      const touch = event.changedTouches[0]
+      if (!touch) return
+
+      const deltaX = touch.clientX - start.x
+      const deltaY = touch.clientY - start.y
+
+      if (Math.abs(deltaX) < SWIPE_THRESHOLD_PX) return
+      if (Math.abs(deltaY) > Math.abs(deltaX) * 0.85) return
+
+      if (deltaX < 0) {
+        nextProject()
+      } else {
+        prevProject()
+      }
+    },
+    [loopEnabled, nextProject, prevProject],
+  )
+
+  const clearSwipe = useCallback(() => {
+    swipeStartRef.current = null
+  }, [])
 
   return (
     <section className="projects-section section-page section-page--default">
@@ -89,49 +185,61 @@ const Projects = () => {
           </p>
         </ScrollRevealItem>
 
-        <div className="projects-carousel mt-10">
-          <div className="projects-carousel-stage">
+        <div
+          className={`projects-carousel-3d mt-10${isAnimating ? ' is-animating' : ''}`}
+          aria-roledescription="carousel"
+          aria-label="Progetti principali"
+        >
+          <div className="projects-carousel-3d__viewport">
+            {loopEnabled ? (
+              <button
+                type="button"
+                className="projects-carousel-3d__nav"
+                onClick={prevProject}
+                aria-label="Progetto precedente"
+              >
+                <CarouselChevron direction="left" />
+              </button>
+            ) : null}
+
             <div
-              ref={trackRef}
-              className="projects-carousel-track"
-              data-carousel-loop={loopEnabled ? 'true' : undefined}
-              data-carousel-set-size={projects.length}
+              ref={stageRef}
+              className="projects-carousel-3d__stage"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              onTouchCancel={clearSwipe}
             >
-              {slides.map(({ key, project, carouselSlide }) => (
-                <ProjectCarouselCard
-                  key={key}
-                  project={project}
-                  trackRef={trackRef}
-                  carouselSlide={carouselSlide}
-                />
-              ))}
-            </div>
-          </div>
+              <div className="projects-carousel-3d__track">
+                {projects.map((project, index) => {
+                  const offset = getRelativeProjectOffset(index, currentIndex, projectCount)
+                  const slot = getProjectCarouselSlot(offset)
+                  const isCenter = offset === 0
 
-          {loopEnabled ? (
-            <div className="projects-carousel-dots" role="tablist" aria-label="Progetti">
-              {projects.map((project, index) => {
-                const waveDistance = getCarouselDotWaveDistance(index, activeProjectIndex)
-                const isActive = activeProjectIndex === index
-
-                return (
-                  <span key={project.slug} className="projects-carousel-dot-cell">
-                    <button
-                      type="button"
-                      role="tab"
-                      className={`projects-carousel-dot${
-                        isActive ? ' projects-carousel-dot--active' : ''
-                      }`}
-                      data-wave-distance={waveDistance}
-                      aria-selected={isActive}
-                      aria-label={`Vai a ${project.title}`}
-                      onClick={() => goToProject(index)}
+                  return (
+                    <ProjectCarouselCard
+                      key={project.slug}
+                      ref={isCenter ? centerCardRef : undefined}
+                      project={project}
+                      carouselSlot={slot}
+                      isCenter={isCenter}
+                      onSelect={() => goToProject(index)}
                     />
-                  </span>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
-          ) : null}
+
+            {loopEnabled ? (
+              <button
+                type="button"
+                className="projects-carousel-3d__nav"
+                onClick={nextProject}
+                aria-label="Progetto successivo"
+              >
+                <CarouselChevron direction="right" />
+              </button>
+            ) : null}
+          </div>
         </div>
       </ScrollReveal>
     </section>

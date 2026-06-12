@@ -1,57 +1,57 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { forwardRef, useContext, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getProjectExternalLinkLabel } from '../data/projects'
 import ProjectTypingTitle from './ProjectTypingTitle'
 import TypingTerminalLabel from './TypingTerminalLabel'
 import { ScrollRevealContext } from './ScrollReveal'
 
-const ProjectCarouselCard = ({ project, trackRef, carouselSlide = 'real' }) => {
-  const cardRef = useRef(null)
+const ProjectCarouselCard = forwardRef(function ProjectCarouselCard(
+  { project, carouselSlot = 'center', isCenter = false, onSelect },
+  ref,
+) {
   const sectionVisible = useContext(ScrollRevealContext)
   const [typingEnabled, setTypingEnabled] = useState(false)
   const hasTypedRef = useRef(false)
 
   const externalLinkLabel = getProjectExternalLinkLabel(project.externalUrl)
+  const isSide = carouselSlot === 'left' || carouselSlot === 'right'
 
   useEffect(() => {
-    if (!sectionVisible || hasTypedRef.current) return undefined
+    if (!isCenter || !sectionVisible || hasTypedRef.current) return
 
-    const card = cardRef.current
-    const track = trackRef.current
-    if (!card || !track) return undefined
+    hasTypedRef.current = true
+    setTypingEnabled(true)
+  }, [isCenter, sectionVisible])
 
-    const startTyping = () => {
-      if (hasTypedRef.current) return
-      hasTypedRef.current = true
-      setTypingEnabled(true)
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          startTyping()
-          observer.disconnect()
-        }
-      },
-      { root: track, threshold: 0.35 },
-    )
-
-    observer.observe(card)
-
-    return () => observer.disconnect()
-  }, [sectionVisible, trackRef])
-
-  const isLoopDuplicate = carouselSlide === 'loop-duplicate'
+  const handleSideSelect = () => {
+    if (!isSide || typeof onSelect !== 'function') return
+    onSelect()
+  }
 
   return (
     <article
-      ref={cardRef}
-      className="project-carousel-card skills-category-panel"
-      data-carousel-slide={carouselSlide}
-      aria-hidden={isLoopDuplicate ? true : undefined}
+      ref={ref}
+      className={`project-carousel-card skills-category-panel project-carousel-card--${carouselSlot}`}
+      data-carousel-slot={carouselSlot}
+      aria-hidden={!isCenter}
+      inert={!isCenter ? true : undefined}
+      onClick={isSide ? handleSideSelect : undefined}
+      onKeyDown={
+        isSide
+          ? (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                handleSideSelect()
+              }
+            }
+          : undefined
+      }
+      tabIndex={isSide ? 0 : undefined}
+      role={isSide ? 'button' : undefined}
+      aria-label={isSide ? `Mostra ${project.title}` : undefined}
     >
       <div className="skills-category-inner skills-category-inner--project">
-        {!isLoopDuplicate ? (
+        {isCenter ? (
           <Link
             to={`/progetti/${project.slug}`}
             className="project-carousel-card__hit-area"
@@ -110,6 +110,6 @@ const ProjectCarouselCard = ({ project, trackRef, carouselSlide = 'real' }) => {
       </div>
     </article>
   )
-}
+})
 
 export default ProjectCarouselCard

@@ -1,8 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { FiChevronLeft, FiChevronRight, FiMaximize2, FiX } from 'react-icons/fi'
+import { FiMaximize2, FiX } from 'react-icons/fi'
 import { getCarouselDotWaveDistance } from '../utils/carouselDotWave'
 
 const LIGHTBOX_SWIPE_THRESHOLD_PX = 48
+
+function pauseProjectDemoVideos() {
+  document.querySelectorAll('.project-case-video__player').forEach((video) => {
+    if (video instanceof HTMLVideoElement && !video.paused) {
+      video.pause()
+    }
+  })
+}
 
 function getFeatureScreens(feature) {
   if (feature.screens?.length) return feature.screens
@@ -99,6 +107,8 @@ export function ProjectFeatureScreens({ features }) {
 
   useEffect(() => {
     if (!isLightboxOpen) return undefined
+
+    pauseProjectDemoVideos()
 
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -277,40 +287,6 @@ export function ProjectFeatureScreens({ features }) {
               <FiX className="project-screenshot-lightbox__close-icon" aria-hidden />
             </span>
           </button>
-
-          {hasMultipleSlides ? (
-            <button
-              type="button"
-              className="nav-btn project-screenshot-lightbox__nav project-screenshot-lightbox__nav--prev"
-              onClick={(event) => {
-                event.stopPropagation()
-                goPrevious()
-              }}
-              disabled={activeIndex <= 0}
-              aria-label="Screenshot precedente"
-            >
-              <span className="nav-btn-inner project-screenshot-lightbox__nav-inner">
-                <FiChevronLeft className="project-screenshot-lightbox__nav-icon" aria-hidden />
-              </span>
-            </button>
-          ) : null}
-
-          {hasMultipleSlides ? (
-            <button
-              type="button"
-              className="nav-btn project-screenshot-lightbox__nav project-screenshot-lightbox__nav--next"
-              onClick={(event) => {
-                event.stopPropagation()
-                goNext()
-              }}
-              disabled={activeIndex >= gallery.length - 1}
-              aria-label="Screenshot successivo"
-            >
-              <span className="nav-btn-inner project-screenshot-lightbox__nav-inner">
-                <FiChevronRight className="project-screenshot-lightbox__nav-icon" aria-hidden />
-              </span>
-            </button>
-          ) : null}
 
           <div
             className="project-screenshot-lightbox__inner"
