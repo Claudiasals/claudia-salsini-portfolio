@@ -183,6 +183,7 @@ const Navbar = () => {
             className={`nav-mobile-menu ${menuOpen ? 'nav-mobile-menu--open' : ''}`}
             aria-hidden={!menuOpen}
           >
+            {homeItem}
             {sectionItems}
           </ul>
         </div>

@@ -21,7 +21,6 @@ import TechRadar, {
   BRIDGE_JOINT_GLOW_PX,
   ICON_RADIAL_OFFSET,
   polarToPercent,
-  SkillIcon,
   SPOKE_HUB_COLOR,
 } from './TechRadar'
 
@@ -1385,20 +1384,16 @@ const Skills = () => {
                     <div className="skills-pipeline__constellation-groups">
                       {activeProcessStackGroups.map((group) => (
                         <div key={group.id} className="skills-pipeline__constellation">
-                          <div className="skills-pipeline__tools">
+                          {group.label ? (
+                            <p className="skills-pipeline__constellation-label">{group.label}</p>
+                          ) : null}
+                          <ul className="project-case-tech-list skills-pipeline__stack-list">
                             {group.tools.map((tool) => (
-                              <span
-                  key={tool.name}
-                                className="skills-pipeline__tool"
-                  style={{ '--skill-color': tool.glow }}
-                >
-                                <span className="skills-pipeline__tool-icon" aria-hidden="true">
-                    <SkillIcon skill={tool} />
-                  </span>
-                                <span className="skills-pipeline__tool-name">{tool.name}</span>
-                              </span>
+                              <li key={tool.name} className="project-case-tech-list__item">
+                                {tool.name}
+                              </li>
                             ))}
-                          </div>
+                          </ul>
                 </div>
               ))}
             </div>
