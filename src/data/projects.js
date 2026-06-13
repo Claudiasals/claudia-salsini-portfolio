@@ -4,7 +4,7 @@ export const projects = [
     category: 'SaaS B2B per contratti online e firme digitali',
     title: 'InklySign',
     description:
-      'Piattaforma full stack sviluppata durante lo stage presso Mirai Bay per digitalizzare il workflow contrattuale: creazione contratti, firma in presenza o da remoto con OTP, gestione utenti e processo documentale centralizzato per aziende.',
+      'Piattaforma sviluppata durante lo stage presso Mirai Bay per digitalizzare il workflow contrattuale: creazione contratti, firma OTP, gestione utenti e processo documentale centralizzato.',
     image: '/images/projects/inklysign.png',
     imageAlt: 'Anteprima dashboard InklySign',
     tech: ['React', 'Vite', 'Tailwind CSS', 'PHP', 'Laravel', 'MySQL'],

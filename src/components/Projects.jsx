@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { projects } from '../data/projects'
 import ProjectCarouselCard from './ProjectCarouselCard'
 import ScrollReveal, { ScrollRevealItem } from './ScrollReveal'
+import { getCarouselDotWaveDistance } from '../utils/carouselDotWave'
 import {
   getNextProjectIndex,
   getPrevProjectIndex,
@@ -240,6 +241,38 @@ const Projects = () => {
               </button>
             ) : null}
           </div>
+
+          {loopEnabled ? (
+            <div
+              className="projects-carousel-3d__dots projects-carousel-dots"
+              role="tablist"
+              aria-label="Paginazione progetti"
+            >
+              {projects.map((project, index) => {
+                const waveDistance = getCarouselDotWaveDistance(
+                  index,
+                  currentIndex,
+                  projectCount,
+                )
+
+                return (
+                  <span key={project.slug} className="projects-carousel-dot-cell">
+                    <button
+                      type="button"
+                      role="tab"
+                      className={`projects-carousel-dot${
+                        currentIndex === index ? ' projects-carousel-dot--active' : ''
+                      }`}
+                      data-wave-distance={waveDistance}
+                      aria-selected={currentIndex === index}
+                      aria-label={project.title}
+                      onClick={() => goToProject(index)}
+                    />
+                  </span>
+                )
+              })}
+            </div>
+          ) : null}
         </div>
       </ScrollReveal>
     </section>

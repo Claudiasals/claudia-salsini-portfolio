@@ -1,8 +1,25 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 /** Boost leggero oltre il massimo del controllo volume nativo del `<video>` (1.0). */
 export const useVideoVolumeBoost = (gain = 1.35) => {
   const videoRef = useRef(null)
+  const gainNodeRef = useRef(null)
+  const mutedRef = useRef(false)
+
+  const setMuted = useCallback(
+    (muted) => {
+      mutedRef.current = muted
+      const video = videoRef.current
+      if (video) {
+        video.muted = muted
+      }
+      const gainNode = gainNodeRef.current
+      if (gainNode) {
+        gainNode.gain.value = muted ? 0 : gain
+      }
+    },
+    [gain],
+  )
 
   useEffect(() => {
     const video = videoRef.current
@@ -19,13 +36,16 @@ export const useVideoVolumeBoost = (gain = 1.35) => {
         audioContext = new AudioContext()
         source = audioContext.createMediaElementSource(video)
         gainNode = audioContext.createGain()
-        gainNode.gain.value = gain
+        gainNode.gain.value = mutedRef.current ? 0 : gain
+        gainNodeRef.current = gainNode
         source.connect(gainNode)
         gainNode.connect(audioContext.destination)
         video.dataset.volumeBoost = 'true'
         video.volume = 1
+        video.muted = mutedRef.current
       } catch {
         video.volume = 1
+        video.muted = mutedRef.current
       }
     }
 
@@ -47,10 +67,11 @@ export const useVideoVolumeBoost = (gain = 1.35) => {
       video.removeEventListener('play', resumeOnPlay)
       source?.disconnect()
       gainNode?.disconnect()
+      gainNodeRef.current = null
       void audioContext?.close()
       delete video.dataset.volumeBoost
     }
   }, [gain])
 
-  return videoRef
+  return { videoRef, setMuted }
 }

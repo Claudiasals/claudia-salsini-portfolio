@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { FaCompress, FaExpand, FaPause, FaPlay } from 'react-icons/fa'
+import { FaCompress, FaExpand, FaPause, FaPlay, FaVolumeMute, FaVolumeUp } from 'react-icons/fa'
 import { useVideoVolumeBoost } from '../hooks/useVideoVolumeBoost'
 
 const PAUSE_CONTROL_HIDE_MS = 1000
@@ -46,12 +46,13 @@ function playWhenReady(video) {
  */
 export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '' }) {
   const frameRef = useRef(null)
-  const videoRef = useVideoVolumeBoost(volumeGain)
+  const { videoRef, setMuted } = useVideoVolumeBoost(volumeGain)
   const hidePauseTimerRef = useRef(null)
   const isSeekingRef = useRef(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [showPauseControl, setShowPauseControl] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
 
@@ -186,6 +187,18 @@ export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '
     clearHidePauseTimer()
   }, [isPlaying, clearHidePauseTimer])
 
+  const toggleMute = useCallback(
+    (event) => {
+      event.stopPropagation()
+      setIsMuted((current) => {
+        const next = !current
+        setMuted(next)
+        return next
+      })
+    },
+    [setMuted],
+  )
+
   const toggleFullscreen = useCallback(async () => {
     const frame = frameRef.current
     const video = videoRef.current
@@ -281,6 +294,24 @@ export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '
           <span className="project-case-video__time-sep">/</span>
           <span>{formatVideoTime(duration)}</span>
         </div>
+      </div>
+
+      <div className="project-case-video__mute-wrap">
+        <button
+          type="button"
+          className="nav-btn project-case-video__mute-btn"
+          onClick={toggleMute}
+          aria-label={isMuted ? 'Attiva audio del video' : 'Disattiva audio del video'}
+          aria-pressed={isMuted}
+        >
+          <span className="nav-btn-inner flex items-center justify-center">
+            {isMuted ? (
+              <FaVolumeMute className="project-case-video__mute-icon" aria-hidden />
+            ) : (
+              <FaVolumeUp className="project-case-video__mute-icon" aria-hidden />
+            )}
+          </span>
+        </button>
       </div>
 
       <div className="project-case-video__fullscreen-wrap">

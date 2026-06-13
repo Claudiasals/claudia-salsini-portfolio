@@ -1475,25 +1475,24 @@
   }
 
   .skills-pipeline__stage {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+    max-width: 100%;
+    justify-self: center;
     margin: 1rem 0 0;
     padding: 0.8rem 0.75rem 0.85rem;
+    translate: none;
   }
 
-  .skills-pipeline__stage--narrow {
-    max-width: min(100%, 13.5rem);
-  }
-
-  .skills-pipeline__stage--compact {
-    max-width: min(100%, 17.5rem);
-  }
-
-  .skills-pipeline__stage--wide {
-    max-width: min(calc(100vw - 2rem), 38rem);
-  }
-
+  .skills-pipeline__stage--narrow,
+  .skills-pipeline__stage--compact,
+  .skills-pipeline__stage--wide,
   .skills-pipeline__stage--evolution {
-    width: min(calc(100vw - 2rem), var(--evolution-card-width));
-    max-width: min(calc(100vw - 2rem), var(--evolution-card-width));
+    width: 100%;
+    max-width: 100%;
+    justify-self: center;
+    margin-inline: 0;
+    translate: none;
   }
 
   .skills-pipeline__constellation-groups {
