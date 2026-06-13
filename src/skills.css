@@ -500,6 +500,13 @@
   column-gap: clamp(0.35rem, 1.2vw, 0.85rem);
   row-gap: 0.5rem;
   margin-top: 1.75rem;
+  container-type: inline-size;
+  --pipeline-column-gap: clamp(0.35rem, 1.2vw, 0.85rem);
+  --pipeline-col-width: calc((100cqw - 4 * var(--pipeline-column-gap)) / 5);
+  --pipeline-edge-inset: max(
+    0px,
+    calc((var(--pipeline-col-width) - 15.5rem) / 2)
+  );
 }
 
 .skills-pipeline__track {
@@ -680,14 +687,13 @@
 
 .skills-pipeline__stage {
   position: relative;
-  grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
   width: fit-content;
-  max-width: min(100%, 38rem);
+  max-width: 100%;
   justify-self: center;
-  margin: clamp(1.5rem, 3.5vw, 2.25rem) auto 0;
+  margin: clamp(1.5rem, 3.5vw, 2.25rem) 0 0;
   padding: 0.9rem 1.15rem 1rem;
   border: 2px solid transparent;
   border-radius: 1.1rem;
@@ -701,7 +707,35 @@
     )
       border-box;
   overflow: hidden;
-  transition: background 0.35s ease;
+  transition:
+    background 0.35s ease,
+    grid-column 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    max-width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.skills-pipeline__stage--narrow {
+  max-width: min(100%, 15.5rem);
+}
+
+.skills-pipeline__stage--compact {
+  max-width: min(100%, 20.5rem);
+}
+
+.skills-pipeline__stage--wide {
+  max-width: 38rem;
+  translate: calc((var(--stage-align-col, 3) - 3) / 5 * 100cqw) 0;
+}
+
+.skills-pipeline__stage--evolution {
+  --evolution-card-width: calc((38rem + 35px) / 2);
+  justify-self: end;
+  width: min(100%, var(--evolution-card-width));
+  max-width: var(--evolution-card-width);
+  margin-inline-end: var(--pipeline-edge-inset);
+}
+
+.skills-pipeline__stage--evolution .skills-pipeline__stage-text {
+  max-width: none;
 }
 
 .skills-pipeline__stage-glow {
@@ -1378,6 +1412,11 @@
     column-gap: 0;
     row-gap: 0.45rem;
     margin-top: 1.1rem;
+    --pipeline-column-gap: 0px;
+    --pipeline-edge-inset: max(
+      0px,
+      calc((var(--pipeline-col-width) - 13.5rem) / 2)
+    );
   }
 
   .skills-pipeline__track {
@@ -1436,12 +1475,25 @@
   }
 
   .skills-pipeline__stage {
-    grid-column: 1 / -1 !important;
-    width: fit-content;
-    max-width: min(calc(100% - 1.5rem), 38rem);
-    justify-self: center;
-    margin: 1rem auto 0;
+    margin: 1rem 0 0;
     padding: 0.8rem 0.75rem 0.85rem;
+  }
+
+  .skills-pipeline__stage--narrow {
+    max-width: min(100%, 13.5rem);
+  }
+
+  .skills-pipeline__stage--compact {
+    max-width: min(100%, 17.5rem);
+  }
+
+  .skills-pipeline__stage--wide {
+    max-width: min(calc(100vw - 2rem), 38rem);
+  }
+
+  .skills-pipeline__stage--evolution {
+    width: min(calc(100vw - 2rem), var(--evolution-card-width));
+    max-width: min(calc(100vw - 2rem), var(--evolution-card-width));
   }
 
   .skills-pipeline__constellation-groups {

@@ -8,6 +8,7 @@ import { LuLightbulb } from 'react-icons/lu'
 import { RxRocket } from 'react-icons/rx'
 import {
   getProcessStepStackGroups,
+  getProcessStageLayout,
   getRadarSkillsByCategory,
   PROCESS_STEPS,
   SKILL_CATEGORY_TABS,
@@ -1143,6 +1144,10 @@ const Skills = () => {
     () => getProcessStepStackGroups(activeProcessStep),
     [activeProcessStep],
   )
+  const processStageLayout = useMemo(
+    () => getProcessStageLayout(activeProcessIndex),
+    [activeProcessIndex],
+  )
   const selectProcessStep = useCallback((index) => {
     setActiveProcessIndex(index)
   }, [])
@@ -1366,8 +1371,12 @@ const Skills = () => {
                 id="skills-pipeline-panel"
                 role="tabpanel"
                 aria-labelledby={`skills-pipeline-tab-${activeProcessStep.number}`}
-                className="skills-pipeline__stage"
-                style={{ '--phase-color': activeProcessStep.tone }}
+                className={`skills-pipeline__stage skills-pipeline__stage--${processStageLayout.tier}`}
+                style={{
+                  '--phase-color': activeProcessStep.tone,
+                  '--stage-align-col': processStageLayout.alignCol ?? 3,
+                  gridColumn: processStageLayout.gridColumn,
+                }}
               >
                 <div className="skills-pipeline__stage-glow" aria-hidden="true" />
 

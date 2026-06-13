@@ -200,3 +200,32 @@ export const PROCESS_STEPS = [
     stack: [],
   },
 ]
+
+const PROCESS_STAGE_TIERS = {
+  0: 'narrow',
+  1: 'wide',
+  2: 'compact',
+  3: 'compact',
+  4: 'evolution',
+}
+
+const FULL_WIDTH_ALIGNED_TIERS = new Set(['wide', 'evolution'])
+
+/** Allinea la card sotto l'icona attiva, con larghezza per fase. */
+export function getProcessStageLayout(stepIndex) {
+  const tier = PROCESS_STAGE_TIERS[stepIndex] ?? 'compact'
+  const col = stepIndex + 1
+
+  if (FULL_WIDTH_ALIGNED_TIERS.has(tier)) {
+    return {
+      tier,
+      gridColumn: '1 / -1',
+      alignCol: col,
+    }
+  }
+
+  return {
+    tier,
+    gridColumn: `${col} / ${col + 1}`,
+  }
+}
