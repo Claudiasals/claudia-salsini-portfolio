@@ -73,6 +73,10 @@ html.is-scrolling .hero-bg__circuit-spotlight--auto {
   scroll-margin-top: var(--section-anchor-offset);
 }
 
+#projects.section-scroll-anchor {
+  scroll-margin-top: calc(var(--section-anchor-offset) - 80px);
+}
+
 .section-page {
   position: relative;
   padding-left: 1.5rem;
@@ -1832,7 +1836,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   overflow: hidden;
   width: 100%;
   max-width: none;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 5;
 }
 
 .project-carousel-card .project-card-image {
@@ -1842,7 +1846,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: top center;
 }
 
 /* Layout orizzontale solo quando la card ha spazio sufficiente (non viewport) */
@@ -1872,7 +1876,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   .project-carousel-card .project-card-image-wrap {
     flex: 1;
     width: 100%;
-    min-height: clamp(14rem, 36cqw, 20rem);
+    min-height: clamp(7rem, 18cqw, 10rem);
     height: 100%;
     aspect-ratio: unset;
   }
@@ -1934,6 +1938,8 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 }
 
 .projects-carousel-3d__nav {
+  position: relative;
+  z-index: 40;
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
