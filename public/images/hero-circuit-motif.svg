@@ -14,9 +14,10 @@
     <path d="M40 120 H280 L320 160 H520 L560 120 H880" />
     <path d="M80 260 H240 L300 320 H460 L520 260 H760 L820 300 H920" />
     <path d="M120 400 H360 L400 360 H640 L680 420 H900" />
-    <path d="M200 80 V200 L260 260 V380" />
-    <path d="M480 60 V180 L540 240 V420" />
-    <path d="M720 100 V220 L660 280 V460" />
+    <path d="M0 0 H200 V200 L260 260 V380" />
+    <path d="M480 0 V180 L540 240 V420" />
+    <path d="M720 0 V220 L660 280 V460" />
+    <path d="M0 0 H220 L260 40 H520 L560 0 H960" />
     <path d="M340 140 V300" />
     <path d="M600 200 V380" />
     <!-- angoli: rametti verso i bordi del viewBox -->
@@ -35,9 +36,11 @@
     <circle cx="300" cy="320" r="3" />
     <circle cx="520" cy="260" r="2.5" />
     <circle cx="680" cy="420" r="3" />
-    <circle cx="480" cy="180" r="2.5" />
+    <circle cx="480" cy="120" r="2.5" />
     <circle cx="720" cy="220" r="3" />
+    <circle cx="260" cy="40" r="2" />
     <circle cx="260" cy="260" r="2" />
+    <circle cx="520" cy="0" r="2" />
     <circle cx="600" cy="200" r="2" />
     <circle cx="6" cy="24" r="2.5" />
     <circle cx="104" cy="24" r="2" />

@@ -1478,10 +1478,66 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 }
 
 
-/* Hero mobile: «Portfolio di» sulla stessa fascia del menu hamburger, testo resta centrato */
+/* Hero mobile: padding solo sul testo, bg circuiti dal bordo alto viewport */
 @media (width < 768px) {
+  :root {
+    --hero-mobile-content-lift: calc(var(--navbar-height) + 0.375rem - 1.375rem);
+    --hero-mobile-circuit-y: 0%;
+    --hero-mobile-circuit-size: 182% auto;
+  }
+
   #hero.page-under-navbar {
+    padding-top: 0;
+  }
+
+  #hero .hero-content {
     padding-top: 1.375rem;
+  }
+
+  .hero-section .hero-bg {
+    inset: 0;
+    overflow: visible;
+  }
+
+  .hero-section .hero-bg.hero-bg--mobile-viewport {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: var(--hero-bg-sync-height, 100vh);
+    transform: translate3d(0, var(--hero-bg-sync-y, 0px), 0);
+    inset: auto;
+    z-index: 0;
+    will-change: transform;
+  }
+
+  .hero-section .hero-bg__circuit,
+  .hero-section .hero-bg__circuit-spotlight,
+  .hero-section .hero-bg__circuit-spotlight::after {
+    top: 0;
+    right: -8%;
+    bottom: 0;
+    left: -8%;
+    width: auto;
+    height: 100%;
+    --hero-circuit-bg: center 0% / var(--hero-mobile-circuit-size, 182% auto) no-repeat;
+  }
+
+  .hero-section .hero-bg__scrim {
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--site-bg-rgb), 0.08) 0%,
+      rgba(var(--site-bg-rgb), 0.14) 18%,
+      rgba(var(--site-bg-rgb), 0.28) 34%,
+      rgba(var(--site-bg-rgb), 0.68) 52%,
+      rgba(var(--site-bg-rgb), 0.88) 100%
+    );
+  }
+
+  .hero-section .hero-bg__circuit {
+    opacity: 0.5;
   }
 
   #hero .hero-name {
@@ -2582,6 +2638,18 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   .contact-section .section-circuits-bg .hero-bg__circuit-spotlight {
     inset: 0;
     --hero-circuit-bg: center 40% / 168% auto no-repeat;
+  }
+
+  .hero-section .hero-bg__circuit,
+  .hero-section .hero-bg__circuit-spotlight,
+  .hero-section .hero-bg__circuit-spotlight::after {
+    top: 0;
+    right: -8%;
+    bottom: 0;
+    left: -8%;
+    width: auto;
+    height: 100%;
+    --hero-circuit-bg: center 0% / var(--hero-mobile-circuit-size, 182% auto) no-repeat;
   }
 
   .skills-section,

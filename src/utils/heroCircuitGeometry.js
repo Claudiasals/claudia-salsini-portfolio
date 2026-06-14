@@ -73,6 +73,12 @@ export const getHeroCircuitBackgroundLayoutFromElement = (el) => {
     if (value === 'center' || value === 'centre') {
       return (layerSize - imageSize) / 2
     }
+    if (value === 'top' || value === 'left') {
+      return 0
+    }
+    if (value === 'bottom' || value === 'right') {
+      return layerSize - imageSize
+    }
     if (value.endsWith('%')) {
       const pct = parsePx(value)
       if (pct !== null) return ((layerSize - imageSize) * pct) / 100

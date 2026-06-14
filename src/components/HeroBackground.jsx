@@ -1,10 +1,15 @@
+import { useRef } from 'react'
 import useHeroCircuitSpotlight from '../hooks/useHeroCircuitSpotlight'
+import useHeroMobileBackgroundSync from '../hooks/useHeroMobileBackgroundSync'
 
 const HeroBackground = ({ withSpotlight = true }) => {
+  const bgRef = useRef(null)
   const { patternRef } = useHeroCircuitSpotlight()
 
+  useHeroMobileBackgroundSync(bgRef)
+
   return (
-    <div className="hero-bg" aria-hidden="true">
+    <div ref={bgRef} className="hero-bg" aria-hidden="true">
       <div className="hero-bg__circuit" />
       {withSpotlight ? (
         <div

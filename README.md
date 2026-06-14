@@ -1,86 +1,32 @@
 # Claudia Salsini — Portfolio
 
-Portfolio personale di **Claudia Salsini**, Junior Full Stack Web Developer.  
-Sito one-page con case study dedicati, sezione competenze tecniche, form di contatto e pagine legali.
+**Junior Full Stack Web Developer**
 
-![Anteprima Hero del portfolio](./docs/screenshots/home-hero.png)
-
----
-
-## Indice
-
-- [Panoramica](#panoramica)
-- [Anteprime](#anteprime)
-- [Funzionalità](#funzionalità)
-- [Stack tecnologico](#stack-tecnologico)
-- [Progetti in evidenza](#progetti-in-evidenza)
-- [Struttura del repository](#struttura-del-repository)
-- [Avvio in locale](#avvio-in-locale)
-- [Build e deploy](#build-e-deploy)
-- [Contatti](#contatti)
+**Sito online:** [claudiasalsini.dev](https://claudiasalsini.dev/)
 
 ---
 
 ## Panoramica
 
-Il portfolio presenta il percorso professionale di Claudia — dalla formazione in psicologia allo sviluppo web — attraverso un’interfaccia scura, moderna e responsive, con animazioni leggere e attenzione all’esperienza utente.
+Portfolio personale one-page con case study dedicati, competenze tecniche, form di contatto e pagine legali. Presenta progetti full stack, percorso professionale e approccio orientato a UX e codice manutenibile.
 
-**Sezioni principali**
+**In sintesi:** routing SPA · scroll verso sezioni · carousel progetti · tech radar competenze · form contatto · case study per ogni progetto · pagine Privacy, Cookie e Termini.
 
-| Sezione | Contenuto |
-|--------|-----------|
-| **Hero** | Presentazione e value proposition |
-| **About Me** | Background, approccio UX, formazione |
-| **Projects** | Carousel dei progetti principali con link a demo e repository |
-| **Skills** | Tech Radar interattivo con tab per categoria (Frontend / Backend / Strumenti), card dettaglio al focus e workflow «Dal codice al prodotto» su desktop; layout verticale su mobile, a tre colonne su tablet (intro · radar · card fissa) |
-| **Contact** | Form mailto, email, telefono, GitHub, LinkedIn, WhatsApp |
+<p align="center">
+  <img src="./docs/screenshots/home-hero.png" alt="Homepage — Hero" width="720" />
+</p>
 
-Sono incluse anche pagine di **Privacy**, **Cookie** e **Termini**, oltre a **case study** dettagliati per i singoli progetti.
-
----
-
-## Anteprime
-
-### Hero
-
-![Sezione Hero](./docs/screenshots/home-hero.png)
-
-### About Me
-
-![Sezione About Me](./docs/screenshots/home-about.png)
-
-### Projects
-
-![Sezione Projects](./docs/screenshots/home-projects.png)
-
-### Skills
-
-![Sezione Skills](./docs/screenshots/home-skills.png)
-
-### Contact
-
-![Sezione Contact](./docs/screenshots/home-contact.png)
-
-### Case study — InklySign
-
-![Pagina case study InklySign](./docs/screenshots/project-inklysign.png)
+<p align="center">
+  <img src="./docs/screenshots/home-skills.png" alt="Sezione Skills" width="360" />
+  &nbsp;&nbsp;
+  <img src="./docs/screenshots/project-inklysign.png" alt="Case study InklySign" width="360" />
+</p>
 
 ---
 
-## Funzionalità
+## Sito online
 
-- **Routing SPA** con React Router (home, case study, pagine legali)
-- **Scroll animato** verso le sezioni con offset per navbar fissa e **scroll spy** sulla navigazione
-- **Reveal on scroll** a cascata sulle sezioni principali
-- **Effetto griglia con spotlight** al passaggio del mouse (Skills + Contact)
-- **Cursore personalizzato** su elementi interattivi
-- **Carousel progetti** orizzontale con navigazione
-- **Tech Radar competenze** con tab Frontend / Backend / Strumenti, card dettaglio al passaggio del mouse o tap e layout responsive a tre livelli: mobile verticale (radar e card in colonna), tablet 640–1280px con titolo a tutta larghezza, intro a sinistra, radar al centro e card fissa a destra, desktop ≥1280px con card laterali e collegamenti visivi al radar
-- **Workflow «Dal codice al prodotto»** visibile solo su desktop (≥1280px), con card numerate e frecce animate tra gli step
-- **Form di contatto** via `mailto:` con precompilazione del messaggio
-- **Etichette con effetto digitazione** (JetBrains Mono + gradiente)
-- **Design responsive** per desktop, tablet e mobile
-- **Supporto `prefers-reduced-motion`** per animazioni ridotte
+[https://claudiasalsini.dev/](https://claudiasalsini.dev/)
 
 ---
 
@@ -105,8 +51,6 @@ Sono incluse anche pagine di **Privacy**, **Cookie** e **Termini**, oltre a **ca
 | **WorkHub** | Gestionale interno full stack | [GitHub](https://github.com/Claudiasals/workhub.git) |
 | **Francesca Gandelli** | Portfolio fotografico con pannello admin | [Demo](https://francescagandelli.netlify.app/) |
 
-Anteprime incluse nel sito:
-
 <p align="center">
   <img src="./public/images/projects/inklysign.png" alt="InklySign" width="280" />
   <img src="./public/images/projects/workhub.png" alt="WorkHub" width="280" />
@@ -115,50 +59,18 @@ Anteprime incluse nel sito:
 
 ---
 
-## Struttura del repository
-
-```
-claudia-salsini-portfolio/
-├── docs/
-│   └── screenshots/          # Anteprime per README e documentazione
-├── public/
-│   └── images/               # Asset statici (hero, about, progetti)
-├── scripts/
-│   └── capture-readme-screenshots.mjs
-├── src/
-│   ├── components/           # UI riutilizzabili (Hero, About, Projects, Skills, Contact…)
-│   ├── data/                 # Progetti, tech radar e showcase skill
-│   ├── hooks/                # Scroll spotlight, typing label
-│   ├── pages/                # Home, legal, case study progetti
-│   ├── utils/
-│   ├── App.jsx
-│   └── index.css             # Stili globali e componenti
-├── index.html
-├── vite.config.js
-└── package.json
-```
-
----
-
 ## Avvio in locale
 
 **Requisiti:** Node.js 18+ consigliato, npm
 
 ```bash
-# Clona il repository
 git clone https://github.com/Claudiasals/claudia-salsini-portfolio.git
 cd claudia-salsini-portfolio
-
-# Installa le dipendenze
 npm install
-
-# Avvia il dev server
 npm run dev
 ```
 
 Apri l’URL indicato in terminale (di default `http://localhost:5173`).
-
-### Script disponibili
 
 | Comando | Descrizione |
 |---------|-------------|
@@ -166,17 +78,6 @@ Apri l’URL indicato in terminale (di default `http://localhost:5173`).
 | `npm run build` | Build di produzione in `dist/` |
 | `npm run preview` | Anteprima locale della build |
 | `npm run lint` | Controllo ESLint |
-
-### Rigenerare gli screenshot del README
-
-Con il dev server avviato:
-
-```bash
-npx playwright install chromium
-node scripts/capture-readme-screenshots.mjs
-```
-
-Opzionale: imposta un URL diverso con `SCREENSHOT_BASE_URL=http://localhost:5173 node scripts/capture-readme-screenshots.mjs`.
 
 ---
 

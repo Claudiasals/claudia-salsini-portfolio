@@ -20,13 +20,13 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="hero-section page-under-navbar relative overflow-hidden px-6 pb-[calc(4rem+5px)] text-white md:pb-[calc(5rem+5px)]"
+      className="hero-section page-under-navbar relative overflow-x-clip overflow-y-visible md:overflow-hidden px-6 pb-[calc(4rem+5px)] text-white md:pb-[calc(5rem+5px)]"
     >
       <HeroBackground />
 
       <ScrollReveal
         heroIntroBroadcast
-        className="relative z-10 mx-auto max-w-6xl flex flex-col items-center text-center"
+        className="hero-content relative z-10 mx-auto max-w-6xl flex flex-col items-center text-center"
       >
         <ScrollRevealItem tier="hero-1">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-400">
