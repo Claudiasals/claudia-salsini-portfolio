@@ -48,6 +48,7 @@ const SkillDetailCard = ({ skill }) => (
 
 const BRIDGE_ENTRY_RATIO = 0.26
 const SKILL_CARD_EXTRA_DOWN_PX = 15
+const DETAIL_CARD_SHIFT_DOWN_PX = 25
 
 const SKILL_CARD_EXTRA_DOWN = new Set(['React', 'PHP'])
 
@@ -358,7 +359,7 @@ const buildReactDetailLayout = (
   const detailTop = Math.max(
     4,
     Math.max(tailwindLabelBottom + 8, reactLabelBottom + 10) - REACT_CARD_SHIFT_UP_PX,
-  )
+  ) + DETAIL_CARD_SHIFT_DOWN_PX
 
   const cardAttachY =
     detailTop +
@@ -417,7 +418,8 @@ const buildNodeDetailLayout = (
     cardHeight * BRIDGE_ENTRY_RATIO -
     NODE_CARD_SHIFT_UP_PX +
     cardOffset.y +
-    getNodeBridgeCardCompensationPx(skill.name)
+    getNodeBridgeCardCompensationPx(skill.name) +
+    DETAIL_CARD_SHIFT_DOWN_PX
 
   return {
     detailTop,
@@ -477,10 +479,11 @@ const buildPhpDetailLayout = (
     Math.max(phpLayout.iconCenterX + PHP_CARD_RIGHT_OF_ICON_PX, phpLabelRight + 8) +
     cardOffset.x
 
-  const detailTop = Math.max(
-    4,
-    mongoLabelBottom + PHP_CARD_BELOW_MONGODB_GAP_PX + PHP_CARD_SHIFT_DOWN_PX + cardOffset.y,
-  )
+  const detailTop =
+    Math.max(
+      4,
+      mongoLabelBottom + PHP_CARD_BELOW_MONGODB_GAP_PX + PHP_CARD_SHIFT_DOWN_PX + cardOffset.y,
+    ) + DETAIL_CARD_SHIFT_DOWN_PX
 
   const cardAttachY =
     detailTop + cardHeight - PHP_CARD_CORNER_RADIUS_PX - PHP_BRIDGE_ATTACH_LIFT_PX
@@ -624,7 +627,7 @@ const buildRadarDetailLayout = (skill, radarEl, leftSlotEl, rightSlotEl, cardEl)
 
   let detailTop =
     bridgeAnchorY - slotTop - cardHeight * BRIDGE_ENTRY_RATIO + cardExtraDown + cardOffset.y
-  detailTop = Math.max(4, detailTop)
+  detailTop = Math.max(4, detailTop) + DETAIL_CARD_SHIFT_DOWN_PX
 
   const endY = bridgeAnchorY
 
