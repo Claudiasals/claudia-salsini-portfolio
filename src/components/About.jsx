@@ -15,8 +15,8 @@ const highlightCards = [
   },
   {
     number: '02',
-    title: 'Sviluppo end-to-end',
-    text: 'Dal design al deploy: esperienza su flussi completi a partire dal mockup con Figma alla creazione del frontend e lo sviluppo backend fino alla messa in produzione. Interfaccia, logica applicativa e dati, dall\'usabilità all\'uso concreto, non solo esercizi isolati.',
+    title: 'Sviluppo e prototipazione',
+    text: 'Realizzazione di applicazioni web full stack, dalla progettazione dell\'interfaccia allo sviluppo frontend e backend, utilizzando anche strumenti di AI-assisted development per accelerare ricerca, prototipazione e implementazione.',
   },
   {
     number: '03',
@@ -59,19 +59,24 @@ const About = () => {
             <ScrollRevealItem tier="about-1" revealMargin={REVEAL_COPY}>
               <div className="about-copy section-lead mt-5 space-y-4">
                 <p>
-                  Sono una Junior Full Stack Web Developer con una formazione in Scienze e
-                  Tecniche Psicologiche e un percorso precedente nei settori psicologico,
-                  educativo e direct marketing.
+                  Sono una Junior Full Stack Developer con una formazione in Scienze e Tecniche
+                  Psicologiche e un percorso professionale nei settori educativo, psicologico e
+                  commerciale.
                 </p>
                 <p>
-                  Questo background mi permette di avvicinarmi allo sviluppo web con uno
-                  sguardo orientato alle persone: non solo codice, ma attenzione a come gli
-                  utenti leggono, scelgono, si orientano e interagiscono con un&apos;interfaccia.
+                  Questa esperienza mi ha insegnato a osservare il modo in cui le persone
+                  prendono decisioni, cercano informazioni e interagiscono con gli strumenti che
+                  utilizzano ogni giorno.
                 </p>
                 <p>
-                  Mi interessa crescere in team dove poter contribuire alla realizzazione di
-                  applicazioni web moderne, accessibili e intuitive, trasformando esigenze
-                  concrete in esperienze digitali semplici e curate.
+                  Oggi applico questo approccio allo sviluppo web, progettando interfacce e
+                  funzionalità che non si limitano a funzionare dal punto di vista tecnico, ma che
+                  risultino anche chiare, intuitive e utili per chi le utilizza.
+                </p>
+                <p>
+                  Mi interessa crescere in contesti dove tecnologia, esperienza utente e
+                  innovazione possano incontrarsi, contribuendo allo sviluppo di prodotti digitali
+                  moderni e orientati a esigenze concrete.
                 </p>
               </div>
             </ScrollRevealItem>

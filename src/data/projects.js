@@ -1,13 +1,13 @@
 export const projects = [
   {
     slug: 'workhub-ai',
-    category: 'Piattaforma gestionale AI-enabled',
+    category: 'Estensione prodotto · AI-assisted development',
     title: 'WorkHub +AI',
     description:
-      'Dopo il capstone di gruppo, evoluzione autonoma di WorkHub: layer AI, API dedicate, fallback euristici e integrazione in ticketing, clienti, magazzino, dashboard e comunicazioni interne.',
+      'Evoluzione di WorkHub da gestionale operativo a piattaforma più intelligente, con strumenti AI per classificare ticket, leggere segnali da clienti e magazzino e aiutare l’admin a individuare prima le priorità.',
     image: '/images/projects/workhub-ai.png',
-    imageAlt: 'Dashboard WorkHub +AI con KPI, Centro operativo AI e andamento vendite',
-    tech: ['React', 'Node.js', 'LLM API', 'Express', 'MongoDB', 'AI Insights'],
+    imageAlt: 'WorkHub +AI: overview admin con Centro operativo e andamento vendite',
+    tech: ['React', 'Node.js', 'Cursor', 'Express', 'MongoDB', 'Product UX'],
     externalUrl: 'https://github.com/Claudiasals/workhub',
   },
   {

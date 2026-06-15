@@ -43,23 +43,31 @@ const Hero = () => {
         <ScrollRevealItem tier="hero-3">
           <h1 className="hero-title mt-8 mb-0 md:mb-10 md:mt-10">
             <span className="bg-gradient-to-r from-purple-600 via-sky-400 to-emerald-300 bg-clip-text text-transparent">
-              Junior Full Stack
+              Junior Full Stack Developer
             </span>
             <br />
             <span className="bg-gradient-to-r from-emerald-300 via-sky-400 to-purple-600 bg-clip-text text-transparent">
-              Web Developer
+              orientata all&apos;esperienza utente
             </span>
           </h1>
         </ScrollRevealItem>
 
         <ScrollRevealItem tier="hero-4">
-          <p className="hero-lead section-lead mx-auto mt-4 max-w-3xl">
-            Creo applicazioni web moderne, responsive e orientate all&apos;esperienza utente, <br />
-            con attenzione a interfacce chiare, flussi semplici e soluzioni digitali <br /> pensate
-            per esigenze reali.
-            <br />
-            Aperta a nuove opportunità professionali e collaborazioni su progetti web.
-          </p>
+          <div className="hero-lead section-lead mx-auto mt-4 max-w-3xl space-y-4">
+            <p>
+              Progetto e sviluppo applicazioni web moderne utilizzando tecnologie frontend e
+              backend, con particolare attenzione a usabilità, semplicità e bisogni reali delle
+              persone.
+            </p>
+            <p>
+              Utilizzo strumenti di AI-assisted development per trasformare rapidamente idee e
+              requisiti in soluzioni concrete, mantenendo cura per i dettagli e per
+              l&apos;esperienza utente.
+            </p>
+            <p className="opacity-90">
+              Aperta a nuove opportunità professionali e collaborazioni su progetti web.
+            </p>
+          </div>
         </ScrollRevealItem>
 
         <ScrollRevealItem tier="hero-5">
