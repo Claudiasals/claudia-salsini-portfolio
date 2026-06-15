@@ -1485,7 +1485,7 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
 .hero-name {
   font-family: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
-  font-size: clamp(1.625rem, 2.8vw + 0.625rem, 3rem);
+  font-size: clamp(2.125rem, 3.6vw + 0.875rem, 4rem);
   letter-spacing: 0.04em;
 }
 
@@ -1505,6 +1505,18 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   font-size: clamp(2.25rem, 5.5vw + 0.75rem, 4.5rem);
   line-height: 0.95;
   letter-spacing: 0.04em;
+}
+
+.hero-lead {
+  font-size: 1.125rem;
+  line-height: 1.875rem;
+}
+
+@media (width >= 768px) {
+  .hero-lead {
+    font-size: 1.25rem;
+    line-height: 2.125rem;
+  }
 }
 
 .hero-actions {

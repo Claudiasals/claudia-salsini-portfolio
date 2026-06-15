@@ -45,27 +45,21 @@ const Hero = () => {
             <span className="bg-gradient-to-r from-purple-600 via-sky-400 to-emerald-300 bg-clip-text text-transparent">
               Junior Full Stack Developer
             </span>
-            <br />
-            <span className="bg-gradient-to-r from-emerald-300 via-sky-400 to-purple-600 bg-clip-text text-transparent">
-              orientata all&apos;esperienza utente
-            </span>
           </h1>
         </ScrollRevealItem>
 
         <ScrollRevealItem tier="hero-4">
           <div className="hero-lead section-lead mx-auto mt-4 max-w-3xl space-y-4">
             <p>
-              Progetto e sviluppo applicazioni web moderne utilizzando tecnologie frontend e
-              backend, con particolare attenzione a usabilità, semplicità e bisogni reali delle
-              persone.
+              Sviluppo applicazioni web moderne,{' '}
+              <span className="text-sky-400">orientate all&apos;esperienza utente</span>, con
+              attenzione a usabilità, semplicità.
             </p>
             <p>
-              Utilizzo strumenti di AI-assisted development per trasformare rapidamente idee e
-              requisiti in soluzioni concrete, mantenendo cura per i dettagli e per
-              l&apos;esperienza utente.
-            </p>
-            <p className="opacity-90">
-              Aperta a nuove opportunità professionali e collaborazioni su progetti web.
+              Utilizzo strumenti di{' '}
+              <span className="text-sky-400">AI-assisted development</span> per trasformare
+              rapidamente idee e requisiti in{' '}
+              <span className="text-sky-400">soluzioni concrete</span>.
             </p>
           </div>
         </ScrollRevealItem>
