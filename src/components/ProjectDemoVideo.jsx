@@ -3,6 +3,7 @@ import { FaCompress, FaExpand, FaPause, FaPlay, FaVolumeMute, FaVolumeUp } from 
 import { useVideoVolumeBoost } from '../hooks/useVideoVolumeBoost'
 
 const PAUSE_CONTROL_HIDE_MS = 1000
+const FULLSCREEN_CURSOR_HIDE_MS = 3000
 
 const isIOSDevice = () => {
   if (typeof navigator === 'undefined') return false
@@ -48,9 +49,11 @@ export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '
   const frameRef = useRef(null)
   const { videoRef, setMuted } = useVideoVolumeBoost(volumeGain)
   const hidePauseTimerRef = useRef(null)
+  const fullscreenCursorTimerRef = useRef(null)
   const isSeekingRef = useRef(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [showPauseControl, setShowPauseControl] = useState(false)
+  const [fullscreenCursorVisible, setFullscreenCursorVisible] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
@@ -70,6 +73,40 @@ export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '
     }
   }, [])
 
+  const clearFullscreenCursorTimer = useCallback(() => {
+    if (fullscreenCursorTimerRef.current != null) {
+      window.clearTimeout(fullscreenCursorTimerRef.current)
+      fullscreenCursorTimerRef.current = null
+    }
+  }, [])
+
+  const hideFullscreenCursor = useCallback(() => {
+    document.documentElement.classList.remove('video-fullscreen-cursor-visible')
+    setFullscreenCursorVisible(false)
+    if (isPlaying) {
+      setShowPauseControl(false)
+    }
+    clearFullscreenCursorTimer()
+  }, [isPlaying, clearFullscreenCursorTimer])
+
+  const revealFullscreenCursor = useCallback(() => {
+    document.documentElement.classList.add('video-fullscreen-cursor-visible')
+    setFullscreenCursorVisible(true)
+    clearHidePauseTimer()
+    if (isPlaying) {
+      setShowPauseControl(true)
+    }
+    clearFullscreenCursorTimer()
+    fullscreenCursorTimerRef.current = window.setTimeout(() => {
+      hideFullscreenCursor()
+    }, FULLSCREEN_CURSOR_HIDE_MS)
+  }, [
+    isPlaying,
+    clearHidePauseTimer,
+    clearFullscreenCursorTimer,
+    hideFullscreenCursor,
+  ])
+
   const scheduleHidePauseControl = useCallback(() => {
     clearHidePauseTimer()
     hidePauseTimerRef.current = window.setTimeout(() => {
@@ -79,9 +116,13 @@ export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '
   }, [clearHidePauseTimer])
 
   const revealPauseControl = useCallback(() => {
+    if (isFullscreen) {
+      revealFullscreenCursor()
+      return
+    }
     setShowPauseControl(true)
     scheduleHidePauseControl()
-  }, [scheduleHidePauseControl])
+  }, [isFullscreen, revealFullscreenCursor, scheduleHidePauseControl])
 
   const togglePlayback = useCallback(() => {
     const video = videoRef.current
@@ -230,18 +271,43 @@ export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '
 
   useEffect(() => {
     const onFullscreenChange = () => {
-      setIsFullscreen(Boolean(document.fullscreenElement))
+      const active = Boolean(document.fullscreenElement)
+      setIsFullscreen(active)
+      if (active) {
+        document.documentElement.classList.add('video-fullscreen-active')
+        revealFullscreenCursor()
+        return
+      }
+      document.documentElement.classList.remove(
+        'video-fullscreen-active',
+        'video-fullscreen-cursor-visible',
+      )
+      setFullscreenCursorVisible(false)
+      clearFullscreenCursorTimer()
     }
 
     document.addEventListener('fullscreenchange', onFullscreenChange)
-    return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
-  }, [])
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange)
+      document.documentElement.classList.remove(
+        'video-fullscreen-active',
+        'video-fullscreen-cursor-visible',
+      )
+      clearFullscreenCursorTimer()
+    }
+  }, [revealFullscreenCursor, clearFullscreenCursorTimer])
+
+  const handleFramePointerMove = useCallback(() => {
+    if (!isFullscreen) return
+    revealFullscreenCursor()
+  }, [isFullscreen, revealFullscreenCursor])
 
   const frameClass = [
     'project-case-video__frame',
     'project-case-video__frame--contain',
     isPlaying ? 'is-playing' : '',
     isPlaying && showPauseControl ? 'is-pause-control-visible' : '',
+    isFullscreen && fullscreenCursorVisible ? 'is-fullscreen-cursor-visible' : '',
     className,
   ]
     .filter(Boolean)
@@ -255,6 +321,7 @@ export function ProjectDemoVideo({ src, poster, volumeGain = 1.35, className = '
       className={frameClass}
       onMouseEnter={handleFrameMouseEnter}
       onMouseLeave={handleFrameMouseLeave}
+      onPointerMove={handleFramePointerMove}
     >
       <video
         ref={videoRef}

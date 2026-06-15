@@ -127,9 +127,9 @@ const ROADMAP_ITEMS = [
 
 const OVERVIEW_CARDS = [
   {
-    title: 'Da gestionale standard ad AI-enabled',
+    title: 'Sviluppo autonomo del layer AI',
     text:
-      'WorkHub nasce come team capstone project: un gestionale completo per personale, turni, clienti, magazzino, ordini e ticket. In una fase successiva ho esteso la piattaforma con un AI layer che accelera triage, risposte e decisioni amministrative.',
+      'WorkHub nasce come capstone di gruppo; WorkHub +AI è un’estensione che ho progettato e implementato da sola — layer AI, API `/ai`, fallback euristici e integrazione UI nei moduli esistenti, senza riscrivere il gestionale base.',
   },
   {
     title: 'Cosa cambia con l’AI',
@@ -255,22 +255,22 @@ const WorkHubAiProject = () => (
           </p>
 
           <h1 className="project-case-intro__title mt-8 w-full text-3xl font-bold text-white md:text-4xl">
-            WorkHub +AI: dal team capstone project al gestionale con Decision Support System
+            WorkHub +AI: layer AI sviluppato in autonomia sul capstone di gruppo
           </h1>
           <p className="project-case-intro__desc">
-            Evoluzione del capstone WorkHub: partendo da un gestionale interno standard per
-            operazioni aziendali, ho aggiunto AI integrations che supportano gli admin
-            nei moduli ticket, clienti, magazzino, dashboard e generazione comunicazioni interne, definendo un'architettura modulare
-            con heuristic fallbacks per la demo quando il modello LLM non è configurato.
+            Dopo il capstone project di gruppo ho sviluppato autonomamente WorkHub +AI,
+            progettando e implementando il layer di intelligenza artificiale, le API dedicate,
+            il sistema di fallback euristico e l’integrazione nei moduli esistenti — ticketing,
+            clienti, magazzino, dashboard e generazione comunicazioni interne.
           </p>
           <p className="project-case-intro__desc mt-4">
-            Il progetto base resta documentato nella{' '}
+            Il gestionale base (personale, turni, ordini, CRUD condivisi) resta il lavoro del team
+            ed è documentato nella{' '}
             <Link to={WORKHUB_CASE_URL} className="text-sky-400 underline-offset-2 hover:underline">
               case study WorkHub
             </Link>
-            ; questa pagina racconta come il prodotto è cresciuto con un AI layer
-            sopra l’esistente React, Express e MongoDB stack — inclusa la dashboard rinnovata
-            e le AI integrations per rendere operative tutte le sezioni del gestionale.
+            . Questa pagina riguarda solo la parte AI che ho costruito io: architettura modulare
+            LLM + heuristics, componenti UI condivisi e Decision Support System per gli admin.
           </p>
           <p className="project-case-intro__desc mt-4 opacity-90">
             <strong>Nota:</strong> il lavoro è in evoluzione. Sono previste ottimizzazioni su sales

@@ -4,7 +4,7 @@ export const projects = [
     category: 'Piattaforma gestionale AI-enabled',
     title: 'WorkHub +AI',
     description:
-      'Evoluzione del capstone WorkHub: AI integrations su ticketing, clienti, magazzino, dashboard e generazione comunicazioni interne — piattaforma AI-enabled con Decision Support System e heuristic fallbacks per la demo portfolio.',
+      'Dopo il capstone di gruppo, evoluzione autonoma di WorkHub: layer AI, API dedicate, fallback euristici e integrazione in ticketing, clienti, magazzino, dashboard e comunicazioni interne.',
     image: '/images/projects/workhub-ai.png',
     imageAlt: 'Dashboard WorkHub +AI con KPI, Centro operativo AI e andamento vendite',
     tech: ['React', 'Node.js', 'LLM API', 'Express', 'MongoDB', 'AI Insights'],

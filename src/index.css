@@ -249,6 +249,47 @@ html.custom-cursor-active * {
   cursor: none !important;
 }
 
+html.custom-cursor-active.video-fullscreen-active .custom-cursor {
+  visibility: hidden !important;
+}
+
+html.custom-cursor-active.video-fullscreen-active:not(.video-fullscreen-cursor-visible)
+  .project-case-video__frame:fullscreen,
+html.custom-cursor-active.video-fullscreen-active:not(.video-fullscreen-cursor-visible)
+  .project-case-video__frame:-webkit-full-screen,
+html.custom-cursor-active.video-fullscreen-active:not(.video-fullscreen-cursor-visible)
+  .project-case-video__frame:fullscreen *,
+html.custom-cursor-active.video-fullscreen-active:not(.video-fullscreen-cursor-visible)
+  .project-case-video__frame:-webkit-full-screen * {
+  cursor: none !important;
+}
+
+html.custom-cursor-active.video-fullscreen-active.video-fullscreen-cursor-visible
+  .project-case-video__frame:fullscreen,
+html.custom-cursor-active.video-fullscreen-active.video-fullscreen-cursor-visible
+  .project-case-video__frame:-webkit-full-screen,
+html.custom-cursor-active.video-fullscreen-active.video-fullscreen-cursor-visible
+  .project-case-video__frame:fullscreen *,
+html.custom-cursor-active.video-fullscreen-active.video-fullscreen-cursor-visible
+  .project-case-video__frame:-webkit-full-screen * {
+  cursor: auto !important;
+}
+
+html.custom-cursor-active.video-fullscreen-active.video-fullscreen-cursor-visible
+  .project-case-video__frame:fullscreen
+  button,
+html.custom-cursor-active.video-fullscreen-active.video-fullscreen-cursor-visible
+  .project-case-video__frame:-webkit-full-screen
+  button,
+html.custom-cursor-active.video-fullscreen-active.video-fullscreen-cursor-visible
+  .project-case-video__frame:fullscreen
+  input[type='range'],
+html.custom-cursor-active.video-fullscreen-active.video-fullscreen-cursor-visible
+  .project-case-video__frame:-webkit-full-screen
+  input[type='range'] {
+  cursor: pointer !important;
+}
+
 .custom-cursor {
   position: fixed;
   top: 0;
@@ -3280,6 +3321,43 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
 .project-case-video__frame:fullscreen .project-case-video__controls,
 .project-case-video__frame:-webkit-full-screen .project-case-video__controls {
+  pointer-events: auto;
+}
+
+.project-case-video__frame:fullscreen:not(.is-fullscreen-cursor-visible)
+  .project-case-video__mute-wrap,
+.project-case-video__frame:-webkit-full-screen:not(.is-fullscreen-cursor-visible)
+  .project-case-video__mute-wrap,
+.project-case-video__frame:fullscreen:not(.is-fullscreen-cursor-visible)
+  .project-case-video__fullscreen-wrap,
+.project-case-video__frame:-webkit-full-screen:not(.is-fullscreen-cursor-visible)
+  .project-case-video__fullscreen-wrap,
+.project-case-video__frame:fullscreen:not(.is-fullscreen-cursor-visible)
+  .project-case-video__controls,
+.project-case-video__frame:-webkit-full-screen:not(.is-fullscreen-cursor-visible)
+  .project-case-video__controls {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+}
+
+.project-case-video__frame:fullscreen.is-fullscreen-cursor-visible
+  .project-case-video__mute-wrap,
+.project-case-video__frame:-webkit-full-screen.is-fullscreen-cursor-visible
+  .project-case-video__mute-wrap,
+.project-case-video__frame:fullscreen.is-fullscreen-cursor-visible
+  .project-case-video__fullscreen-wrap,
+.project-case-video__frame:-webkit-full-screen.is-fullscreen-cursor-visible
+  .project-case-video__fullscreen-wrap,
+.project-case-video__frame:fullscreen.is-fullscreen-cursor-visible
+  .project-case-video__controls,
+.project-case-video__frame:-webkit-full-screen.is-fullscreen-cursor-visible
+  .project-case-video__controls {
+  opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 
