@@ -18,7 +18,7 @@ const CONTRIBUTION_ITEMS = [
   'backend Node.js ed Express con MongoDB Atlas: modelli dati, autenticazione JWT e upload immagini',
   'pannello admin per inserire categorie e foto, modificare testi, contatti e pagine legali in autonomia',
   'recupero password con verifica OTP via email: richiesta codice, conferma e impostazione nuova password',
-  'integrazione Cloudinary per storage foto, Multer per upload e Nodemailer per form contatti e OTP',
+  'Cloudinary integration per storage foto, Multer per upload e Nodemailer per form contatti e OTP',
   'deploy frontend su Netlify e backend su Render, con configurazione variabili d’ambiente',
 ]
 
@@ -211,7 +211,7 @@ const FrancescaGandelliProject = () => (
           </h2>
           <p className="project-case-body">
             Ho sviluppato il portfolio in parallelo alla formazione: prima ho allineato
-            l’interfaccia alle richieste estetiche della cliente, poi ho progettato l’architettura
+            l’interfaccia alle richieste estetiche della cliente, poi ho progettato la system architecture
             client/server con React, API Express, MongoDB Atlas e Cloudinary, con autenticazione
             admin e deploy su Netlify e Render.
           </p>

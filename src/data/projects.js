@@ -1,5 +1,16 @@
 export const projects = [
   {
+    slug: 'workhub-ai',
+    category: 'Piattaforma gestionale AI-enabled',
+    title: 'WorkHub +AI',
+    description:
+      'Evoluzione del capstone WorkHub: AI integrations su ticketing, clienti, magazzino, dashboard e generazione comunicazioni interne — piattaforma AI-enabled con Decision Support System e heuristic fallbacks per la demo portfolio.',
+    image: '/images/projects/workhub-ai.png',
+    imageAlt: 'Dashboard WorkHub +AI con KPI, Centro operativo AI e andamento vendite',
+    tech: ['React', 'Node.js', 'LLM API', 'Express', 'MongoDB', 'AI Insights'],
+    externalUrl: 'https://github.com/Claudiasals/workhub',
+  },
+  {
     slug: 'inklysign',
     category: 'SaaS B2B per contratti online e firme digitali',
     title: 'InklySign',

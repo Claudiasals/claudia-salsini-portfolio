@@ -68,14 +68,14 @@ const FEATURES = [
     tags: 'Overview · react-big-calendar · Role-based · Joi',
     screens: [
       {
-        src: '/images/projects/workhub/warehouse.png',
-        alt: 'Overview dipendente WorkHub con indicatori riepilogativi, bacheca eventi, prodotti in esaurimento e calendario turni',
+        src: '/images/projects/workhub/dashboard-user-board.png',
+        alt: 'Overview dipendente WorkHub con KPI, grafico vendite e calendario turni',
         label: 'Overview dipendente',
       },
       {
-        src: '/images/projects/workhub/admin-board-edit.png',
-        alt: 'Overview amministratore WorkHub con modifica evento sulla bacheca aziendale',
-        label: 'Overview amministratore',
+        src: '/images/projects/workhub/dashboard-user-calendario.png',
+        alt: 'Calendario turni settimanale WorkHub con turni personali visibili',
+        label: 'Turni personali',
       },
     ],
   },
@@ -142,18 +142,13 @@ const FEATURES = [
     tags: 'Pipeline ticketing · MUI Charts',
     screens: [
       {
-        src: '/images/projects/workhub/admin-personale.png',
-        alt: 'Modulo Ticket WorkHub con elenco ticket aperti e chiusi e pulsante Apri ticket',
+        src: '/images/projects/workhub/ticketing-user-apri-ticket.png',
+        alt: 'Modulo Ticket WorkHub lato dipendente con elenco ticket e form per aprire una richiesta',
         label: 'I miei ticket',
       },
       {
-        src: '/images/projects/workhub/orders-detail.png',
-        alt: 'Modulo Ticket WorkHub con drawer Apri ticket per inserire titolo e descrizione della richiesta',
-        label: 'Apri ticket',
-      },
-      {
         src: '/images/projects/workhub/admin-ticket-analytics.png',
-        alt: 'Vista admin Ticket WorkHub con grafico andamento ticket, lista completa e filtri per data, utente e stato',
+        alt: 'Vista admin Ticket WorkHub con grafico andamento ticket, lista completa e filtri',
         label: 'Ticketing admin',
       },
       {
@@ -175,7 +170,7 @@ const FEATURES = [
         label: 'Login con 2FA',
       },
       {
-        src: '/images/projects/workhub/admin-ticket.png',
+        src: '/images/projects/workhub/settings.png',
         alt: 'Impostazioni WorkHub con modifica password, 2FA, anagrafica utente, lingua e tema chiaro/scuro',
         label: 'Impostazioni account',
       },
@@ -240,7 +235,7 @@ const WorkHubProject = () => (
             con interfaccia role-based per admin e dipendenti.
           </p>
           <p className="project-case-intro__desc mt-4">
-            Capstone di corso in team: abbiamo progettato e sviluppato la piattaforma end-to-end con
+            Capstone project di team: abbiamo progettato e sviluppato la piattaforma end-to-end con
             React sul frontend, API Express e MongoDB, autenticazione, ruoli e moduli operativi per
             simulare un gestionale aziendale reale.
           </p>
@@ -289,11 +284,11 @@ const WorkHubProject = () => (
           </h2>
           <p className="project-case-body">
             WorkHub rappresenta il progetto conclusivo del percorso Full Stack Web Developer e
-            sintetizza le competenze maturate nello sviluppo full stack. Architettura, convenzioni e
+            sintetizza le competenze maturate nello sviluppo full stack. System architecture, convenzioni e
             stile dell&apos;interfaccia sono stati definiti insieme all&apos;avvio del progetto; il
             lavoro è stato poi ripartito per moduli del gestionale (personale, clienti, magazzino,
             ordini, ticket, dashboard), con ogni componente del gruppo responsabile del proprio ambito
-            end-to-end — componenti React, logica frontend, endpoint Express, modelli e query
+            end-to-end — componenti React, frontend logic, Express endpoints, modelli e query
             MongoDB — integrando tutto nelle API REST condivise.
           </p>
           <ul className="project-case-checklist space-y-4">
@@ -393,7 +388,7 @@ const WorkHubProject = () => (
             </p>
             <p>
               Questo stack ci ha permesso di lavorare in team su un percorso completo,
-              dall&apos;interfaccia alle logiche server, fino all&apos;integrazione end-to-end dei moduli.
+              dall&apos;interfaccia alle logiche server, fino all&apos;end-to-end integration dei moduli.
             </p>
           </div>
         </section>

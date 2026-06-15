@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import FrancescaGandelliProject from './pages/projects/FrancescaGandelliProject'
 import InklySignProject from './pages/projects/InklySignProject'
+import WorkHubAiProject from './pages/projects/WorkHubAiProject'
 import WorkHubProject from './pages/projects/WorkHubProject'
 import TermsPage from './pages/TermsPage'
 
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/termini" element={<TermsPage />} />
           <Route path="/progetti/inklysign" element={<InklySignProject />} />
           <Route path="/progetti/workhub" element={<WorkHubProject />} />
+          <Route path="/progetti/workhub-ai" element={<WorkHubAiProject />} />
           <Route
             path="/progetti/francesca-gandelli"
             element={<FrancescaGandelliProject />}

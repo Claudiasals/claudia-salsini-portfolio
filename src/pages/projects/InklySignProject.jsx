@@ -13,9 +13,9 @@ const DEMO_SECTION_ID = 'inklysign-demo'
 const CONTRIBUTION_ITEMS = [
   'progettazione UI in Figma, con brief condivisi col team tech Mirai Bay su modifiche e nuove funzionalità',
   'sviluppo frontend con Javascript, React, Vite e Tailwind CSS: schermate, flussi, dashboard, contratti, template e firma online',
-  'sviluppo backend con PHP, Laravel e MySQL: logiche applicative, dati e API',
+  'sviluppo backend con PHP, Laravel e MySQL: application logic, dati e API',
   'deploy e messa online dell’applicazione',
-  'sviluppo di quanto concordato nei brief, con integrazioni e miglioramenti proposti in autonomia',
+  'sviluppo di quanto concordato nei brief, con integrations e miglioramenti proposti in autonomia',
 ]
 
 const OVERVIEW_CARDS = [
@@ -45,7 +45,7 @@ const OVERVIEW_CARDS = [
 
 const FEATURES = [
   {
-    title: 'Dashboard gestionale',
+    title: 'Admin dashboard',
     text:
       'Dopo il login la dashboard riassume i dati operativi e lo storico dei clienti: andamento delle firme, attività recenti e stato delle pratiche in un’unica vista. La sidebar laterale permette di spostarsi tra contratti, clienti, template e impostazioni senza uscire dall’applicazione.',
     tags: 'KPI contratti · Storico attività',
