@@ -4,7 +4,7 @@ export const projects = [
     category: 'Estensione prodotto · AI-assisted development',
     title: 'WorkHub +AI',
     description:
-      'Evoluzione di WorkHub da gestionale operativo a piattaforma più intelligente, con strumenti AI per classificare ticket, leggere segnali da clienti e magazzino e aiutare l’admin a individuare prima le priorità.',
+      'Evoluzione di WorkHub, gestionale interno per il personale del capstone di gruppo, da gestionale operativo a piattaforma smart con strumenti AI per ottimizzare il flusso di lavoro.',
     image: '/images/projects/workhub-ai.png',
     imageAlt: 'WorkHub +AI: overview admin con Centro operativo e andamento vendite',
     tech: ['React', 'Node.js', 'Cursor', 'Express', 'MongoDB', 'Product UX'],

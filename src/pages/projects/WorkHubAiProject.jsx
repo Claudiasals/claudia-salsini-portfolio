@@ -1,63 +1,36 @@
 import { Link } from 'react-router-dom'
 import { ProjectSuggestions } from '../../components/ProjectSuggestions'
 import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
+import { ProjectDemoLink } from '../../components/ProjectDemoLink'
+import { ProjectDemoVideo } from '../../components/ProjectDemoVideo'
 import { ProjectFeatureScreens } from '../../components/ProjectFeatureScreens'
 
 const CATEGORY = 'Estensione prodotto · AI-assisted development'
 const TITLE = 'WorkHub +AI'
 const EXTERNAL_URL = 'https://github.com/Claudiasals/workhub'
 const WORKHUB_CASE_URL = '/progetti/workhub'
+const DEMO_SECTION_ID = 'workhub-ai-demo'
 
 const CONTRIBUTION_ITEMS = [
-  'Supporto decisionale per amministratori: nel Centro operativo della dashboard, alert su magazzino, ticket, turni e vendite, con link diretti al modulo giusto; l’andamento vendite in overview è l’unico elemento della dashboard con ricaduta sui clienti.',
-  'Classificazione e gestione più rapida dei ticket: priorità e categoria suggerite alla creazione, alert su richieste in ritardo e bozze di risposta per l’admin.',
-  'Insight operativi su clienti e magazzino: profilo commerciale, promo personalizzate e segnali su stock critico o trasferimenti consigliati tra sedi.',
-  'Generazione assistita di comunicazioni interne: da poche parole chiave a testi pronti per eventi e riunioni aziendali.',
-  'Suggerimenti contestuali nei flussi esistenti: pannelli informativi nel punto giusto del percorso, senza schermate parallele o passaggi in più.',
-]
-
-const USER_FEATURES = [
   {
-    area: 'Centro operativo',
-    per: 'Admin',
-    dove: 'Dashboard',
-    risultato:
-      'Una vista unica su ciò che richiede attenzione oggi: stock, ticket, turni e vendite, con azioni rapide verso il modulo giusto.',
+    title: 'Analisi e progettazione',
+    text: 'individuazione dei bisogni operativi, definizione dei casi d’uso AI per modulo e progettazione dei flussi.',
   },
   {
-    area: 'Ticket',
-    per: 'Admin e dipendente',
-    dove: 'Modulo ticket',
-    risultato:
-      'Meno tempo su triage e risposte ripetitive: classificazione alla creazione, alert su priorità e aging, bozze di risposta modificabili dall’admin.',
+    title: 'Prompt e logica AI',
+    text: 'progettazione dei prompt, servizi su modelli linguistici ed euristiche di fallback quando l’API non è configurata.',
   },
   {
-    area: 'Clienti',
-    per: 'Admin',
-    dove: 'Scheda cliente',
-    risultato:
-      'Storico ordini tradotto in insight leggibili e fino a tre promo suggerite, con email promo generabile in un click.',
+    title: 'Interfaccia e UX',
+    text: 'inserimento di pannelli, badge e alert nei moduli esistenti, con componenti e stile coerenti con il gestionale base.',
   },
   {
-    area: 'Magazzino',
-    per: 'Admin',
-    dove: 'Modulo magazzino',
-    risultato:
-      'Alert su esaurimenti e soglie basse, con suggerimenti di riordino o trasferimento tra sedi ordinati per urgenza.',
+    title: 'Frontend e backend',
+    text: 'sviluppo delle funzionalità con React, Redux, Node.js, Express e MongoDB.',
   },
   {
-    area: 'Comunicazioni evento',
-    per: 'Admin',
-    dove: 'Calendario eventi',
-    risultato:
-      'Comunicazioni interne per riunioni e appuntamenti aziendali partendo da keyword, pronte da revisionare e salvare.',
-  },
-  {
-    area: 'Dashboard e calendario',
-    per: 'Admin e dipendente',
-    dove: 'Overview',
-    risultato:
-      'KPI, turni personali, eventi aziendali e documenti nello stesso design system — l’admin vede di più, il dipendente solo ciò che gli serve.',
+    title: 'AI-assisted development',
+    text: 'uso di Cursor per accelerare prototipazione e sviluppo, con revisione e adattamento manuale del codice prima dell’integrazione.',
   },
 ]
 
@@ -65,33 +38,28 @@ const ROADMAP_ITEMS = [
   {
     title: 'Vendite: individuare i punti critici',
     text:
-      'Integrazione AI per ottimizzare le vendite: analisi dei prodotti in calo, segnalazione dei punti critici per sede o categoria e suggerimenti concreti su dove intervenire — promo, riordino o assortimento.',
+      'Analisi dei prodotti in calo e suggerimenti su promo, riordino o assortimento per sede e categoria.',
   },
   {
     title: 'Turni: proposta generata dall’AI',
     text:
-      'Integrazione AI per preparare una bozza di turni settimanali tenendo conto di ferie, festività, orari contrattuali e riposi. Il responsabile rivede la proposta e la approva prima che entri in vigore: nessuna creazione automatica senza conferma.',
+      'Bozza settimanale che considera ferie, festività e riposi, con approvazione del responsabile prima dell’inserimento.',
   },
 ]
 
 const OVERVIEW_CARDS = [
   {
-    title: 'AI integrata nel gestionale',
+    title: 'Il punto di partenza',
     text:
-      'Suggerimenti e alert compaiono nei moduli previsti per admin e dipendente — ticket, clienti, magazzino, dashboard — senza aprire sezioni separate o imparare nuove schermate.',
+      'WorkHub è una piattaforma gestionale che centralizza i flussi di lavoro. Servivano però dati più centralizzati su magazzino e stock, maggiore velocità nella gestione dei ticket e un uso più efficace dei dati commerciali: ottimizzare le vendite era fondamentale, ma ordini e storico clienti non venivano sfruttati abbastanza per orientare le scelte in negozio.',
   },
   {
-    title: 'Il mio ruolo nel progetto',
+    title: 'La soluzione sviluppata',
     text:
-      'WorkHub è nato come capstone di gruppo. WorkHub +AI è l’estensione che ho progettato e sviluppato dopo il corso, dall’analisi delle esigenze all’integrazione in interfaccia.',
+      'Ho sviluppato WorkHub +AI per colmare questi gap. Alert e suggerimenti in magazzino, classificazione e risposta assistita sui ticket, centro operativo per le priorità incrociate e, sui clienti, promo mirate con suggerimenti di upselling basati sugli acquisti reali. Più dati al posto giusto, meno lavoro manuale, vendite guidate da ciò che la piattaforma sa già.',
   },
   {
-    title: 'Sviluppo con strumenti AI',
-    text:
-      'Ho usato Cursor, assistenti di coding e API su modelli linguistici per prototipare e implementare più rapidamente, validando e adattando il codice al prodotto finale.',
-  },
-  {
-    title: 'Tecnologie',
+    title: 'Tech stack',
     technologies: [
       'React · Redux',
       'Node.js · Express',
@@ -104,20 +72,20 @@ const OVERVIEW_CARDS = [
 
 const FEATURES = [
   {
-    title: 'Dashboard: meno dispersione, più orientamento',
+    title: 'Centro operativo',
     text:
-      'L’admin apre la overview e trova subito KPI, Centro operativo con alert prioritizzati, andamento vendite, calendario turni/eventi e documenti — senza saltare tra moduli per capire la situazione.',
-    tags: 'UX admin · Overview · Calendario',
+      'Il centro operativo raccoglie in dashboard, a portata di mano, gli alert prioritari delle diverse aree e rimanda direttamente ai moduli di competenza per velocizzare il flusso di lavoro.',
+    tags: 'Dashboard · Alert operativi · UX admin',
     screens: [
-      {
-        src: '/images/projects/workhub/ai-admin-overview-calendario-documenti.png',
-        alt: 'Overview admin WorkHub con sezione Documenti e Comunicazioni',
-        label: 'Documenti e comunicazioni',
-      },
       {
         src: '/images/projects/workhub/ai-admin-overview-centro-operativo.png',
         alt: 'Overview admin WorkHub con Centro operativo AI e grafico andamento vendite',
         label: 'Centro operativo e vendite',
+      },
+      {
+        src: '/images/projects/workhub/ai-admin-overview-calendario-documenti.png',
+        alt: 'Overview admin WorkHub con sezione Documenti e Comunicazioni',
+        label: 'Documenti e comunicazioni',
       },
       {
         src: '/images/projects/workhub/ai-admin-overview-turni.png',
@@ -127,22 +95,22 @@ const FEATURES = [
     ],
   },
   {
-    title: 'Ticket: triage e risposte più veloci',
+    title: 'Comunicazione e ticketing',
     text:
-      'Alla creazione il ticket riceve priorità e categoria suggerite; in area admin un pannello evidenzia richieste vecchie, picchi per categoria e carico operativo, con bozze di risposta partendo da poche parole chiave.',
-    tags: 'Ticketing · Classificazione · Admin workflow',
+      'Classificare le richieste, individuare i ritardi e rispondere con messaggi ripetitivi richiede tempo all’admin. In cima all’area ticket compaiono suggerimenti operativi sul backlog dei ticket aperti, sulle priorità da gestire e sulle categorie con più richieste in sospeso. Alla creazione di un ticket l’AI ne imposta la priorità e la tipologia. Inoltre la risposta assistita genera una bozza professionale da poche parole chiave, pronta da inviare o copiare. Riduce i passaggi manuali necessari per classificare una richiesta e preparare una prima risposta.',
+    tags: 'Ticketing · Suggerimenti operativi · Risposta assistita AI',
     screens: [
       {
         src: '/images/projects/workhub/ai-admin-ticket.png',
-        alt: 'Area ticket admin WorkHub con pannello AI Insights, filtri e lista ticket',
-        label: 'Ticketing admin',
+        alt: 'Area ticket WorkHub con suggerimenti operativi AI, filtri priorità e lista richieste',
+        label: 'Comunicazione e ticketing',
       },
     ],
   },
   {
-    title: 'Clienti: da storico ordini a azioni commerciali',
+    title: 'Clienti',
     text:
-      'Nella scheda cliente, insight su categorie preferite, frequenza e spesa media si traducono in promo personalizzate e testi email pronti da inviare — utili per chi vende, non solo per chi consulta dati.',
+      'Lo storico ordini da solo non si traduce in azioni commerciali concrete. Dalla scheda cliente l’AI legge categorie preferite, frequenza d’acquisto e spesa media, suggerisce fino a tre promo mirate da proporre al cliente e genera il testo dell’email promo da inviare.',
     tags: 'CRM · Promo · Customer insights',
     screens: [
       {
@@ -153,38 +121,38 @@ const FEATURES = [
     ],
   },
   {
-    title: 'Magazzino: criticità visibili subito',
+    title: 'Magazzino',
     text:
-      'Esaurimenti, soglie basse e anomalie tra sedi compaiono in un pannello dedicato, ordinato per urgenza, così l’admin sa dove intervenire senza scorrere l’intero inventario.',
+      'Esaurimenti e squilibri tra sedi emergono solo scorrendo l’inventario riga per riga. Il pannello AI evidenzia immediatamente i prodotti critici, evitando il controllo manuale dell’intero inventario, segnala le soglie basse e suggerisce riordini o trasferimenti tra punti vendita, ordinati per urgenza per intervenire subito dove necessario.',
     tags: 'Magazzino · Alert operativi',
     screens: [
       {
         src: '/images/projects/workhub/warehouse-ai-suggestions.png',
-        alt: 'Magazzino WorkHub con pannello suggerimenti e alert stock',
+        alt: 'Magazzino WorkHub con KPI, pannello Suggerimenti AI e tabella inventario con alert stock',
         label: 'Suggerimenti magazzino',
       },
     ],
   },
 ]
 
-const APPROACH_HIGHLIGHTS = [
+const STACK_HIGHLIGHTS = [
   {
-    title: 'Analisi prima del codice',
+    title: 'Frontend e UX',
     text:
-      'Ho individuato i punti in cui admin e dipendente avrebbero disperso più tempo — ticket, KPI sparsi, promo generiche, comunicazioni ripetitive — e ho tradotto ogni criticità in un miglioramento nell’interfaccia.',
-    tags: 'Product thinking · User needs',
+      'Pannelli, badge e stati di caricamento condivisi tra moduli React, integrati nel design system del gestionale base senza un «modulo AI» separato.',
+    tags: 'React · Redux · Design system',
   },
   {
-    title: 'Strumenti AI al servizio del prodotto',
+    title: 'Backend e servizi AI',
     text:
-      'Cursor e assistenti di coding per esplorare soluzioni e iterare velocemente; API su modelli linguistici dove serviva testo o classificazione; logica locale dove bastava per mantenere l’esperienza fluida anche in demo.',
-    tags: 'Cursor · AI-assisted coding · LLM API',
+      'API Express con servizi AI modulari: centro operativo incrociato, insight e classificazione ticket, risposte assistite, analisi clienti e promo, suggerimenti magazzino, turni e bozze per comunicazioni interne. Modelli linguistici lato server, affiancati da euristiche locali così la piattaforma resta utilizzabile anche in demo senza API key.',
+    tags: 'Node.js · Express · LLM API · Euristiche',
   },
   {
-    title: 'Interfaccia coerente',
+    title: 'AI-assisted development',
     text:
-      'Pannelli, badge e stati di caricamento condivisi tra moduli, stesso design system del gestionale base: nessun «modulo AI» separato da imparare.',
-    tags: 'Design system · UX · React',
+      'Cursor come IDE con AI integrata per accelerare prototipazione e sviluppo: esplorazione di approcci, bozze di componenti e servizi, correzione di errori e rifinitura dell’interfaccia. Uso consapevole da junior: l’AI propone e velocizza, ma analisi, scelte tecniche, test e revisione del codice restano in capo allo sviluppatore.',
+    tags: 'Cursor · AI-assisted coding',
   },
 ]
 
@@ -203,27 +171,19 @@ const WorkHubAiProject = () => (
           </p>
 
           <h1 className="project-case-intro__title mt-8 w-full text-3xl font-bold text-white md:text-4xl">
-            WorkHub +AI
+            WorkHub +AI: estensione intelligente del gestionale
           </h1>
           <p className="project-case-intro__desc">
-            Dopo WorkHub, il capstone project di gruppo, ho sviluppato WorkHub +AI, un’estensione
-            della piattaforma per rendere più rapide e intuitive le operazioni tipiche di admin e
-            dipendente, e per orientare meglio le vendite grazie a insight sui clienti e
-            all’analisi dei dati in dashboard.
-          </p>
-          <p className="project-case-intro__desc mt-4">
-            Ho integrato strumenti AI-assisted development e modelli linguistici nell’interfaccia
-            esistente: classificazione ticket, alert su magazzino, insight sui clienti, promo
-            suggerite e un Centro operativo che aiuta l’admin a individuare prima le priorità — senza
-            stravolgere la struttura di navigazione esistente.
+            Dopo aver realizzato WorkHub come progetto finale di gruppo, ho progettato
+            autonomamente un’estensione AI per esplorare come automazione e modelli linguistici
+            potessero migliorare ticketing, magazzino, CRM e processi decisionali.
           </p>
           <p className="project-case-intro__desc mt-4 opacity-90">
-            Il gestionale base resta documentato nella{' '}
+            Il gestionale base è documentato nella{' '}
             <Link to={WORKHUB_CASE_URL} className="text-sky-400 underline-offset-2 hover:underline">
               case study WorkHub
             </Link>
-            {' '}
-            (progetto di gruppo). Questa pagina riguarda solo l’evoluzione AI.
+            . Questa pagina riguarda solo l’evoluzione AI.
           </p>
         </header>
 
@@ -236,9 +196,14 @@ const WorkHubAiProject = () => (
           <Link to={WORKHUB_CASE_URL} className="btn-secondary">
             <span className="btn-secondary-inner">Case study WorkHub base</span>
           </Link>
+          <ProjectDemoLink sectionId={DEMO_SECTION_ID} className="btn-primary">
+            <span className="btn-primary-inner">
+              <span className="btn-primary-text">Demo gestionale +AI</span>
+            </span>
+          </ProjectDemoLink>
         </ProjectCaseHeroActions>
 
-        <section className="project-case-overview-cards" aria-label="Contesto prodotto e approccio">
+        <section className="project-case-overview-cards" aria-label="Punto di partenza, soluzione e stack">
           <ul className="project-case-overview-cards__grid">
             {OVERVIEW_CARDS.map((card) => (
               <li key={card.title} className="project-case-card project-case-card--compact">
@@ -259,99 +224,78 @@ const WorkHubAiProject = () => (
         </section>
 
         <section aria-labelledby="workhub-ai-contribution">
-          <p className="project-case-section-label">Il mio contributo</p>
+          <p className="project-case-section-label">Il mio ruolo</p>
           <h2
             id="workhub-ai-contribution"
             className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
           >
-            Cosa ho integrato
+            Come ho realizzato WorkHub +AI
           </h2>
-          <p className="project-case-body mb-2">
-            Ho inserito integrazioni AI nei moduli del gestionale base — ticket, clienti, magazzino,
-            dashboard — con pannelli e suggerimenti contestuali, senza stravolgere il flusso della
-            piattaforma. In particolare:
+          <p className="project-case-body">
+            Ho sviluppato WorkHub +AI partendo dal progetto di fine corso WorkHub, analizzando i punti
+            critici del gestionale originale e progettando integrazioni AI pensate per ottimizzare flussi
+            di lavoro, vendite e usabilità della piattaforma:
           </p>
           <ul className="project-case-checklist space-y-4">
             {CONTRIBUTION_ITEMS.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section aria-labelledby="workhub-ai-features">
-          <p className="project-case-section-label">Funzionalità in piattaforma</p>
-          <h2
-            id="workhub-ai-features"
-            className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
-          >
-            Cosa cambia nell’interfaccia
-          </h2>
-          <p className="project-case-body">
-            Schermate reali dell’applicazione: ogni sezione mostra come pannelli e suggerimenti AI
-            si integrano nei moduli previsti per admin e dipendente, senza stravolgere la
-            navigazione esistente.
-          </p>
-          <ProjectFeatureScreens features={FEATURES} />
-        </section>
-
-        <section aria-labelledby="workhub-ai-user-map">
-          <p className="project-case-section-label">Mappa funzionale</p>
-          <h2
-            id="workhub-ai-user-map"
-            className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
-          >
-            Dove si integra il valore dell'AI
-          </h2>
-          <p className="project-case-body">
-            Nessuna modifica automatica a turni, stock o ticket senza conferma: l’AI classifica,
-            suggerisce e genera bozze — le decisioni restano a chi conferma l’azione in piattaforma.
-          </p>
-          <ul className="project-case-checklist space-y-4 mt-6">
-            {USER_FEATURES.map((item) => (
-              <li key={item.area}>
-                <strong>{item.area}</strong>
-                <span className="block text-sm opacity-80 mt-1">
-                  {item.per} · {item.dove}
-                </span>
-                <span className="block mt-1">{item.risultato}</span>
+              <li key={item.title}>
+                <strong>{item.title}</strong>: {item.text}
               </li>
             ))}
           </ul>
         </section>
 
-        <section aria-labelledby="workhub-ai-learned">
-          <p className="project-case-section-label">Cosa ho imparato</p>
-          <h2
-            id="workhub-ai-learned"
-            className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
-          >
-            Prodotto, utenti e AI-assisted development
-          </h2>
-          <p className="project-case-body">
-            Questo progetto rappresenta una delle mie prime esperienze di integrazione avanzata
-            dell’AI all’interno di un prodotto web esistente. Mi ha permesso di sviluppare
-            competenze nella progettazione di funzionalità orientate all’utente, nell’utilizzo di
-            strumenti di AI-assisted coding, nella validazione del codice generato e nella
-            trasformazione di esigenze di business in soluzioni utilizzabili dagli utenti finali.
-          </p>
-          <p className="project-case-body mt-4">
-            L’aspetto che mi appassiona maggiormente è individuare problemi reali e utilizzare la
-            tecnologia, inclusa l’intelligenza artificiale, per creare esperienze più semplici,
-            veloci e intuitive.
-          </p>
+        <section
+          id={DEMO_SECTION_ID}
+          className="project-case-video section-scroll-anchor"
+          aria-labelledby="workhub-ai-demo-heading"
+        >
+          <div className="project-case-video__intro">
+            <p className="project-case-section-label">Demo progetto</p>
+            <h2
+              id="workhub-ai-demo-heading"
+              className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
+            >
+              Walkthrough della piattaforma AI-enabled
+            </h2>
+            <p className="project-case-body">
+              Registrazione schermo del gestionale con le integrazioni AI: Centro operativo,
+              ticket, clienti, magazzino e flussi admin/dipendente.
+            </p>
+          </div>
+
+          <ProjectDemoVideo
+            src="/videos/workhub-ai-demo.mp4"
+            poster="/images/projects/workhub/workhub-ai-video-poster.png"
+          />
         </section>
 
-        <section aria-labelledby="workhub-ai-approach">
-          <p className="project-case-section-label">Come ho lavorato</p>
+        <section aria-labelledby="workhub-ai-features">
+          <p className="project-case-section-label">Funzionalità principali</p>
           <h2
-            id="workhub-ai-approach"
+            id="workhub-ai-features"
             className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
           >
-            Problem solving, UX e strumenti
+            Integrazioni AI
+          </h2>
+          <p className="project-case-body">
+            Ogni integrazione affronta un’esigenza operativa concreta. Le schermate mostrano come
+            pannelli e suggerimenti si integrano nei moduli già presenti in WorkHub.
+          </p>
+          <ProjectFeatureScreens features={FEATURES} />
+        </section>
+
+        <section className="project-case-stack" aria-labelledby="workhub-ai-stack">
+          <p className="project-case-section-label">Stack tecnologico</p>
+          <h2
+            id="workhub-ai-stack"
+            className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
+          >
+            Stack tecnologico
           </h2>
 
           <ul className="project-case-stack-highlights">
-            {APPROACH_HIGHLIGHTS.map((card) => (
+            {STACK_HIGHLIGHTS.map((card) => (
               <li key={card.title} className="project-case-card project-case-card--compact">
                 <h3 className="project-case-card__title">{card.title}</h3>
                 <p className="project-case-card__text">{card.text}</p>
@@ -364,9 +308,8 @@ const WorkHubAiProject = () => (
 
           <div className="project-case-stack-narrative">
             <p>
-              L’evoluzione si appoggia allo stack full stack già usato nel capstone — React,
-              Redux, Node.js, Express e MongoDB — con integrazioni AI dove aggiungevano valore
-              percepibile in interfaccia, non complessità tecnica in più.
+              L’estensione si appoggia allo stack del capstone (React, Redux, Node.js, Express e
+              MongoDB), con servizi AI dove aggiungevano valore percepibile in interfaccia.
             </p>
           </div>
         </section>
@@ -377,12 +320,11 @@ const WorkHubAiProject = () => (
             id="workhub-ai-roadmap"
             className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
           >
-            Margini di miglioramento
+            Integrazioni previste
           </h2>
           <p className="project-case-body">
-            Oggi l’AI analizza turni e vendite, ma non crea turni in autonomia né propone
-            interventi commerciali strutturati su tutti i prodotti in calo. Le prossime integrazioni
-            che vorrei sviluppare:
+            Oggi l’AI analizza turni e vendite, ma non crea turni in autonomia né propone interventi
+            commerciali strutturati su tutti i prodotti in calo.
           </p>
           <ul className="project-case-checklist space-y-4">
             {ROADMAP_ITEMS.map((item) => (
@@ -402,6 +344,11 @@ const WorkHubAiProject = () => (
           <Link to={WORKHUB_CASE_URL} className="btn-secondary">
             <span className="btn-secondary-inner">Torna a WorkHub base →</span>
           </Link>
+          <ProjectDemoLink sectionId={DEMO_SECTION_ID} className="btn-primary">
+            <span className="btn-primary-inner">
+              <span className="btn-primary-text">Demo gestionale +AI</span>
+            </span>
+          </ProjectDemoLink>
         </ProjectCaseHeroActions>
 
         <ProjectSuggestions currentSlug="workhub-ai" />
