@@ -68,7 +68,7 @@ const OVERVIEW_CARDS = [
 const AI_FEATURES = [
   {
     title: 'Centro operativo',
-    pairRow: true,
+    layout: 'side',
     text:
       'Il centro operativo AI raccoglie in dashboard alert e insight incrociati su magazzino, ticket, vendite, clienti e turni. Gli alert operativi segnalano stock critico per sede e ticket ad alta priorità aperti da oltre 7 giorni, con link diretti ai moduli di competenza; gli insight strategici sintetizzano lo stato complessivo della piattaforma.',
     tags: 'Dashboard · Alert operativi · UX admin',
@@ -82,7 +82,7 @@ const AI_FEATURES = [
   },
   {
     title: 'Insight vendite',
-    pairRow: true,
+    layout: 'side-reverse',
     text:
       'Pannello dedicato alle vendite che traduce i dati in insight azionabili: trend di fatturato e ordini, crescita dei nuovi clienti, stock critico su prodotti in accelerazione (con suggerimento di riordino entro 7 giorni) e link «Apri modulo» verso magazzino o altre aree. A differenza del grafico andamento vendite, che visualizza i dati, qui l’AI interpreta l’andamento e propone interventi concreti.',
     tags: 'Vendite · AI · Decisioni operative',
