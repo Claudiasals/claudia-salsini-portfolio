@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FiMaximize2, FiX } from 'react-icons/fi'
+import { PinchZoomImage } from './PinchZoomImage'
 import { getCarouselDotWaveDistance } from '../utils/carouselDotWave'
 
 const LIGHTBOX_SWIPE_THRESHOLD_PX = 48
@@ -68,8 +69,15 @@ export function ProjectFeatureScreens({ features }) {
 
   const lightboxRef = useRef(null)
   const swipeStartRef = useRef(null)
+  const isZoomedRef = useRef(false)
+
+  const handleZoomChange = useCallback((isZoomed) => {
+    isZoomedRef.current = isZoomed
+  }, [])
 
   const handleLightboxTouchStart = useCallback((event) => {
+    if (event.touches.length !== 1 || isZoomedRef.current) return
+
     const touch = event.touches[0]
     if (!touch) return
 
@@ -81,7 +89,7 @@ export function ProjectFeatureScreens({ features }) {
       const start = swipeStartRef.current
       swipeStartRef.current = null
 
-      if (!start || !hasMultipleSlides) return
+      if (!start || !hasMultipleSlides || isZoomedRef.current) return
 
       const touch = event.changedTouches[0]
       if (!touch) return
@@ -151,17 +159,11 @@ export function ProjectFeatureScreens({ features }) {
     htmlStyle.overflow = 'hidden'
     body.classList.add('project-screenshot-lightbox-open')
 
-    const lightbox = lightboxRef.current
-    const onTouchMove = (event) => {
-      event.preventDefault()
-    }
-
-    lightbox?.addEventListener('touchmove', onTouchMove, { passive: false })
     window.addEventListener('keydown', onKeyDown)
 
     return () => {
-      lightbox?.removeEventListener('touchmove', onTouchMove)
       window.removeEventListener('keydown', onKeyDown)
+      isZoomedRef.current = false
 
       body.classList.remove('project-screenshot-lightbox-open')
       bodyStyle.position = previousBody.position
@@ -226,20 +228,21 @@ export function ProjectFeatureScreens({ features }) {
                       return (
                         <div key={screen.src} className="project-case-feature-screens__shot">
                           <div className="project-case-feature-screens__frame group relative overflow-hidden">
-                            <button
-                              type="button"
-                              className="project-case-feature-screens__frame-hit"
-                              onClick={openScreen}
-                              aria-label={`Ingrandisci immagine: ${feature.title}${screen.label ? ` — ${screen.label}` : ''}`}
+                            <PinchZoomImage
+                              className="project-case-feature-screens__pinch"
+                              stageClassName="project-case-feature-screens__pinch-stage"
+                              onActivate={openScreen}
+                              ariaLabel={`Ingrandisci immagine: ${feature.title}${screen.label ? ` — ${screen.label}` : ''}`}
                             >
                               <img
                                 src={screen.src}
                                 alt={screen.alt}
-                                className="project-case-feature-screens__img w-full cursor-zoom-in transition duration-300 group-hover:scale-[1.02]"
+                                className="project-case-feature-screens__img w-full transition duration-300"
                                 loading="lazy"
                                 decoding="async"
+                                draggable={false}
                               />
-                            </button>
+                            </PinchZoomImage>
                             <button
                               type="button"
                               className="project-case-feature-screens__expand-btn absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition hover:bg-black/80"
@@ -294,11 +297,20 @@ export function ProjectFeatureScreens({ features }) {
           >
             <p className="project-screenshot-lightbox__section-title">{activeSlide.featureTitle}</p>
 
-            <img
-              src={activeSlide.src}
-              alt={activeSlide.alt}
-              className="project-screenshot-lightbox__img"
-            />
+            <PinchZoomImage
+              className="project-screenshot-lightbox__zoom"
+              stageClassName="project-screenshot-lightbox__zoom-stage"
+              resetKey={activeIndex}
+              maxScale={5}
+              onZoomChange={handleZoomChange}
+            >
+              <img
+                src={activeSlide.src}
+                alt={activeSlide.alt}
+                className="project-screenshot-lightbox__img"
+                draggable={false}
+              />
+            </PinchZoomImage>
 
             {activeSlide.screenLabel ? (
               <p className="project-screenshot-lightbox__caption">{activeSlide.screenLabel}</p>
