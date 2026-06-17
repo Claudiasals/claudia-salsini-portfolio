@@ -68,6 +68,7 @@ const OVERVIEW_CARDS = [
 const AI_FEATURES = [
   {
     title: 'Centro operativo',
+    pairRow: true,
     text:
       'Il centro operativo AI raccoglie in dashboard alert e insight incrociati su magazzino, ticket, vendite, clienti e turni. Gli alert operativi segnalano stock critico per sede e ticket ad alta priorità aperti da oltre 7 giorni, con link diretti ai moduli di competenza; gli insight strategici sintetizzano lo stato complessivo della piattaforma.',
     tags: 'Dashboard · Alert operativi · UX admin',
@@ -81,6 +82,7 @@ const AI_FEATURES = [
   },
   {
     title: 'Insight vendite',
+    pairRow: true,
     text:
       'Pannello dedicato alle vendite che traduce i dati in insight azionabili: trend di fatturato e ordini, crescita dei nuovi clienti, stock critico su prodotti in accelerazione (con suggerimento di riordino entro 7 giorni) e link «Apri modulo» verso magazzino o altre aree. A differenza del grafico andamento vendite, che visualizza i dati, qui l’AI interpreta l’andamento e propone interventi concreti.',
     tags: 'Vendite · AI · Decisioni operative',
@@ -94,6 +96,7 @@ const AI_FEATURES = [
   },
   {
     title: 'Ticketing',
+    layout: 'side',
     text:
       'In cima all’area ticket compaiono suggerimenti operativi sul backlog (ticket aperti da oltre 7 giorni, alta priorità ancora aperti, categorie in crescita). La lista integra filtri per periodo, stato Aperti/Chiusi e priorità AI assegnata alla creazione del ticket, con etichette di urgenza e reparto per intervenire subito sulle richieste più critiche.',
     tags: 'Ticketing · Suggerimenti operativi · Classificazione AI',
@@ -107,6 +110,7 @@ const AI_FEATURES = [
   },
   {
     title: 'Clienti',
+    layout: 'side-split',
     text:
       'Sulla pagina elenco, i suggerimenti commerciali analizzano lo storico acquisti e la segmentazione del portafoglio (es. campagne di riattivazione per clienti inattivi da 90+ giorni o comunicazioni dedicate al cluster Premium). Nella scheda singolo cliente, l’AI restituisce profilo ricorrente, insight su categoria preferita e frequenza acquisti, più Smart Promotions con promo personalizzate, selezione tra più proposte e invio email o testo da mostrare in negozio.',
     tags: 'CRM · Segmentazione · Analytics · Promo personalizzate',
@@ -114,17 +118,18 @@ const AI_FEATURES = [
       {
         src: '/images/projects/workhub/suggerimenti-commerciali.png',
         alt: 'Suggerimenti commerciali su campagna riattivazione clienti inattivi e protezione cluster Premium con azioni win-back',
-        label: 'Suggerimenti commerciali (portafoglio)',
+        label: 'Suggerimenti commerciali',
       },
       {
         src: '/images/projects/workhub/ai-admin-customer.png',
         alt: 'Scheda cliente con insight commerciali AI, profilo ricorrente, Smart Promotions e promo consigliata 15% su POÄNG Poltrona con invio promo',
-        label: 'Insight e promo (scheda cliente)',
+        label: 'Insight e promo',
       },
     ],
   },
   {
     title: 'Magazzino',
+    layout: 'side',
     text:
       'Il pannello Suggerimenti AI magazzino evidenzia esaurimenti e soglie basse per sede (es. KALLAX esaurito a Napoli Afragola o Milano San Giuliano, LACK Tavolino sotto soglia), con distinzione tra riordino urgente e valutazione riordino, ordinati per urgenza così l’admin interviene subito dove serve.',
     tags: 'Magazzino · Alert operativi',
@@ -138,6 +143,7 @@ const AI_FEATURES = [
   },
   {
     title: 'Ordini',
+    layout: 'side',
     text:
       'In cima alla pagina ordini, il pannello Suggerimenti Riordino collega ordini attivi e stock: segnala prodotti esauriti o sotto soglia per sede, propone riordini urgenti e ricorda di verificare lo stock sui prodotti più ordinati nel periodo, così chi gestisce le spedizioni interviene prima che le consegne si blocchino.',
     tags: 'Ordini · Magazzino · Alert operativi',
@@ -154,6 +160,7 @@ const AI_FEATURES = [
 const OTHER_INTEGRATIONS = [
   {
     title: 'Andamento vendite',
+    layout: 'side',
     text:
       'Il grafico mostra l’andamento degli ultimi mesi attraverso tre indicatori: fatturato, numero di ordini e nuovi clienti acquisiti, con filtri temporali a 3, 6 e 12 mesi. È stato inserito nell’overview admin per offrire una lettura più immediata dei dati commerciali e affiancare il pannello Insight vendite, rafforzando il collegamento tra dashboard, CRM e andamento degli ordini.',
     tags: 'Dashboard · Vendite · Analytics',
@@ -173,6 +180,7 @@ const OTHER_INTEGRATIONS = [
   },
   {
     title: 'Calendario turni ed eventi',
+    layout: 'side',
     text:
       'Calendario integrato nell’overview con viste settimana, mese e giorno, toggle tra turni ed eventi aziendali, navigazione per periodo e griglia oraria con fasce colorate (mattina, pomeriggio, sera). Per l’admin è disponibile la modifica rapida delle assegnazioni; per il dipendente il filtro «I miei turni».',
     tags: 'Dashboard · Calendario · Turni',
@@ -186,6 +194,7 @@ const OTHER_INTEGRATIONS = [
   },
   {
     title: 'Documenti e comunicazioni',
+    layout: 'side',
     text:
       'Sezione dedicata a policy, circolari e comunicazioni interne: ricerca, lettura in drawer e gestione contenuti per l’admin, con badge di priorità (Standard, Importante) e azioni Leggi, modifica ed elimina. Accessibile a tutto il personale direttamente dalla dashboard.',
     tags: 'Dashboard · Comunicazioni interne',
@@ -199,6 +208,7 @@ const OTHER_INTEGRATIONS = [
   },
   {
     title: 'Conversione e fidelizzazione',
+    layout: 'side',
     text:
       'Nella pagina Clienti ho aggiunto un riquadro di customer insights sul portafoglio: tasso di ritorno, confronto trimestrale sui nuovi clienti acquisiti e conteggio dei contatti inattivi da oltre 90 giorni, per individuare segmenti a rischio churn prima di passare ai suggerimenti commerciali AI.',
     tags: 'CRM · Analytics · Fidelizzazione',
@@ -206,12 +216,13 @@ const OTHER_INTEGRATIONS = [
       {
         src: '/images/projects/workhub/conversione-fidelizzazione.png',
         alt: 'Conversione e fidelizzazione con tasso di ritorno clienti 64%, calo nuovi clienti rispetto al trimestre precedente e 6 clienti inattivi da oltre 90 giorni',
-        label: 'Customer insights portafoglio',
+        label: 'Customer insights',
       },
     ],
   },
   {
     title: 'Lista ticket',
+    layout: 'side-reverse',
     text:
       'Ho riorganizzato la lista ticket admin con filtri per periodo, stato Aperti/Chiusi e priorità (Tutte, Urgente, Media, Bassa, Non classificato). Ogni riga mostra titolo, descrizione, etichette di urgenza e reparto, richiedente e data, con accesso rapido al drawer tramite «Gestisci».',
     tags: 'Ticketing · Filtri · UX lista',
@@ -225,6 +236,7 @@ const OTHER_INTEGRATIONS = [
   },
   {
     title: 'Drawer ticket admin',
+    layout: 'side',
     text:
       'Ho riorganizzato il drawer di gestione ticket in sezioni verticali più leggibili: richiedente e descrizione in alto, pannello assegnazione reparto con suggerimento operativo e selezione manuale, area risposta assistita con generazione del messaggio da parole chiave e azioni salva o invia.',
     tags: 'Ticketing · UX · Drawer',
@@ -238,6 +250,7 @@ const OTHER_INTEGRATIONS = [
   },
   {
     title: 'Notifiche',
+    layout: 'side',
     text:
       'Ho introdotto una campanella nella topbar per raccogliere gli aggiornamenti operativi più rilevanti in base al ruolo. I dipendenti visualizzano notifiche su ticket, ferie, permessi e turni; tutti gli utenti ricevono aggiornamenti su documenti, comunicazioni interne ed eventi in calendario. Ogni voce può essere segnata come letta senza interrompere il lavoro in corso.',
     tags: 'UX · Comunicazioni · Operatività',
@@ -461,9 +474,8 @@ const WorkHubAiProject = () => (
             Integrazioni previste
           </h2>
           <p className="project-case-body">
-            Sulle vendite l’integrazione è già in produzione (Insight vendite in dashboard). Il passo
-            successivo riguarda i turni: oggi l’AI li analizza, ma non propone ancora una bozza
-            settimanale da approvare.
+            Per le vendite, Insight vendite è già integrato in dashboard. Il passo successivo riguarda
+            i turni: oggi l’AI li analizza, ma non propone ancora una bozza settimanale da approvare.
           </p>
           <ul className="project-case-checklist space-y-4">
             {ROADMAP_ITEMS.map((item) => (
