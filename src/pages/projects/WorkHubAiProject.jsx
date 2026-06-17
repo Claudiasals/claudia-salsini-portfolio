@@ -404,12 +404,12 @@ const WorkHubAiProject = () => (
         </section>
 
         <section aria-labelledby="workhub-ai-other">
-          <p className="project-case-section-label">Miglioramenti alla piattaforma</p>
+          <p className="project-case-section-label">Ottimizzazioni della piattaforma</p>
           <h2
             id="workhub-ai-other"
             className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
           >
-            Miglioramenti alla piattaforma
+            UX, dashboard e flussi operativi
           </h2>
           <p className="project-case-body">
             Oltre alle integrazioni AI, ho lavorato anche sull’evoluzione dell’overview admin e dei moduli
@@ -418,11 +418,6 @@ const WorkHubAiProject = () => (
             L’obiettivo era rendere la piattaforma più leggibile e coerente con i nuovi flussi introdotti
             da WorkHub +AI, distinguendo le ottimizzazioni di usabilità dalle funzionalità basate su
             modelli linguistici.
-          </p>
-          <p className="project-case-body mt-4 opacity-90">
-            Il grafico Andamento vendite rientra tra questi miglioramenti perché riguarda la
-            visualizzazione dei dati commerciali; gli Insight vendite, invece, sono nelle
-            integrazioni AI perché interpretano quei dati e suggeriscono azioni operative.
           </p>
           <ProjectFeatureScreens features={OTHER_INTEGRATIONS} />
         </section>
