@@ -10,18 +10,21 @@ const highlightCards = [
   {
     number: '01',
     title: 'Formazione trasversale',
-    text: 'Uno sguardo utile su bisogni, comportamenti e percorsi delle persone, per un modo di progettare più consapevole e centrato sull\'utente.',
+    text:
+      'Unisco sviluppo web, psicologia e comunicazione visiva: una combinazione che mi permette di leggere un progetto da più prospettive, con particolare attenzione alla user experience.',
     education: true,
   },
   {
     number: '02',
-    title: 'Sviluppo e prototipazione',
-    text: 'Realizzazione di applicazioni web full stack, dalla progettazione dell\'interfaccia allo sviluppo frontend e backend, utilizzando anche strumenti di AI-assisted development per accelerare ricerca, prototipazione e implementazione.',
+    title: 'Sviluppo Full Stack',
+    text:
+      'Realizzo applicazioni web full stack, dalla progettazione dell\'interfaccia allo sviluppo frontend e backend, integrando funzionalità AI per automatizzare processi, generare suggerimenti operativi e migliorare l\'esperienza utente.',
   },
   {
     number: '03',
-    title: 'Approccio UX',
-    text: 'Attenzione a interfacce chiare, accessibili e facili da usare per costruire siti e applicazioni più efficaci: progettare spazi digitali in cui orientarsi, scegliere e interagire deve risultare naturale.',
+    title: 'Problem solving e prodotto',
+    text:
+      'Analizzo bisogni, flussi e punti di miglioramento per capire cosa serve davvero all\'utente e trasformarlo in soluzioni concrete, chiare e sostenibili.',
   },
 ]
 

@@ -4,6 +4,7 @@ import { ProjectCaseHeroActions } from '../../components/ProjectCaseHeroActions'
 import { ProjectDemoLink } from '../../components/ProjectDemoLink'
 import { ProjectDemoVideo } from '../../components/ProjectDemoVideo'
 import { ProjectFeatureScreens } from '../../components/ProjectFeatureScreens'
+import { ProjectInlineScreenshotCarousel } from '../../components/ProjectInlineScreenshotCarousel'
 
 const CATEGORY = 'Estensione prodotto · AI-assisted development'
 const TITLE = 'WorkHub +AI'
@@ -18,7 +19,7 @@ const CONTRIBUTION_ITEMS = [
   },
   {
     title: 'Prompt e logica AI',
-    text: 'progettazione dei prompt, servizi su modelli linguistici ed euristiche di fallback quando l’API non è configurata.',
+    text: 'progettazione dei prompt, integrazione di servizi basati su modelli linguistici ed euristiche di fallback quando l’API non è configurata.',
   },
   {
     title: 'Interfaccia e UX',
@@ -30,15 +31,20 @@ const CONTRIBUTION_ITEMS = [
   },
   {
     title: 'AI-assisted development',
-    text: 'uso di Cursor per accelerare prototipazione e sviluppo, con revisione e adattamento manuale del codice prima dell’integrazione.',
+    text: 'uso di Cursor per accelerare prototipazione e sviluppo, con revisione, adattamento manuale del codice e test prima dell’integrazione.',
   },
 ]
 
 const ROADMAP_ITEMS = [
   {
-    title: 'Turni: proposta generata dall’AI',
+    title: 'Turni: bozza settimanale generata dall’AI',
     text:
-      'Bozza settimanale che considera ferie, festività e riposi, con approvazione del responsabile prima dell’inserimento.',
+      'proposta automatica del piano turni che incrocia ferie, permessi, malattie, festività, riposi obbligatori, cambi turno e vincoli orari già presenti in piattaforma, lasciando al responsabile solo la revisione e l’approvazione prima dell’inserimento.',
+  },
+  {
+    title: 'Magazzino: movimenti di giacenza collegati agli ordini',
+    text:
+      'oggi la giacenza si aggiorna manualmente. Il passo successivo è collegare il ricevimento merce agli ordini, con carico automatico in magazzino, movimenti tracciati e revisione dell’operatore prima della pubblicazione.',
   },
 ]
 
@@ -46,7 +52,7 @@ const OVERVIEW_CARDS = [
   {
     title: 'Il punto di partenza',
     text:
-      'WorkHub è una piattaforma gestionale che centralizza i flussi di lavoro. Servivano però dati più centralizzati su magazzino e stock, maggiore velocità nella gestione dei ticket e un uso più efficace dei dati commerciali: ottimizzare le vendite era fondamentale, ma ordini e storico clienti non venivano sfruttati abbastanza per orientare le scelte in negozio.',
+      'Il gestionale centralizzava i processi aziendali, ma molte attività richiedevano ancora analisi manuali: gestione dei ticket, monitoraggio delle scorte e utilizzo dei dati clienti per supportare le vendite. L’obiettivo era trasformare i dati già presenti nella piattaforma in indicazioni operative immediate.',
   },
   {
     title: 'La soluzione sviluppata',
@@ -69,6 +75,7 @@ const AI_FEATURES = [
   {
     title: 'Centro operativo',
     layout: 'side',
+    imageCropBottom: 30,
     text:
       'Il centro operativo AI raccoglie in dashboard alert e insight incrociati su magazzino, ticket, vendite, clienti e turni. Gli alert operativi segnalano stock critico per sede e ticket ad alta priorità aperti da oltre 7 giorni, con link diretti ai moduli di competenza; gli insight strategici sintetizzano lo stato complessivo della piattaforma.',
     tags: 'Dashboard · Alert operativi · UX admin',
@@ -82,9 +89,10 @@ const AI_FEATURES = [
   },
   {
     title: 'Insight vendite',
-    layout: 'side-reverse',
+    layout: 'side',
+    imageMatchCopyHeight: true,
     text:
-      'Pannello dedicato alle vendite che traduce i dati in insight azionabili: trend di fatturato e ordini, crescita dei nuovi clienti, stock critico su prodotti in accelerazione (con suggerimento di riordino entro 7 giorni) e link «Apri modulo» verso magazzino o altre aree. A differenza del grafico andamento vendite, che visualizza i dati, qui l’AI interpreta l’andamento e propone interventi concreti.',
+      'Nell’overview admin, il grafico andamento vendite e il pannello Insight vendite sono affiancati: a sinistra la lettura visiva di fatturato, ordini e nuovi clienti; a destra l’AI interpreta l’andamento e propone interventi concreti — trend commerciali, crescita dei nuovi clienti, stock critico su prodotti in accelerazione (con suggerimento di riordino entro 7 giorni) e link «Apri modulo» verso magazzino o altre aree.',
     tags: 'Vendite · AI · Decisioni operative',
     screens: [
       {
@@ -96,11 +104,15 @@ const AI_FEATURES = [
   },
   {
     title: 'Ticketing',
-    layout: 'side',
     text:
-      'In cima all’area ticket compaiono suggerimenti operativi sul backlog (ticket aperti da oltre 7 giorni, alta priorità ancora aperti, categorie in crescita). La lista integra filtri per periodo, stato Aperti/Chiusi e priorità AI assegnata alla creazione del ticket, con etichette di urgenza e reparto per intervenire subito sulle richieste più critiche.',
-    tags: 'Ticketing · Suggerimenti operativi · Classificazione AI',
+      'In cima all’area ticket compaiono suggerimenti operativi sul backlog (ticket aperti da oltre 7 giorni, alta priorità ancora aperti, categorie in crescita). La lista integra filtri per periodo, stato Aperti/Chiusi e priorità AI assegnata alla creazione del ticket, con etichette di urgenza e reparto per intervenire subito sulle richieste più critiche. Riduzione del tempo necessario per la gestione dei ticket grazie alla classificazione automatica delle richieste e alla generazione assistita delle risposte.',
+    tags: 'Ticketing · Suggerimenti operativi · Classificazione AI · Drawer',
     screens: [
+      {
+        src: '/images/projects/workhub/ticket-drawer-assegnazione-risposta.png',
+        alt: 'Drawer ticket con assegnazione reparto suggerita, reparto responsabile Tecnico e risposta assistita con generazione messaggio professionale',
+        label: 'Drawer ticket admin',
+      },
       {
         src: '/images/projects/workhub/ai-admin-ticket.png',
         alt: 'Suggerimenti AI ticket su backlog e priorità, lista ticket con filtri Aperti/Chiusi, priorità AI e pulsante Gestisci',
@@ -112,7 +124,7 @@ const AI_FEATURES = [
     title: 'Clienti',
     layout: 'side-split',
     text:
-      'Sulla pagina elenco, i suggerimenti commerciali analizzano lo storico acquisti e la segmentazione del portafoglio (es. campagne di riattivazione per clienti inattivi da 90+ giorni o comunicazioni dedicate al cluster Premium). Nella scheda singolo cliente, l’AI restituisce profilo ricorrente, insight su categoria preferita e frequenza acquisti, più Smart Promotions con promo personalizzate, selezione tra più proposte e invio email o testo da mostrare in negozio.',
+      'I suggerimenti commerciali incrociano storico acquisti e segmentazione del portafoglio clienti per proporre interventi concreti, ad esempio campagne di riattivazione su clienti inattivi da oltre 90 giorni, comunicazioni dedicate al cluster Premium o azioni win-back. Utilizzo dello storico acquisti per individuare opportunità di cross-selling, upselling e riattivazione clienti. L’operatore sceglie la proposta e può inviarla via email o mostrarla in negozio direttamente al cliente.',
     tags: 'CRM · Segmentazione · Analytics · Promo personalizzate',
     screens: [
       {
@@ -131,7 +143,7 @@ const AI_FEATURES = [
     title: 'Magazzino',
     layout: 'side',
     text:
-      'Il pannello Suggerimenti AI magazzino evidenzia esaurimenti e soglie basse per sede (es. KALLAX esaurito a Napoli Afragola o Milano San Giuliano, LACK Tavolino sotto soglia), con distinzione tra riordino urgente e valutazione riordino, ordinati per urgenza così l’admin interviene subito dove serve.',
+      'Supporto al riordino attraverso l’analisi delle giacenze, degli ordini attivi e dei prodotti con maggiore domanda: evidenzia esaurimenti e soglie basse per sede (es. KALLAX esaurito a Napoli Afragola o Milano San Giuliano, LACK Tavolino sotto soglia), collega lo stock agli ordini attivi e ai prodotti più ordinati nel periodo, con distinzione tra riordino urgente e valutazione riordino, ordinati per urgenza così l’admin interviene subito prima che stock e spedizioni si blocchino.',
     tags: 'Magazzino · Alert operativi',
     screens: [
       {
@@ -141,126 +153,80 @@ const AI_FEATURES = [
       },
     ],
   },
-  {
-    title: 'Ordini',
-    layout: 'side',
-    text:
-      'In cima alla pagina ordini, il pannello Suggerimenti Riordino collega ordini attivi e stock: segnala prodotti esauriti o sotto soglia per sede, propone riordini urgenti e ricorda di verificare lo stock sui prodotti più ordinati nel periodo, così chi gestisce le spedizioni interviene prima che le consegne si blocchino.',
-    tags: 'Ordini · Magazzino · Alert operativi',
-    screens: [
-      {
-        src: '/images/projects/workhub/ordini-suggerimenti-riordino.png',
-        alt: 'Suggerimenti Riordino con esaurimenti KALLAX, stock sotto soglia per sede IKEA e verifica ordini attivi nel periodo',
-        label: 'Suggerimenti riordino',
-      },
-    ],
-  },
 ]
 
-const OTHER_INTEGRATIONS = [
+const PLATFORM_OPTIMIZATION_HIGHLIGHTS = [
   {
-    title: 'Andamento vendite',
-    layout: 'side',
+    title: 'Overview riorganizzata',
     text:
-      'Il grafico mostra l’andamento degli ultimi mesi attraverso tre indicatori: fatturato, numero di ordini e nuovi clienti acquisiti, con filtri temporali a 3, 6 e 12 mesi. È stato inserito nell’overview admin per offrire una lettura più immediata dei dati commerciali e affiancare il pannello Insight vendite, rafforzando il collegamento tra dashboard, CRM e andamento degli ordini.',
-    tags: 'Dashboard · Vendite · Analytics',
-    screens: [
-      {
-        src: '/images/projects/workhub/dashboard-admin-vendite.png',
-        alt: 'Grafico andamento vendite con fatturato, ordini e nuovi clienti, filtro 6 mesi e andamento gen–giu 2026 nella dashboard admin',
-        label: 'Grafico andamento vendite',
-      },
-    ],
-  },
-  {
-    title: 'Overview admin',
-    text:
-      'Ho riorganizzato l’overview admin per rendere più chiaro l’accesso alle informazioni principali: in alto Centro operativo AI e Documenti e comunicazioni, al centro calendario con turni ed eventi, in basso andamento vendite e Insight vendite.',
-    tags: 'Dashboard · UX · Information architecture',
-  },
-  {
-    title: 'Calendario turni ed eventi',
-    layout: 'side',
-    text:
-      'Calendario integrato nell’overview con viste settimana, mese e giorno, toggle tra turni ed eventi aziendali, navigazione per periodo e griglia oraria con fasce colorate (mattina, pomeriggio, sera). Per l’admin è disponibile la modifica rapida delle assegnazioni; per il dipendente il filtro «I miei turni».',
-    tags: 'Dashboard · Calendario · Turni',
-    screens: [
-      {
-        src: '/images/projects/workhub/ai-admin-overview-turni.png',
-        alt: 'Calendario turni settimanali con vista settimana giu 15–21, toggle Turni ed eventi, fasce orarie colorate e assegnazioni dipendenti',
-        label: 'Turni settimanali',
-      },
-    ],
+      'dashboard con priorità visive più chiare: documenti e comunicazioni in evidenza, calendario al centro, andamento vendite in basso; stesso design system del gestionale base ma con moduli più facili da raggiungere per una vista più centralizzata.',
   },
   {
     title: 'Documenti e comunicazioni',
-    layout: 'side',
-    text:
-      'Sezione dedicata a policy, circolari e comunicazioni interne: ricerca, lettura in drawer e gestione contenuti per l’admin, con badge di priorità (Standard, Importante) e azioni Leggi, modifica ed elimina. Accessibile a tutto il personale direttamente dalla dashboard.',
-    tags: 'Dashboard · Comunicazioni interne',
-    screens: [
-      {
-        src: '/images/projects/workhub/documenti-comunicazioni.png',
-        alt: 'Documenti e comunicazioni con catalogo, procedura inventario, policy resi e manuale cassa, badge Standard e Importante, ricerca e pulsante Nuovo',
-        label: 'Documenti e comunicazioni',
-      },
-    ],
+    text: 'accesso diretto a policy, circolari e comunicazioni interne.',
   },
   {
-    title: 'Conversione e fidelizzazione',
-    layout: 'side',
+    title: 'Calendario turni ed eventi',
     text:
-      'Nella pagina Clienti ho aggiunto un riquadro di customer insights sul portafoglio: tasso di ritorno, confronto trimestrale sui nuovi clienti acquisiti e conteggio dei contatti inattivi da oltre 90 giorni, per individuare segmenti a rischio churn prima di passare ai suggerimenti commerciali AI.',
-    tags: 'CRM · Analytics · Fidelizzazione',
-    screens: [
-      {
-        src: '/images/projects/workhub/conversione-fidelizzazione.png',
-        alt: 'Conversione e fidelizzazione con tasso di ritorno clienti 64%, calo nuovi clienti rispetto al trimestre precedente e 6 clienti inattivi da oltre 90 giorni',
-        label: 'Customer insights',
-      },
-    ],
+      'calendario ottimizzato e unificato: la bacheca eventi è confluita nel calendario, con toggle Turni / Eventi, così riunioni e comunicazioni si leggono in vista settimana o mese invece che in un elenco separato.',
   },
   {
-    title: 'Lista ticket',
-    layout: 'side-reverse',
+    title: 'Andamento vendite',
     text:
-      'Ho riorganizzato la lista ticket admin con filtri per periodo, stato Aperti/Chiusi e priorità (Tutte, Urgente, Media, Bassa, Non classificato). Ogni riga mostra titolo, descrizione, etichette di urgenza e reparto, richiedente e data, con accesso rapido al drawer tramite «Gestisci».',
-    tags: 'Ticketing · Filtri · UX lista',
-    screens: [
-      {
-        src: '/images/projects/workhub/ticket-lista-filtri.png',
-        alt: 'Lista ticket con filtro date, tab Aperti e Chiusi, filtri priorità, etichette URGENTE e reparto TECNICO e pulsante Gestisci',
-        label: 'Lista ticket con filtri',
-      },
-    ],
+      'nuovo grafico multi-serie (fatturato, numero ordini, nuovi clienti), analytics standard sui dati commerciali.',
   },
   {
-    title: 'Drawer ticket admin',
-    layout: 'side',
+    title: 'Notifiche in-app',
     text:
-      'Ho riorganizzato il drawer di gestione ticket in sezioni verticali più leggibili: richiedente e descrizione in alto, pannello assegnazione reparto con suggerimento operativo e selezione manuale, area risposta assistita con generazione del messaggio da parole chiave e azioni salva o invia.',
-    tags: 'Ticketing · UX · Drawer',
-    screens: [
-      {
-        src: '/images/projects/workhub/ticket-drawer-assegnazione-risposta.png',
-        alt: 'Drawer ticket con assegnazione reparto suggerita, reparto responsabile Tecnico e risposta assistita con generazione messaggio professionale',
-        label: 'Drawer ticket admin',
-      },
-    ],
+      'campanella in topbar per tutti i ruoli: aggiornamenti su ticket, documenti, calendario e comunicazioni.',
   },
   {
-    title: 'Notifiche',
-    layout: 'side',
+    title: 'Lista ticket e customer insights',
     text:
-      'Ho introdotto una campanella nella topbar per raccogliere gli aggiornamenti operativi più rilevanti in base al ruolo. I dipendenti visualizzano notifiche su ticket, ferie, permessi e turni; tutti gli utenti ricevono aggiornamenti su documenti, comunicazioni interne ed eventi in calendario. Ogni voce può essere segnata come letta senza interrompere il lavoro in corso.',
-    tags: 'UX · Comunicazioni · Operatività',
-    screens: [
-      {
-        src: '/images/projects/workhub/notifiche.png',
-        alt: 'Pannello notifiche con badge 5 aggiornamenti, voci su nuovi eventi in calendario e azione Letta per ogni notifica',
-        label: 'Centro notifiche',
-      },
-    ],
+      'lista ticket admin con filtri per periodo, stato Aperti/Chiusi e priorità, etichette di urgenza e reparto; in pagina Clienti, riquadro analytics su tasso di ritorno, nuovi clienti e contatti inattivi.',
+  },
+]
+
+const PLATFORM_OPTIMIZATION_SLIDES = [
+  {
+    src: '/images/projects/workhub/documenti-comunicazioni.png',
+    alt: 'Documenti e comunicazioni con catalogo, procedura inventario, policy resi e manuale cassa, badge Standard e Importante, ricerca e pulsante Nuovo',
+    label: 'Documenti e comunicazioni',
+  },
+  {
+    src: '/images/projects/workhub/ai-admin-overview-turni.png',
+    alt: 'Calendario turni settimanali con vista settimana giu 15–21, toggle Turni ed eventi, fasce orarie colorate e assegnazioni dipendenti',
+    label: 'Calendario turni ed eventi',
+  },
+  {
+    src: '/images/projects/workhub/dashboard-admin-vendite.png',
+    alt: 'Grafico andamento vendite con fatturato, ordini e nuovi clienti, filtro 6 mesi e andamento gen–giu 2026 nella dashboard admin',
+    label: 'Andamento vendite',
+  },
+  {
+    src: '/images/projects/workhub/dashboard-user-board.png',
+    alt: 'Overview dipendente WorkHub con KPI filtrati per sede, grafico vendite in sola lettura e calendario turni integrato',
+    label: 'Dashboard dipendente',
+  },
+  {
+    src: '/images/projects/workhub/dashboard-user-calendario.png',
+    alt: 'Calendario turni settimanale WorkHub lato dipendente con turni personali visibili e filtro I miei turni',
+    label: 'Calendario dipendente',
+  },
+  {
+    src: '/images/projects/workhub/notifiche.png',
+    alt: 'Pannello notifiche con badge 5 aggiornamenti, voci su nuovi eventi in calendario e azione Letta per ogni notifica',
+    label: 'Notifiche in-app',
+  },
+  {
+    src: '/images/projects/workhub/ticket-lista-filtri.png',
+    alt: 'Lista ticket con filtro date, tab Aperti e Chiusi, filtri priorità, etichette URGENTE e reparto TECNICO e pulsante Gestisci',
+    label: 'Lista ticket con filtri',
+  },
+  {
+    src: '/images/projects/workhub/conversione-fidelizzazione.png',
+    alt: 'Conversione e fidelizzazione con tasso di ritorno clienti 64%, calo nuovi clienti rispetto al trimestre precedente e 6 clienti inattivi da oltre 90 giorni',
+    label: 'Customer insights portafoglio',
   },
 ]
 
@@ -302,11 +268,20 @@ const WorkHubAiProject = () => (
           <h1 className="project-case-intro__title mt-8 w-full text-3xl font-bold text-white md:text-4xl">
             WorkHub +AI: estensione intelligente del gestionale
           </h1>
-          <p className="project-case-intro__desc">
+          <p className="project-case-intro__desc mt-4">
+            Evoluzione AI del gestionale WorkHub, progettata per trasformare dati operativi in
+            suggerimenti concreti per ticketing, vendite, CRM e gestione del magazzino.
+          </p>
+          <p className="project-case-intro__desc mt-4">
             Dopo aver realizzato WorkHub come progetto finale di gruppo, ho progettato autonomamente
             un’estensione AI che combina automazioni basate su regole e funzionalità supportate da
             modelli linguistici, applicate a ticketing, magazzino, CRM e processi decisionali per
             renderli più efficienti.
+          </p>
+          <p className="project-case-intro__desc mt-4">
+            L’estensione si appoggia allo stack del capstone, con servizi AI integrati solo dove
+            aggiungono valore operativo percepibile: ticket, clienti, magazzino, dashboard e
+            comunicazioni interne.
           </p>
           <p className="project-case-intro__desc mt-4 opacity-90">
             Il gestionale base è documentato nella{' '}
@@ -333,7 +308,10 @@ const WorkHubAiProject = () => (
           </ProjectDemoLink>
         </ProjectCaseHeroActions>
 
-        <section className="project-case-overview-cards" aria-label="Punto di partenza, soluzione e stack">
+        <section
+          className="project-case-overview-cards project-case-overview-cards--tech-single-col"
+          aria-label="Punto di partenza, soluzione e stack"
+        >
           <ul className="project-case-overview-cards__grid">
             {OVERVIEW_CARDS.map((card) => (
               <li key={card.title} className="project-case-card project-case-card--compact">
@@ -362,11 +340,12 @@ const WorkHubAiProject = () => (
             Come ho realizzato WorkHub +AI
           </h2>
           <p className="project-case-body">
-            Ho sviluppato WorkHub +AI partendo dal progetto di fine corso WorkHub, analizzando i punti
-            critici del gestionale originale e progettando integrazioni AI pensate per ottimizzare flussi
-            di lavoro, vendite e usabilità della piattaforma:
+            Ho sviluppato WorkHub +AI partendo dal progetto di fine corso WorkHub, analizzando le aree
+            del gestionale con maggiore potenziale di miglioramento e progettando integrazioni AI pensate
+            per rendere più rapidi i flussi di lavoro, supportare le vendite e migliorare l’usabilità della
+            piattaforma.
           </p>
-          <ul className="project-case-checklist space-y-4">
+          <ul className="project-case-feature-screens__highlights space-y-3">
             {CONTRIBUTION_ITEMS.map((item) => (
               <li key={item.title}>
                 <strong>{item.title}</strong>: {item.text}
@@ -417,7 +396,7 @@ const WorkHubAiProject = () => (
         </section>
 
         <section aria-labelledby="workhub-ai-other">
-          <p className="project-case-section-label">Ottimizzazioni della piattaforma</p>
+          <p className="project-case-section-label">Altre ottimizzazioni della piattaforma</p>
           <h2
             id="workhub-ai-other"
             className="project-case-section-title text-2xl font-bold text-white md:text-3xl"
@@ -425,14 +404,20 @@ const WorkHubAiProject = () => (
             UX, dashboard e flussi operativi
           </h2>
           <p className="project-case-body">
-            Oltre alle integrazioni AI, ho lavorato anche sull’evoluzione dell’overview admin e dei moduli
-            ticket e clienti: grafici commerciali, calendario turni, comunicazioni interne, customer
-            insights sul portafoglio, filtri sulla lista ticket, drawer di gestione e notifiche in-app.
-            L’obiettivo era rendere la piattaforma più leggibile e coerente con i nuovi flussi introdotti
-            da WorkHub +AI, distinguendo le ottimizzazioni di usabilità dalle funzionalità basate su
-            modelli linguistici.
+            Modifiche apportate per ottimizzare usabilità, leggibilità e accessibilità delle
+            informazioni in piattaforma:
           </p>
-          <ProjectFeatureScreens features={OTHER_INTEGRATIONS} />
+          <ul className="project-case-checklist space-y-4">
+            {PLATFORM_OPTIMIZATION_HIGHLIGHTS.map((item) => (
+              <li key={item.title}>
+                <strong>{item.title}</strong>: {item.text}
+              </li>
+            ))}
+          </ul>
+          <ProjectInlineScreenshotCarousel
+            slides={PLATFORM_OPTIMIZATION_SLIDES}
+            ariaLabel="Screenshot ottimizzazioni piattaforma"
+          />
         </section>
 
         <section className="project-case-stack" aria-labelledby="workhub-ai-stack">
@@ -455,14 +440,6 @@ const WorkHubAiProject = () => (
               </li>
             ))}
           </ul>
-
-          <div className="project-case-stack-narrative">
-            <p>
-              L’estensione si appoggia allo stack del capstone, con servizi AI integrati solo dove
-              aggiungono valore operativo percepibile: ticket, clienti, magazzino, dashboard e
-              comunicazioni interne.
-            </p>
-          </div>
         </section>
 
         <section aria-labelledby="workhub-ai-roadmap">
@@ -474,10 +451,9 @@ const WorkHubAiProject = () => (
             Integrazioni previste
           </h2>
           <p className="project-case-body">
-            Per le vendite, Insight vendite è già integrato in dashboard. Il passo successivo riguarda
-            i turni: oggi l’AI li analizza, ma non propone ancora una bozza settimanale da approvare.
+            I prossimi sviluppi riguardano soprattutto turni e magazzino:
           </p>
-          <ul className="project-case-checklist space-y-4">
+          <ul className="project-case-feature-screens__highlights space-y-3">
             {ROADMAP_ITEMS.map((item) => (
               <li key={item.title}>
                 <strong>{item.title}</strong>: {item.text}

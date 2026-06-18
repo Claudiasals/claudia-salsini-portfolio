@@ -592,11 +592,16 @@
   background: transparent;
   cursor: pointer;
   text-align: center;
-  transition: transform 0.25s ease;
+  transition: transform 0.28s ease;
 }
 
-.skills-pipeline__node:hover {
-  transform: translateY(-2px);
+.skills-pipeline__node:not(.skills-pipeline__node--active):hover {
+  transform: translateY(-4px);
+}
+
+.skills-pipeline__node--active {
+  z-index: 2;
+  transform: translateY(-4px);
 }
 
 .skills-pipeline__node:focus-visible {
@@ -613,13 +618,20 @@
   width: clamp(3.5rem, 5.5vw, 4.75rem);
   height: clamp(3.5rem, 5.5vw, 4.75rem);
   border-radius: 50%;
-  border: 2px solid color-mix(in srgb, var(--phase-color, #38bdf8) 35%, transparent);
+  border: 2px solid color-mix(in srgb, var(--phase-color, #38bdf8) 52%, transparent);
   background-color: rgb(var(--site-bg-rgb));
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.65);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--phase-color, #38bdf8) 22%, transparent),
+    0 0 20px color-mix(in srgb, var(--phase-color, #38bdf8) 34%, transparent),
+    0 0 36px color-mix(in srgb, var(--phase-color, #38bdf8) 22%, transparent);
   transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.25s ease;
+    border-color 0.28s ease,
+    box-shadow 0.28s ease,
+    transform 0.28s ease,
+    opacity 0.28s ease;
+  transform: scale(0.86);
+  transform-origin: center center;
+  opacity: 0.78;
 }
 
 .skills-pipeline__node-ring::after {
@@ -629,18 +641,30 @@
   border-radius: 50%;
   background: radial-gradient(
     circle at 50% 35%,
-    color-mix(in srgb, var(--phase-color, #38bdf8) 16%, transparent),
-    transparent 72%
+    color-mix(in srgb, var(--phase-color, #38bdf8) 30%, transparent),
+    transparent 68%
   );
   pointer-events: none;
+}
+
+.skills-pipeline__node:not(.skills-pipeline__node--active):hover .skills-pipeline__node-ring {
+  border-color: color-mix(in srgb, var(--phase-color, #38bdf8) 72%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--phase-color, #38bdf8) 35%, transparent),
+    0 0 26px color-mix(in srgb, var(--phase-color, #38bdf8) 46%, transparent),
+    0 0 44px color-mix(in srgb, var(--phase-color, #38bdf8) 30%, transparent);
+  transform: scale(1.08);
+  opacity: 0.95;
 }
 
 .skills-pipeline__node--active .skills-pipeline__node-ring {
   border-color: var(--phase-color, #38bdf8);
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--phase-color, #38bdf8) 35%, transparent),
-    0 0 28px color-mix(in srgb, var(--phase-color, #38bdf8) 42%, transparent);
-  transform: scale(1.06);
+    0 0 0 1px color-mix(in srgb, var(--phase-color, #38bdf8) 45%, transparent),
+    0 0 32px color-mix(in srgb, var(--phase-color, #38bdf8) 55%, transparent),
+    0 0 52px color-mix(in srgb, var(--phase-color, #38bdf8) 34%, transparent);
+  transform: scale(1.26);
+  opacity: 1;
 }
 
 .skills-pipeline__node-number {
@@ -663,10 +687,17 @@
   z-index: 1;
   display: grid;
   place-items: center;
-  color: color-mix(in srgb, var(--phase-color, #38bdf8) 82%, white 18%);
+  color: color-mix(in srgb, var(--phase-color, #38bdf8) 88%, white 12%);
   font-size: clamp(1.15rem, 2vw, 1.45rem);
   line-height: 1;
-  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--phase-color, #38bdf8) 45%, transparent));
+  filter:
+    drop-shadow(0 0 8px color-mix(in srgb, var(--phase-color, #38bdf8) 62%, transparent))
+    drop-shadow(0 0 16px color-mix(in srgb, var(--phase-color, #38bdf8) 40%, transparent));
+  transition: font-size 0.28s ease, filter 0.28s ease;
+}
+
+.skills-pipeline__node--active .skills-pipeline__node-icon {
+  font-size: clamp(1.35rem, 2.35vw, 1.7rem);
 }
 
 .skills-pipeline__node-icon svg {
@@ -679,11 +710,18 @@
   font-weight: 600;
   letter-spacing: 0.03em;
   color: #cbd5e1;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, transform 0.28s ease, opacity 0.28s ease;
+  opacity: 0.72;
+}
+
+.skills-pipeline__node:not(.skills-pipeline__node--active):hover .skills-pipeline__node-label {
+  opacity: 0.92;
 }
 
 .skills-pipeline__node--active .skills-pipeline__node-label {
   color: #f8fafc;
+  opacity: 1;
+  transform: scale(1.06);
 }
 
 .skills-pipeline__stage {
@@ -1450,8 +1488,12 @@
     text-align: center;
   }
 
-  .skills-pipeline__node:hover {
-    transform: none;
+  .skills-pipeline__node:not(.skills-pipeline__node--active):hover {
+    transform: translateY(-2px);
+  }
+
+  .skills-pipeline__node--active {
+    transform: translateY(-2px);
   }
 
   .skills-pipeline__node:focus-visible {
@@ -1463,6 +1505,38 @@
     width: 2.9rem;
     height: 2.9rem;
     border-width: 2px;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--phase-color, #38bdf8) 28%, transparent),
+      0 0 16px color-mix(in srgb, var(--phase-color, #38bdf8) 42%, transparent),
+      0 0 28px color-mix(in srgb, var(--phase-color, #38bdf8) 28%, transparent);
+    transform: scale(0.86);
+    opacity: 0.78;
+  }
+
+  .skills-pipeline__node:not(.skills-pipeline__node--active):hover .skills-pipeline__node-ring {
+    transform: scale(1.06);
+    opacity: 0.95;
+  }
+
+  .skills-pipeline__node-ring::after {
+    background: radial-gradient(
+      circle at 50% 35%,
+      color-mix(in srgb, var(--phase-color, #38bdf8) 36%, transparent),
+      transparent 66%
+    );
+  }
+
+  .skills-pipeline__node--active .skills-pipeline__node-ring {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--phase-color, #38bdf8) 50%, transparent),
+      0 0 24px color-mix(in srgb, var(--phase-color, #38bdf8) 58%, transparent),
+      0 0 40px color-mix(in srgb, var(--phase-color, #38bdf8) 36%, transparent);
+    transform: scale(1.2);
+    opacity: 1;
+  }
+
+  .skills-pipeline__node--active .skills-pipeline__node-icon {
+    font-size: 1.35rem;
   }
 
   .skills-pipeline__node-number {
@@ -1475,6 +1549,9 @@
 
   .skills-pipeline__node-icon {
     font-size: 1.2rem;
+    filter:
+      drop-shadow(0 0 7px color-mix(in srgb, var(--phase-color, #38bdf8) 68%, transparent))
+      drop-shadow(0 0 14px color-mix(in srgb, var(--phase-color, #38bdf8) 46%, transparent));
   }
 
   .skills-pipeline__node-label {

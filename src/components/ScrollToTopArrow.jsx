@@ -60,10 +60,14 @@ const ScrollToTopArrow = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }
 
+  const isProjectPage = pathname.startsWith('/progetti/')
+
   return (
     <button
       type="button"
-      className={`scroll-to-top ${visible ? 'scroll-to-top--visible' : ''}`}
+      className={`scroll-to-top${isProjectPage ? ' scroll-to-top--project' : ''}${
+        visible ? ' scroll-to-top--visible' : ''
+      }`}
       onClick={scrollToTop}
       aria-label="Torna all'inizio della pagina"
       title="Torna su"

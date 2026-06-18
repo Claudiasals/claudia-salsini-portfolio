@@ -42,8 +42,10 @@ const Hero = () => {
 
         <ScrollRevealItem tier="hero-3">
           <h1 className="hero-title mt-8 mb-0 md:mb-10 md:mt-10">
-            <span className="bg-gradient-to-r from-purple-600 via-sky-400 to-emerald-300 bg-clip-text text-transparent">
-              Junior Full Stack Developer
+            <span className="hero-title__desktop hero-title__gradient">Full Stack Developer</span>
+            <span className="hero-title__mobile">
+              <span className="hero-title__gradient hero-title__stack">Full Stack</span>
+              <span className="hero-title__gradient hero-title__developer">Developer</span>
             </span>
           </h1>
         </ScrollRevealItem>

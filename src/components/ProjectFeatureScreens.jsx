@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { FiMaximize2, FiX } from 'react-icons/fi'
 import { PinchZoomImage } from './PinchZoomImage'
 import { getCarouselDotWaveDistance } from '../utils/carouselDotWave'
@@ -50,6 +50,204 @@ function groupFeatureRows(features) {
   }
 
   return groups
+}
+
+function FeatureScreenCard({ feature, asPairChild = false, galleryCursorRef, onOpenScreen }) {
+  const copyRef = useRef(null)
+  const [copyHeight, setCopyHeight] = useState(null)
+  const screens = getFeatureScreens(feature)
+  const multiScreens = screens.length > 1
+  const sideLayout = feature.layout === 'side'
+  const sideReverseLayout = feature.layout === 'side-reverse'
+  const sideSplitLayout = feature.layout === 'side-split'
+  const cropBottom = feature.imageCropBottom ?? 0
+  const matchCopyHeight = feature.imageMatchCopyHeight === true
+
+  const cardLayout = [
+    asPairChild ? 'project-case-feature-screens__card--pair-child' : '',
+    sideLayout ? 'project-case-feature-screens__card--side' : '',
+    sideReverseLayout ? 'project-case-feature-screens__card--side-reverse' : '',
+    sideSplitLayout ? 'project-case-feature-screens__card--side-split' : '',
+    multiScreens && !sideSplitLayout ? 'project-case-feature-screens__card--multi' : '',
+    matchCopyHeight ? 'project-case-feature-screens__card--image-fit-copy' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  useLayoutEffect(() => {
+    if (!matchCopyHeight || !copyRef.current) {
+      setCopyHeight(null)
+      return undefined
+    }
+
+    const sync = () => {
+      if (window.matchMedia('(width < 768px)').matches) {
+        setCopyHeight(null)
+        return
+      }
+
+      setCopyHeight(copyRef.current?.offsetHeight ?? null)
+    }
+
+    sync()
+    const observer = new ResizeObserver(sync)
+    observer.observe(copyRef.current)
+    window.addEventListener('resize', sync)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', sync)
+    }
+  }, [matchCopyHeight, feature.text, feature.tags, feature.title])
+
+  const renderScreen = (screen, shotClassName = '') => {
+    const slideIndex = galleryCursorRef.current
+    galleryCursorRef.current += 1
+
+    const frameStyle = {}
+    if (cropBottom > 0) frameStyle['--image-crop-bottom'] = `${cropBottom}px`
+    if (matchCopyHeight && copyHeight) {
+      frameStyle.maxHeight = `${Math.max(0, copyHeight - cropBottom)}px`
+    }
+
+    const frameClassName = [
+      'project-case-feature-screens__frame group relative overflow-hidden',
+      cropBottom > 0 ? 'project-case-feature-screens__frame--crop-bottom' : '',
+      matchCopyHeight && copyHeight ? 'project-case-feature-screens__frame--fit-copy' : '',
+    ]
+      .filter(Boolean)
+      .join(' ')
+
+    const imgClassName = [
+      'project-case-feature-screens__img transition duration-300',
+      cropBottom > 0 ? 'project-case-feature-screens__img--crop-bottom' : '',
+      matchCopyHeight && copyHeight ? 'project-case-feature-screens__img--fit-copy' : '',
+    ]
+      .filter(Boolean)
+      .join(' ')
+
+    return (
+      <div
+        key={screen.src}
+        className={`project-case-feature-screens__shot ${shotClassName}`.trim()}
+      >
+        <div className={frameClassName} style={Object.keys(frameStyle).length ? frameStyle : undefined}>
+          <PinchZoomImage
+            className="project-case-feature-screens__pinch"
+            stageClassName="project-case-feature-screens__pinch-stage"
+            onActivate={() => onOpenScreen(slideIndex)}
+            ariaLabel={`Ingrandisci immagine: ${feature.title}${screen.label ? ` — ${screen.label}` : ''}`}
+          >
+            <img
+              src={screen.src}
+              alt={screen.alt}
+              className={imgClassName}
+              loading="lazy"
+              decoding="async"
+              draggable={false}
+            />
+          </PinchZoomImage>
+          <button
+            type="button"
+            className="project-case-feature-screens__expand-btn absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition hover:bg-black/80"
+            onClick={() => onOpenScreen(slideIndex)}
+            aria-label="Ingrandisci immagine"
+          >
+            <FiMaximize2 size={18} aria-hidden />
+          </button>
+        </div>
+        {screen.label ? (
+          <span className="project-case-feature-screens__screen-label">{screen.label}</span>
+        ) : null}
+      </div>
+    )
+  }
+
+  const cardBody = (
+    <>
+      <div className="project-case-feature-screens__copy" ref={copyRef}>
+        <h3 className="project-case-feature-screens__title">{feature.title}</h3>
+        {sideSplitLayout ? (
+          <div className="project-case-feature-screens__copy-body">
+            {feature.text ? <p className="project-case-card__text">{feature.text}</p> : null}
+
+            {feature.highlights?.length ? (
+              <ul className="project-case-feature-screens__highlights space-y-3">
+                {feature.highlights.map((item) => (
+                  <li key={item.title}>
+                    <strong>{item.title}</strong>: {item.text}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            {feature.tags ? (
+              <p className="project-case-feature-screens__tags">{feature.tags}</p>
+            ) : null}
+
+            {screens.length === 0 && feature.fallback ? (
+              <p className="project-case-feature-screens__fallback">{feature.fallback}</p>
+            ) : null}
+          </div>
+        ) : (
+          <>
+            {feature.text ? <p className="project-case-card__text">{feature.text}</p> : null}
+
+            {feature.highlights?.length ? (
+              <ul className="project-case-feature-screens__highlights space-y-3">
+                {feature.highlights.map((item) => (
+                  <li key={item.title}>
+                    <strong>{item.title}</strong>: {item.text}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            {feature.tags ? (
+              <p className="project-case-feature-screens__tags">{feature.tags}</p>
+            ) : null}
+
+            {screens.length === 0 && feature.fallback ? (
+              <p className="project-case-feature-screens__fallback">{feature.fallback}</p>
+            ) : null}
+          </>
+        )}
+      </div>
+
+      {sideSplitLayout && screens.length >= 2 ? (
+        <>
+          {renderScreen(screens[0], 'project-case-feature-screens__shot--side-split-inline')}
+          {renderScreen(screens[1], 'project-case-feature-screens__shot--side-split-tall')}
+        </>
+      ) : screens.length > 0 ? (
+        <div className="project-case-feature-screens__media">
+          <div
+            className={
+              multiScreens
+                ? 'project-case-feature-screens__shots'
+                : 'project-case-feature-screens__shots project-case-feature-screens__shots--single'
+            }
+          >
+            {screens.map((screen) => renderScreen(screen))}
+          </div>
+        </div>
+      ) : null}
+    </>
+  )
+
+  if (asPairChild) {
+    return (
+      <div key={feature.title} className={`project-case-feature-screens__card ${cardLayout}`.trim()}>
+        {cardBody}
+      </div>
+    )
+  }
+
+  return (
+    <li key={feature.title} className={`project-case-feature-screens__card ${cardLayout}`.trim()}>
+      {cardBody}
+    </li>
+  )
 }
 
 /**
@@ -197,123 +395,14 @@ export function ProjectFeatureScreens({ features }) {
     }
   }, [isLightboxOpen, close, goNext, goPrevious])
 
-  let galleryCursor = 0
   const featureGroups = useMemo(() => groupFeatureRows(features), [features])
+  const galleryCursorRef = useRef(0)
 
-  const renderFeatureCard = (feature, { asPairChild = false } = {}) => {
-    const screens = getFeatureScreens(feature)
-    const multiScreens = screens.length > 1
-    const sideLayout = feature.layout === 'side'
-    const sideReverseLayout = feature.layout === 'side-reverse'
-    const sideSplitLayout = feature.layout === 'side-split'
-    const cardLayout = [
-      asPairChild ? 'project-case-feature-screens__card--pair-child' : '',
-      sideLayout ? 'project-case-feature-screens__card--side' : '',
-      sideReverseLayout ? 'project-case-feature-screens__card--side-reverse' : '',
-      sideSplitLayout ? 'project-case-feature-screens__card--side-split' : '',
-      multiScreens && !sideSplitLayout ? 'project-case-feature-screens__card--multi' : '',
-    ]
-      .filter(Boolean)
-      .join(' ')
+  const openScreenAt = useCallback((index) => {
+    setActiveIndex(index)
+  }, [])
 
-    const renderScreen = (screen, shotClassName = '') => {
-      const slideIndex = galleryCursor
-      galleryCursor += 1
-      const openScreen = () => setActiveIndex(slideIndex)
-
-      return (
-        <div
-          key={screen.src}
-          className={`project-case-feature-screens__shot ${shotClassName}`.trim()}
-        >
-          <div className="project-case-feature-screens__frame group relative overflow-hidden">
-            <PinchZoomImage
-              className="project-case-feature-screens__pinch"
-              stageClassName="project-case-feature-screens__pinch-stage"
-              onActivate={openScreen}
-              ariaLabel={`Ingrandisci immagine: ${feature.title}${screen.label ? ` — ${screen.label}` : ''}`}
-            >
-              <img
-                src={screen.src}
-                alt={screen.alt}
-                className="project-case-feature-screens__img transition duration-300"
-                loading="lazy"
-                decoding="async"
-                draggable={false}
-              />
-            </PinchZoomImage>
-            <button
-              type="button"
-              className="project-case-feature-screens__expand-btn absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition hover:bg-black/80"
-              onClick={openScreen}
-              aria-label="Ingrandisci immagine"
-            >
-              <FiMaximize2 size={18} aria-hidden />
-            </button>
-          </div>
-          {screen.label ? (
-            <span className="project-case-feature-screens__screen-label">{screen.label}</span>
-          ) : null}
-        </div>
-      )
-    }
-
-    const cardBody = (
-      <>
-        <div className="project-case-feature-screens__copy">
-          <h3 className="project-case-feature-screens__title">{feature.title}</h3>
-          <p className="project-case-card__text">{feature.text}</p>
-
-          {feature.tags ? (
-            <p className="project-case-feature-screens__tags">{feature.tags}</p>
-          ) : null}
-
-          {screens.length === 0 && feature.fallback ? (
-            <p className="project-case-feature-screens__fallback">{feature.fallback}</p>
-          ) : null}
-        </div>
-
-        {sideSplitLayout && screens.length >= 2 ? (
-          <>
-            {renderScreen(screens[0], 'project-case-feature-screens__shot--side-split-inline')}
-            {renderScreen(screens[1], 'project-case-feature-screens__shot--side-split-tall')}
-          </>
-        ) : screens.length > 0 ? (
-          <div className="project-case-feature-screens__media">
-            <div
-              className={
-                multiScreens
-                  ? 'project-case-feature-screens__shots'
-                  : 'project-case-feature-screens__shots project-case-feature-screens__shots--single'
-              }
-            >
-              {screens.map((screen) => renderScreen(screen))}
-            </div>
-          </div>
-        ) : null}
-      </>
-    )
-
-    if (asPairChild) {
-      return (
-        <div
-          key={feature.title}
-          className={`project-case-feature-screens__card ${cardLayout}`.trim()}
-        >
-          {cardBody}
-        </div>
-      )
-    }
-
-    return (
-      <li
-        key={feature.title}
-        className={`project-case-feature-screens__card ${cardLayout}`.trim()}
-      >
-        {cardBody}
-      </li>
-    )
-  }
+  galleryCursorRef.current = 0
 
   return (
     <>
@@ -325,14 +414,27 @@ export function ProjectFeatureScreens({ features }) {
                 key={group.items.map((feature) => feature.title).join('--')}
                 className="project-case-feature-screens__pair-row"
               >
-                {group.items.map((feature) =>
-                  renderFeatureCard(feature, { asPairChild: true }),
-                )}
+                {group.items.map((feature) => (
+                  <FeatureScreenCard
+                    key={feature.title}
+                    feature={feature}
+                    asPairChild
+                    galleryCursorRef={galleryCursorRef}
+                    onOpenScreen={openScreenAt}
+                  />
+                ))}
               </li>
             )
           }
 
-          return renderFeatureCard(group.items[0])
+          return (
+            <FeatureScreenCard
+              key={group.items[0].title}
+              feature={group.items[0]}
+              galleryCursorRef={galleryCursorRef}
+              onOpenScreen={openScreenAt}
+            />
+          )
         })}
       </ul>
 

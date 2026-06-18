@@ -56,15 +56,20 @@ const GIT_CARD_DESC_SHORTEN_SHIFT_PX = 36
 
 const SKILL_CARD_OFFSET = {
   CSS: { x: -5, y: -15 },
-  JavaScript: { x: 0, y: 0 },
+  JavaScript: { x: 0, y: -15 },
   GitHub: { x: 0, y: -20 },
-  'Tailwind CSS': { x: -10, y: 0 },
+  'Tailwind CSS': { x: -10, y: -20 },
   TypeScript: { x: 0, y: -20 },
   React: { x: -20, y: 0 },
   Redux: { x: 30, y: 0 },
   Figma: { x: 30, y: -40 },
   PHP: { x: 0, y: 0 },
+  MongoDB: { x: 0, y: -45 },
   Postman: { x: -20, y: 0 },
+  'VS Code': { x: 0, y: -10 },
+  npm: { x: 0, y: -10 },
+  WordPress: { x: 0, y: -10 },
+  Laravel: { x: 0, y: -10 },
 }
 
 /** Sotto 1280px: tab orizzontali sotto al titolo, radar sotto ai pulsanti */
@@ -78,13 +83,13 @@ const TOP_ICON_RIGHT_BRIDGE_SKILLS = new Set(['HTML', 'Node.js', 'Git'])
 const TOP_ICON_DESKTOP_CARD_OFFSET = {
   HTML: { x: 0, y: 25 },
   'Node.js': { x: 0, y: 40 },
-  Git: { x: 0, y: 12 + GIT_CARD_DESC_SHORTEN_SHIFT_PX },
+  Git: { x: 0, y: 2 + GIT_CARD_DESC_SHORTEN_SHIFT_PX },
 }
 
 const TOP_ICON_STACKED_CARD_OFFSET = {
   HTML: { x: 0, y: -20 },
   'Node.js': { x: 0, y: -20 },
-  Git: { x: 0, y: -20 },
+  Git: { x: 0, y: -30 },
 }
 
 const getSkillCardOffset = (skill) => {
@@ -1172,6 +1177,10 @@ const Skills = () => {
   useEffect(() => {
     const radar = radarRef.current
     if (!radar) return undefined
+
+    if (elementIntersectsViewport(radar, { bottomInset: 48 })) {
+      activateIntro()
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {

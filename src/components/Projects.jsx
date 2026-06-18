@@ -249,11 +249,7 @@ const Projects = () => {
               aria-label="Paginazione progetti"
             >
               {projects.map((project, index) => {
-                const waveDistance = getCarouselDotWaveDistance(
-                  index,
-                  currentIndex,
-                  projectCount,
-                )
+                const waveDistance = getCarouselDotWaveDistance(index, currentIndex)
 
                 return (
                   <span key={project.slug} className="projects-carousel-dot-cell">

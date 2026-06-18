@@ -183,8 +183,8 @@ const Navbar = () => {
             className={`nav-mobile-menu ${menuOpen ? 'nav-mobile-menu--open' : ''}`}
             aria-hidden={!menuOpen}
           >
+            {[...sectionItems].reverse()}
             {homeItem}
-            {sectionItems}
           </ul>
         </div>
       </nav>
