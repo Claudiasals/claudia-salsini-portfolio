@@ -37,7 +37,7 @@ export const projects = [
     category: 'Portfolio fotografico con pannello admin',
     title: 'Francesca Gandelli',
     description:
-      'Progetto personale: portfolio fotografico con stile su misura per la cliente e pannello admin per gestire categorie, foto, testi e recupero password con verifica OTP via email.',
+      'Portfolio fotografico con pannello admin per gallerie, categorie e contenuti testuali.',
     image: '/images/projects/francesca-gandelli.png',
     imageAlt: 'Anteprima del portfolio Francesca Gandelli con pannello admin e griglia categorie',
     tech: ['React', 'Vite', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB Atlas', 'Cloudinary'],

@@ -76,13 +76,37 @@ const AI_FEATURES = [
     title: 'Centro operativo',
     layout: 'side',
     imageCropBottom: 30,
-    text:
-      'Il centro operativo AI raccoglie in dashboard alert e insight incrociati su magazzino, ticket, vendite, clienti e turni. Gli alert operativi segnalano stock critico per sede e ticket ad alta priorità aperti da oltre 7 giorni, con link diretti ai moduli di competenza; gli insight strategici sintetizzano lo stato complessivo della piattaforma.',
+    text: (
+      <>
+        Il centro operativo AI raccoglie in dashboard alert e insight incrociati su magazzino,
+        ticket, vendite, clienti e turni. Gli <strong>alert operativi</strong> segnalano stock
+        critico per sede (prodotti sotto soglia di riordino) e ticket ad alta priorità aperti da
+        oltre 7 giorni, con link diretti ai moduli di competenza. Gli{' '}
+        <strong>insight strategici</strong> incrociano i dati dei moduli attivi e ne ricavano una
+        sintesi leggibile dello stato operativo con link al modulo correlato per l’analisi
+        approfondita:
+      </>
+    ),
+    highlightsStyle: 'copy',
+    highlights: [
+      {
+        title: 'Attività commerciale',
+        text: 'quanto sta lavorando il reparto vendite/ordini',
+      },
+      {
+        title: 'Backlog ticket',
+        text: 'quante richieste di assistenza sono ancora aperte',
+      },
+      {
+        title: 'Stock sotto controllo',
+        text: 'quanti prodotti il magazzino sta seguendo perché vicini alla soglia di riordino',
+      },
+    ],
     tags: 'Dashboard · Alert operativi · UX admin',
     screens: [
       {
         src: '/images/projects/workhub/dashboard-admin-centro-operativo.png',
-        alt: 'Centro operativo AI con alert stock critico in magazzino, ticket ad alta priorità aperti da oltre 7 giorni e insight strategici sulle vendite con link ai moduli',
+        alt: 'Centro operativo AI con alert su criticità di stoccaggio e ticket ad alta priorità, e insight strategici su attività commerciale, backlog ticket e monitoraggio scorte con link ai moduli',
         label: 'Centro operativo AI',
       },
     ],
@@ -91,8 +115,15 @@ const AI_FEATURES = [
     title: 'Insight vendite',
     layout: 'side',
     imageMatchCopyHeight: true,
-    text:
-      'Nell’overview admin, il grafico andamento vendite e il pannello Insight vendite sono affiancati: a sinistra la lettura visiva di fatturato, ordini e nuovi clienti; a destra l’AI interpreta l’andamento e propone interventi concreti — trend commerciali, crescita dei nuovi clienti, stock critico su prodotti in accelerazione (con suggerimento di riordino entro 7 giorni) e link «Apri modulo» verso magazzino o altre aree.',
+    text: (
+      <>
+        Il pannello Insight vendite, che si trova subito di fianco al grafico sull’andamento delle
+        vendite, interpreta i dati del grafico e ne restituisce una <strong>sintesi operativa</strong>
+        : confronto di fatturato e ordini rispetto ai periodi precedenti, andamento dell’acquisizione
+        di nuovi clienti e, quando le vendite di un prodotto accelerano mentre lo stock scende,
+        suggerimento di riordino entro 7 giorni.
+      </>
+    ),
     tags: 'Vendite · AI · Decisioni operative',
     screens: [
       {
@@ -104,8 +135,17 @@ const AI_FEATURES = [
   },
   {
     title: 'Ticketing',
-    text:
-      'In cima all’area ticket compaiono suggerimenti operativi sul backlog (ticket aperti da oltre 7 giorni, alta priorità ancora aperti, categorie in crescita). La lista integra filtri per periodo, stato Aperti/Chiusi e priorità AI assegnata alla creazione del ticket, con etichette di urgenza e reparto per intervenire subito sulle richieste più critiche. Riduzione del tempo necessario per la gestione dei ticket grazie alla classificazione automatica delle richieste e alla generazione assistita delle risposte.',
+    text: (
+      <>
+        In cima all’area ticket compaiono{' '}
+        <strong>suggerimenti operativi sul backlog</strong> (ticket aperti da oltre 7 giorni, ticket ad
+        alta priorità ancora aperti e aree in cui è presente un aumento di richieste). La pagina
+        ticketing integra filtri per periodo, stato Aperti/Chiusi e priorità AI assegnata alla
+        creazione del ticket per intervenire subito sulle richieste più critiche. L’obiettivo è la
+        riduzione del tempo necessario per la gestione dei ticket grazie alla classificazione
+        automatica delle richieste e alla generazione assistita delle risposte.
+      </>
+    ),
     tags: 'Ticketing · Suggerimenti operativi · Classificazione AI · Drawer',
     screens: [
       {
@@ -123,8 +163,20 @@ const AI_FEATURES = [
   {
     title: 'Clienti',
     layout: 'side-split',
-    text:
-      'I suggerimenti commerciali incrociano storico acquisti e segmentazione del portafoglio clienti per proporre interventi concreti, ad esempio campagne di riattivazione su clienti inattivi da oltre 90 giorni, comunicazioni dedicate al cluster Premium o azioni win-back. Utilizzo dello storico acquisti per individuare opportunità di cross-selling, upselling e riattivazione clienti. L’operatore sceglie la proposta e può inviarla via email o mostrarla in negozio direttamente al cliente.',
+    text: (
+      <>
+        I <strong>suggerimenti commerciali</strong> incrociano lo storico acquisti e la segmentazione
+        del portafoglio clienti per proporre interventi concreti, ad esempio: campagne di
+        riattivazione sui clienti inattivi da oltre novanta giorni, comunicazioni dedicate al cluster
+        Premium e azioni win-back.
+        <br />
+        <br />
+        Gli <strong>insight commerciali</strong>, presenti nella scheda cliente, analizzano il profilo
+        e lo storico acquisti per individuare opportunità di cross-selling, upselling e
+        riattivazione; l’operatore sceglie la promo tra le proposte dell’AI e può inviarla via email
+        o mostrarla in negozio direttamente al cliente.
+      </>
+    ),
     tags: 'CRM · Segmentazione · Analytics · Promo personalizzate',
     screens: [
       {
@@ -142,8 +194,16 @@ const AI_FEATURES = [
   {
     title: 'Magazzino',
     layout: 'side',
-    text:
-      'Supporto al riordino attraverso l’analisi delle giacenze, degli ordini attivi e dei prodotti con maggiore domanda: evidenzia esaurimenti e soglie basse per sede (es. KALLAX esaurito a Napoli Afragola o Milano San Giuliano, LACK Tavolino sotto soglia), collega lo stock agli ordini attivi e ai prodotti più ordinati nel periodo, con distinzione tra riordino urgente e valutazione riordino, ordinati per urgenza così l’admin interviene subito prima che stock e spedizioni si blocchino.',
+    text: (
+      <>
+        I <strong>suggerimenti AI magazzino</strong> monitorano le giacenze per sede e indicano quando
+        intervenire sul riordino. Per ogni punto vendita distinguono due casi: il prodotto esaurito, con
+        riordino urgente consigliato (es. KALLAX a Milano San Giuliano), e il prodotto sotto soglia, da
+        valutare per il riordino (es. LACK Tavolino sotto 3/5). I suggerimenti sono ordinati per
+        urgenza, così l’admin interviene prima sulle criticità più gravi e previene blocchi in stock e
+        spedizioni.
+      </>
+    ),
     tags: 'Magazzino · Alert operativi',
     screens: [
       {
@@ -345,7 +405,7 @@ const WorkHubAiProject = () => (
             per rendere più rapidi i flussi di lavoro, supportare le vendite e migliorare l’usabilità della
             piattaforma.
           </p>
-          <ul className="project-case-feature-screens__highlights space-y-3">
+          <ul className="project-case-checklist project-case-checklist--feature-copy">
             {CONTRIBUTION_ITEMS.map((item) => (
               <li key={item.title}>
                 <strong>{item.title}</strong>: {item.text}
@@ -407,7 +467,7 @@ const WorkHubAiProject = () => (
             Modifiche apportate per ottimizzare usabilità, leggibilità e accessibilità delle
             informazioni in piattaforma:
           </p>
-          <ul className="project-case-checklist space-y-4">
+          <ul className="project-case-checklist project-case-checklist--feature-copy">
             {PLATFORM_OPTIMIZATION_HIGHLIGHTS.map((item) => (
               <li key={item.title}>
                 <strong>{item.title}</strong>: {item.text}

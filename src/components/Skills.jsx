@@ -87,9 +87,9 @@ const TOP_ICON_DESKTOP_CARD_OFFSET = {
 }
 
 const TOP_ICON_STACKED_CARD_OFFSET = {
-  HTML: { x: 0, y: -20 },
-  'Node.js': { x: 0, y: -20 },
-  Git: { x: 0, y: -30 },
+  HTML: { x: 0, y: -30 },
+  'Node.js': { x: 5, y: -35 },
+  Git: { x: 0, y: -40 },
 }
 
 const getSkillCardOffset = (skill) => {

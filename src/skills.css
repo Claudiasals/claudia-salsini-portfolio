@@ -504,6 +504,9 @@
   container-type: inline-size;
   --pipeline-column-gap: clamp(0.35rem, 1.2vw, 0.85rem);
   --pipeline-col-width: calc((100cqw - 4 * var(--pipeline-column-gap)) / 5);
+  --pipeline-node-size: clamp(3.5rem, 5.5vw, 4.75rem);
+  --pipeline-node-radius: calc(var(--pipeline-node-size) / 2);
+  --pipeline-node-radius-outer: calc(var(--pipeline-node-radius) * 1.26);
   --pipeline-edge-inset: max(
     0px,
     calc((var(--pipeline-col-width) - 15.5rem) / 2)
@@ -520,41 +523,25 @@
 
 .skills-pipeline__rail {
   position: absolute;
-  top: calc(0.5rem + clamp(1.75rem, 2.75vw, 2.375rem));
-  left: 10%;
-  right: 10%;
+  top: calc(0.5rem + var(--pipeline-node-radius));
+  left: calc(10% - var(--pipeline-node-radius-outer));
+  right: calc(10% - var(--pipeline-node-radius-outer));
   height: 2px;
   z-index: 0;
   overflow: hidden;
   border-radius: 999px;
   background: linear-gradient(
     90deg,
-    transparent 0%,
-    color-mix(in srgb, #a855f7 55%, transparent) 10%,
+    #a855f7 0%,
     #a855f7 18%,
     #3b82f6 32%,
     #22d3ee 50%,
     #fb923c 68%,
     #a855f7 82%,
-    color-mix(in srgb, #a855f7 55%, transparent) 90%,
-    transparent 100%
+    #a855f7 100%
   );
   opacity: 0.48;
   pointer-events: none;
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 16%,
-    #000 84%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 16%,
-    #000 84%,
-    transparent 100%
-  );
 }
 
 .skills-pipeline__rail-glow {
@@ -593,15 +580,37 @@
   cursor: pointer;
   text-align: center;
   transition: transform 0.28s ease;
+  --node-visual-scale: 0.86;
 }
 
 .skills-pipeline__node:not(.skills-pipeline__node--active):hover {
   transform: translateY(-4px);
+  --node-visual-scale: 1.08;
+}
+
+/* Disco opaco alla dimensione visiva del ring (non al layout box scalato) */
+.skills-pipeline__node::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--pipeline-node-size) * (1 - var(--node-visual-scale)) / 2);
+  left: 50%;
+  width: calc(var(--pipeline-node-size) * var(--node-visual-scale));
+  height: calc(var(--pipeline-node-size) * var(--node-visual-scale));
+  border-radius: 50%;
+  background-color: rgb(var(--site-bg-rgb));
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+  transition:
+    top 0.28s ease,
+    width 0.28s ease,
+    height 0.28s ease;
 }
 
 .skills-pipeline__node--active {
   z-index: 2;
   transform: translateY(-4px);
+  --node-visual-scale: 1.26;
 }
 
 .skills-pipeline__node:focus-visible {
@@ -615,8 +624,8 @@
   z-index: 1;
   display: grid;
   place-items: center;
-  width: clamp(3.5rem, 5.5vw, 4.75rem);
-  height: clamp(3.5rem, 5.5vw, 4.75rem);
+  width: var(--pipeline-node-size);
+  height: var(--pipeline-node-size);
   border-radius: 50%;
   border: 2px solid color-mix(in srgb, var(--phase-color, #38bdf8) 52%, transparent);
   background-color: rgb(var(--site-bg-rgb));
@@ -627,11 +636,9 @@
   transition:
     border-color 0.28s ease,
     box-shadow 0.28s ease,
-    transform 0.28s ease,
-    opacity 0.28s ease;
+    transform 0.28s ease;
   transform: scale(0.86);
   transform-origin: center center;
-  opacity: 0.78;
 }
 
 .skills-pipeline__node-ring::after {
@@ -645,6 +652,7 @@
     transparent 68%
   );
   pointer-events: none;
+  z-index: 1;
 }
 
 .skills-pipeline__node:not(.skills-pipeline__node--active):hover .skills-pipeline__node-ring {
@@ -654,7 +662,6 @@
     0 0 26px color-mix(in srgb, var(--phase-color, #38bdf8) 46%, transparent),
     0 0 44px color-mix(in srgb, var(--phase-color, #38bdf8) 30%, transparent);
   transform: scale(1.08);
-  opacity: 0.95;
 }
 
 .skills-pipeline__node--active .skills-pipeline__node-ring {
@@ -664,7 +671,6 @@
     0 0 32px color-mix(in srgb, var(--phase-color, #38bdf8) 55%, transparent),
     0 0 52px color-mix(in srgb, var(--phase-color, #38bdf8) 34%, transparent);
   transform: scale(1.26);
-  opacity: 1;
 }
 
 .skills-pipeline__node-number {
@@ -684,7 +690,7 @@
 
 .skills-pipeline__node-icon {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: grid;
   place-items: center;
   color: color-mix(in srgb, var(--phase-color, #38bdf8) 88%, white 12%);
@@ -1458,6 +1464,9 @@
     row-gap: 0.45rem;
     margin-top: 1.1rem;
     --pipeline-column-gap: 0px;
+    --pipeline-node-size: 2.9rem;
+    --pipeline-node-radius: calc(var(--pipeline-node-size) / 2);
+    --pipeline-node-radius-outer: calc(var(--pipeline-node-radius) * 1.2);
     --pipeline-edge-inset: max(
       0px,
       calc((var(--pipeline-col-width) - 13.5rem) / 2)
@@ -1474,9 +1483,9 @@
 
   .skills-pipeline__rail {
     display: block;
-    top: calc(0.25rem + 1.45rem);
-    left: 10%;
-    right: 10%;
+    top: calc(0.25rem + var(--pipeline-node-radius));
+    left: calc(10% - var(--pipeline-node-radius-outer));
+    right: calc(10% - var(--pipeline-node-radius-outer));
     height: 3px;
   }
 
@@ -1490,10 +1499,12 @@
 
   .skills-pipeline__node:not(.skills-pipeline__node--active):hover {
     transform: translateY(-2px);
+    --node-visual-scale: 1.06;
   }
 
   .skills-pipeline__node--active {
     transform: translateY(-2px);
+    --node-visual-scale: 1.2;
   }
 
   .skills-pipeline__node:focus-visible {
@@ -1502,20 +1513,18 @@
   }
 
   .skills-pipeline__node-ring {
-    width: 2.9rem;
-    height: 2.9rem;
+    width: var(--pipeline-node-size);
+    height: var(--pipeline-node-size);
     border-width: 2px;
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--phase-color, #38bdf8) 28%, transparent),
       0 0 16px color-mix(in srgb, var(--phase-color, #38bdf8) 42%, transparent),
       0 0 28px color-mix(in srgb, var(--phase-color, #38bdf8) 28%, transparent);
     transform: scale(0.86);
-    opacity: 0.78;
   }
 
   .skills-pipeline__node:not(.skills-pipeline__node--active):hover .skills-pipeline__node-ring {
     transform: scale(1.06);
-    opacity: 0.95;
   }
 
   .skills-pipeline__node-ring::after {
@@ -1532,7 +1541,6 @@
       0 0 24px color-mix(in srgb, var(--phase-color, #38bdf8) 58%, transparent),
       0 0 40px color-mix(in srgb, var(--phase-color, #38bdf8) 36%, transparent);
     transform: scale(1.2);
-    opacity: 1;
   }
 
   .skills-pipeline__node--active .skills-pipeline__node-icon {

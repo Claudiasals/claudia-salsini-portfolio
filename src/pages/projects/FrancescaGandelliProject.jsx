@@ -155,7 +155,7 @@ const FrancescaGandelliProject = () => (
           </h1>
           <p className="project-case-intro__desc">
             Progetto personale sviluppato in autonomia per Francesca Gandelli: ho seguito le
-            richieste della cliente per lo stile del sito — font, colori e impostazione generale —
+            richieste della cliente per le specifiche di design — font, colori e impostazione generale —
             e ho costruito il portfolio full stack con area pubblica e pannello admin.
           </p>
           <p className="project-case-intro__desc mt-4">

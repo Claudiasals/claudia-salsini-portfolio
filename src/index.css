@@ -3737,6 +3737,33 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
   color: #38bdf8;
 }
 
+.project-case-checklist--feature-copy li {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: #94a3b8;
+  padding-left: 1.75rem;
+}
+
+.project-case-checklist--feature-copy li + li {
+  margin-top: 0.25rem;
+}
+
+.project-case-checklist--feature-copy li strong {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.project-case-checklist--feature-copy li::before {
+  content: "✓";
+  top: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
 .project-case-visual__img {
   min-height: 16rem;
   border-radius: 1rem;
@@ -3933,7 +3960,42 @@ html.perf-lite .hero-bg__circuit-spotlight.hero-bg__circuit-spotlight--auto {
 
 .project-case-feature-screens__card .project-case-card__text {
   margin: 0;
+  font-size: 0.9375rem;
   line-height: 1.75;
+  color: #94a3b8;
+}
+
+.project-case-card__text .project-case-feature-screens__highlights--copy {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-case-card__text .project-case-feature-screens__highlights--copy li {
+  position: relative;
+  padding-left: 1.25rem;
+  font: inherit;
+  color: inherit;
+}
+
+.project-case-card__text .project-case-feature-screens__highlights--copy li + li {
+  margin-top: 0.25rem;
+}
+
+.project-case-card__text .project-case-feature-screens__highlights--copy li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.project-case-feature-screens__card .project-case-card__text strong {
+  color: #e2e8f0;
+  font-weight: 600;
 }
 
 .project-case-feature-screens__tags {

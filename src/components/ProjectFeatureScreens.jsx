@@ -21,6 +21,42 @@ function getFeatureScreens(feature) {
   return []
 }
 
+function renderFeatureProse(feature) {
+  const hasCopyHighlights =
+    feature.highlightsStyle === 'copy' && feature.highlights?.length > 0
+
+  if (hasCopyHighlights) {
+    return (
+      <div className="project-case-card__text">
+        {feature.text ?? null}
+        <ul className="project-case-feature-screens__highlights project-case-feature-screens__highlights--copy">
+          {feature.highlights.map((item) => (
+            <li key={item.title}>
+              {item.title}: {item.text}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      {feature.text ? <p className="project-case-card__text">{feature.text}</p> : null}
+
+      {feature.highlights?.length ? (
+        <ul className="project-case-feature-screens__highlights space-y-3">
+          {feature.highlights.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>: {item.text}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </>
+  )
+}
+
 function buildScreenshotGallery(features) {
   return features.flatMap((feature) =>
     getFeatureScreens(feature).map((screen) => ({
@@ -169,17 +205,7 @@ function FeatureScreenCard({ feature, asPairChild = false, galleryCursorRef, onO
         <h3 className="project-case-feature-screens__title">{feature.title}</h3>
         {sideSplitLayout ? (
           <div className="project-case-feature-screens__copy-body">
-            {feature.text ? <p className="project-case-card__text">{feature.text}</p> : null}
-
-            {feature.highlights?.length ? (
-              <ul className="project-case-feature-screens__highlights space-y-3">
-                {feature.highlights.map((item) => (
-                  <li key={item.title}>
-                    <strong>{item.title}</strong>: {item.text}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+            {renderFeatureProse(feature)}
 
             {feature.tags ? (
               <p className="project-case-feature-screens__tags">{feature.tags}</p>
@@ -191,17 +217,7 @@ function FeatureScreenCard({ feature, asPairChild = false, galleryCursorRef, onO
           </div>
         ) : (
           <>
-            {feature.text ? <p className="project-case-card__text">{feature.text}</p> : null}
-
-            {feature.highlights?.length ? (
-              <ul className="project-case-feature-screens__highlights space-y-3">
-                {feature.highlights.map((item) => (
-                  <li key={item.title}>
-                    <strong>{item.title}</strong>: {item.text}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+            {renderFeatureProse(feature)}
 
             {feature.tags ? (
               <p className="project-case-feature-screens__tags">{feature.tags}</p>
