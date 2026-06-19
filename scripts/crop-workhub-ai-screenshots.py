@@ -7,7 +7,6 @@ IMG = ROOT / "public" / "images" / "projects" / "workhub"
 
 # Sidebar ~210px at 1024px width; top app header ~56px
 SIDEBAR = 210
-HEADER = 56
 
 
 def crop_box(img: Image.Image, left: int, top: int, right: int, bottom: int) -> Image.Image:
@@ -24,13 +23,8 @@ def save(path: Path, img: Image.Image) -> None:
 
 def main() -> None:
     crops = {
-        # Overview turni: card calendario (senza sidebar né documenti sotto)
         "ai-admin-overview-turni.png": (SIDEBAR, 48, 1024, 512),
-        # Overview calendario pomeriggio + documenti
-        "ai-admin-overview-calendario-documenti.png": (SIDEBAR, 36, 1024, 681),
-        # Ticketing: da titolo pagina + AI insights
         "ai-admin-ticket.png": (SIDEBAR, 48, 1024, 681),
-        # Clienti: storico ordini + AI Customer Insights
         "ai-admin-customer.png": (SIDEBAR, 158, 1024, 681),
     }
 
@@ -39,10 +33,6 @@ def main() -> None:
         img = Image.open(path)
         cropped = crop_box(img, l, t, r, b)
         save(path, cropped)
-
-    # Centro operativo: invariato (sidebar visibile)
-    centro = IMG / "ai-admin-overview-centro-operativo.png"
-    save(ROOT / "public" / "images" / "projects" / "workhub-ai.png", Image.open(centro))
 
 
 if __name__ == "__main__":

@@ -97,29 +97,6 @@ const adminPage = await context.newPage()
 await login(adminPage, 'admin', 'admin123')
 
 await prepareCalendar(adminPage)
-await adminPage.locator('.calendar-mode-btn--shifts').click()
-await waitCalendarEvents(adminPage, 5)
-await expandCalendarForCapture(adminPage)
-await captureLocator(
-  adminPage,
-  'dashboard-admin-calendario-turni-ai.png',
-  '.company-events-calendar',
-  20
-)
-
-await adminPage.locator('.calendar-mode-btn--events').click()
-await adminPage.waitForTimeout(800)
-await waitCalendarEvents(adminPage, 3)
-await adminPage.locator('.calendar-view-btn').filter({ hasText: /mese|month/i }).click()
-await adminPage.waitForTimeout(600)
-await captureLocator(
-  adminPage,
-  'dashboard-admin-calendario-eventi.png',
-  '.company-events-calendar',
-  16,
-  720
-)
-
 await adminPage.evaluate(() => {
   const scrollHost = document.querySelector('[data-page-scroll]')
   if (scrollHost) scrollHost.scrollTop = 0
@@ -145,18 +122,10 @@ await captureLocator(
 
 await adminPage.goto(`${baseUrl}/ticket`, { waitUntil: 'domcontentloaded' })
 await adminPage.waitForTimeout(3500)
-await captureLocator(adminPage, 'ticket-ai-insights.png', '.ticket-ai-insights-wrap', 16)
 await adminPage.screenshot({
   path: path.join(outputDir, 'admin-ticket-analytics.png'),
   clip: { x: 0, y: 0, width: 1440, height: 900 },
 })
-
-await adminPage.goto(`${baseUrl}/customers`, { waitUntil: 'networkidle' })
-await adminPage.waitForTimeout(2000)
-await adminPage.locator('table tbody tr').first().click()
-await adminPage.waitForURL(/\/customer\//)
-await adminPage.waitForTimeout(3500)
-await captureLocator(adminPage, 'customer-ai-insights.png', '.customer-ai-card', 20)
 
 await context.clearCookies()
 await adminPage.evaluate(() => {

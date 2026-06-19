@@ -10,10 +10,7 @@ const baseUrl = process.env.SCREENSHOT_BASE_URL ?? 'http://localhost:5173'
 
 const shots = [
   { name: 'home-hero.png', path: '/', fullPage: false, height: 900 },
-  { name: 'home-about.png', path: '/#about', fullPage: false, height: 900 },
-  { name: 'home-projects.png', path: '/#projects', fullPage: false, height: 900 },
   { name: 'home-skills.png', path: '/#skills', fullPage: false, height: 900 },
-  { name: 'home-contact.png', path: '/#contact', fullPage: false, height: 900 },
   { name: 'project-inklysign.png', path: '/progetti/inklysign', fullPage: false, height: 900 },
 ]
 
