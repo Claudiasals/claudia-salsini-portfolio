@@ -53,15 +53,14 @@ const Hero = () => {
         <ScrollRevealItem tier="hero-4">
           <div className="hero-lead section-lead mx-auto mt-4 max-w-3xl space-y-4">
             <p>
-              Sviluppo applicazioni web moderne,{' '}
-              <span className="text-sky-400">orientate all&apos;esperienza utente</span>, con
-              attenzione a usabilità, semplicità.
+              Sviluppo applicazioni web moderne{' '}
+              <span className="text-sky-400">orientate all&apos;esperienza utente</span>, all&apos;usabilità
+              e alla semplicità.
             </p>
             <p>
-              Utilizzo strumenti di{' '}
-              <span className="text-sky-400">AI-assisted development</span> per trasformare
-              rapidamente idee e requisiti in{' '}
-              <span className="text-sky-400">soluzioni concrete</span>.
+              Unisco competenze tecniche, approccio progettuale e{' '}
+              <span className="text-sky-400">strumenti di AI-assisted development</span> per
+              trasformare idee, requisiti e bisogni reali in soluzioni digitali concrete.
             </p>
           </div>
         </ScrollRevealItem>

@@ -16,9 +16,9 @@ const highlightCards = [
   },
   {
     number: '02',
-    title: 'Sviluppo Full Stack',
+    title: 'AI-assisted development',
     text:
-      'Realizzo applicazioni web full stack, dalla progettazione dell\'interfaccia allo sviluppo frontend e backend, integrando funzionalità AI per automatizzare processi, generare suggerimenti operativi e migliorare l\'esperienza utente.',
+      'Utilizzo strumenti di AI-assisted development come supporto alla progettazione e allo sviluppo, per trasformare più rapidamente idee, bisogni e requisiti in soluzioni digitali concrete.',
   },
   {
     number: '03',
@@ -67,9 +67,11 @@ const About = () => {
                   commerciale.
                 </p>
                 <p>
-                  Questa esperienza mi ha insegnato a osservare il modo in cui le persone
-                  prendono decisioni, cercano informazioni e interagiscono con gli strumenti che
-                  utilizzano ogni giorno.
+                  La scelta di avvicinarmi allo sviluppo web nasce dal desiderio di evolvere
+                  professionalmente e lavorare in un ambito più dinamico, creativo e in continua
+                  trasformazione. Le esperienze precedenti mi hanno insegnato a osservare il modo in
+                  cui le persone prendono decisioni, cercano informazioni e interagiscono con gli
+                  strumenti che utilizzano ogni giorno.
                 </p>
                 <p>
                   Oggi applico questo approccio allo sviluppo web, progettando interfacce e
@@ -79,7 +81,7 @@ const About = () => {
                 <p>
                   Mi interessa crescere in contesti dove tecnologia, esperienza utente e
                   innovazione possano incontrarsi, contribuendo allo sviluppo di prodotti digitali
-                  moderni e orientati a esigenze concrete.
+                  moderni e orientati a esigenze reali.
                 </p>
               </div>
             </ScrollRevealItem>
