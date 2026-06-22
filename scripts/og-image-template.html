@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@700&family=Orbitron:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #020617;
+        display: flex;
+        color: #fff;
+        padding: 0 52px;
+        gap: 0;
+      }
+
+      .og-left {
+        flex: 1;
+        height: 630px;
+        min-width: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+      }
+
+      .og-head {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .og-label {
+        display: none;
+      }
+
+      .og-name {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 62px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        line-height: 1.02;
+      }
+
+      .og-title {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-family: Orbitron, Inter, system-ui, sans-serif;
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1;
+      }
+
+      .og-title span {
+        background: linear-gradient(to right, #9333ea, #38bdf8, #6ee7b7);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .og-tagline,
+      .og-domain {
+        display: none;
+      }
+
+      .og-right {
+        flex: 1;
+        min-width: 0;
+        height: 630px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 0;
+      }
+
+      .og-right::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 100px;
+        background: linear-gradient(to right, #020617 0%, rgba(2, 6, 23, 0.7) 45%, transparent);
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .og-portrait {
+        height: 100%;
+        max-height: 582px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        object-position: center center;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="og-left">
+      <div class="og-head">
+        <p class="og-name">Claudia Salsini</p>
+        <p class="og-title">
+          <span>Full Stack Web</span>
+          <span>Developer</span>
+        </p>
+      </div>
+    </div>
+    <div class="og-right">
+      <img class="og-portrait" src="../public/images/about-portrait.png" alt="" />
+    </div>
+  </body>
+</html>
